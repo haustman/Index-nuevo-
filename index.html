@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Añadido para mejor responsividad -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -12,7 +13,7 @@
 
     body {
       font-family: 'Outfit', sans-serif;
-      background: transparent; /* Fondo del body transparente */
+      background: transparent;
       color: #ffffff;
       padding: 30px 20px;
       min-height: 100vh;
@@ -24,12 +25,12 @@
     .form-wrapper {
       max-width: 600px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente para el formulario */
+      background: rgba(255, 255, 255, 0.1);
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada para definición */
-      border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
-      backdrop-filter: blur(5px); /* Efecto de desenfoque para un toque moderno */
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
     }
 
     .progress-bar {
@@ -42,9 +43,9 @@
       flex: 1;
       text-align: center;
       font-size: 16px;
-      color: #ffffff; /* Texto blanco para contraste */
+      color: #ffffff;
       font-weight: 400;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .progress-step.active {
@@ -100,19 +101,19 @@
     label {
       display: block;
       font-weight: 400;
-      color: #ffffff; /* Texto blanco para contraste */
+      color: #ffffff;
       margin-bottom: 8px;
       font-size: 16px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     input, select {
       width: 100%;
       padding: 12px 15px;
-      border: 1px solid rgba(255, 255, 255, 0.3); /* Borde claro */
+      border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 5px;
       font-size: 16px;
-      background: rgba(255, 255, 255, 0.9); /* Fondo claro para legibilidad */
+      background: rgba(255, 255, 255, 0.9);
       color: #1C2526;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -136,7 +137,7 @@
       position: absolute;
       bottom: -22px;
       left: 0;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .form-group.error .error-message {
@@ -201,7 +202,7 @@
       color: #ffffff;
       margin-top: 20px;
       font-size: 14px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     #message {
@@ -212,27 +213,27 @@
       border-radius: 5px;
       margin: 0 10px;
       min-height: 40px;
-      background: rgba(255, 255, 255, 0.8); /* Fondo claro para el mensaje */
+      background: rgba(255, 255, 255, 0.8);
       color: #1C2526;
     }
 
     #message.success {
-      background: rgba(230, 244, 234, 0.9); /* Verde claro semitransparente */
+      background: rgba(230, 244, 234, 0.9);
       color: #2e7d32;
     }
 
     #message.pending {
-      background: rgba(255, 243, 224, 0.9); /* Naranja claro semitransparente */
+      background: rgba(255, 243, 224, 0.9);
       color: #ef6c00;
     }
 
     #message.error {
-      background: rgba(255, 235, 238, 0.9); /* Rojo claro semitransparente */
+      background: rgba(255, 235, 238, 0.9);
       color: #c62828;
     }
 
     #message.info {
-      background: rgba(227, 242, 253, 0.9); /* Azul claro semitransparente */
+      background: rgba(227, 242, 253, 0.9);
       color: #1565c0;
     }
 
@@ -266,26 +267,30 @@
         bottom: -20px;
       }
       .buttons {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;
       }
       button {
-        padding: 10px;
+        padding: 8px 15px;
         font-size: 14px;
-        max-width: 100%;
+        max-width: 100px;
+        flex: 1;
       }
       #message {
         font-size: 12px;
         padding: 8px;
-        margin: 10px 0;
+        margin: 0 5px;
         min-height: 30px;
+        flex: 1;
       }
     }
   </style>
 </head>
 <body>
   <div class="form-wrapper">
-    <!-- Indicador de progreso -->
     <div class="progress-bar">
       <div class="progress-step active">Paso 1: Datos Personales</div>
       <div class="progress-step">Paso 2: Datos de Pago</div>
@@ -293,7 +298,6 @@
     </div>
 
     <form id="packageForm" novalidate>
-      <!-- Paso 1 -->
       <div class="step active">
         <div class="form-group">
           <label for="firstName">Nombre:</label>
@@ -320,7 +324,6 @@
         </div>
       </div>
 
-      <!-- Paso 2 -->
       <div class="step">
         <div class="form-group">
           <label for="cardName">Nombre en la tarjeta:</label>
@@ -353,7 +356,6 @@
         </div>
       </div>
 
-      <!-- Paso 3 -->
       <div class="step">
         <div class="form-group">
           <label for="address">Dirección:</label>
