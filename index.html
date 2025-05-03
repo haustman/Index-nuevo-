@@ -28,7 +28,7 @@
       background: rgba(255, 255, 255, 0.8);
       padding: 20px;
       border-radius: 8px;
-      border: 1px solid rgba(0, 0, 0, 0.2); /* Borde más visible para confirmar que el contenedor está presente */
+      border: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .progress-bar {
@@ -90,6 +90,13 @@
       opacity: 1;
     }
 
+    .inputs-container {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
     .form-group {
       margin-bottom: 15px;
       position: relative;
@@ -98,7 +105,6 @@
     label {
       display: block;
       font-weight: 400;
-      color: #1C2526;
       margin-bottom: 5px;
       font-size: 12px;
     }
@@ -109,7 +115,7 @@
       border: 1px solid rgba(0, 0, 0, 0.2);
       border-radius: 4px;
       font-size: 12px;
-      background: rgba(255, 255, 255, 0.9);
+      background: #fff;
       color: #1C2526;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -118,11 +124,7 @@
       border-color: #00AEEF;
       box-shadow: 0 0 5px rgba(0, 174, 239, 0.5);
       outline: none;
-      background: #ffffff;
-    }
-
-    input:invalid:not(:focus), select:invalid:not(:focus) {
-      border-color: #e74c3c;
+      background: #fff;
     }
 
     .error-message {
@@ -161,9 +163,9 @@
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.3s ease;
       flex: 1;
       max-width: 120px;
+      color: #fff;
     }
 
     button:disabled {
@@ -174,41 +176,41 @@
 
     #prevBtn {
       background: #b0b0b0;
-      color: #fff;
     }
 
     #prevBtn:hover:not(:disabled) {
       background: #999;
+      transition: background 0.3s ease;
     }
 
     #nextBtn, #submitBtn {
       background: #00AEEF;
-      color: #fff;
     }
 
     #nextBtn:hover:not(:disabled), #submitBtn:hover:not(:disabled) {
       background: #008bc2;
+      transition: background 0.3s ease;
+    }
+
+    .text-center {
+      text-align: center;
     }
 
     #loading {
       display: none;
-      text-align: center;
       font-style: italic;
-      color: #1C2526;
       margin-top: 15px;
       font-size: 11px;
     }
 
     #message {
       flex: 2;
-      text-align: center;
       font-size: 12px;
       padding: 8px;
       border-radius: 4px;
       margin: 0 5px;
       min-height: 30px;
       background: rgba(255, 255, 255, 0.8);
-      color: #1C2526;
     }
 
     #message.success {
@@ -232,17 +234,16 @@
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 15px 10px;
+      body, .form-wrapper {
+        padding: 15px;
       }
       .form-wrapper {
-        padding: 15px;
         max-width: 100%;
       }
       .progress-bar {
         margin-bottom: 10px;
       }
-      .progress-step {
+      .progress-step, label, input, select, #message, button {
         font-size: 11px;
       }
       .progress-step::before {
@@ -254,12 +255,10 @@
         top: 4px;
       }
       label {
-        font-size: 11px;
         margin-bottom: 4px;
       }
       input, select {
         padding: 6px 8px;
-        font-size: 11px;
       }
       .form-group {
         margin-bottom: 12px;
@@ -278,12 +277,9 @@
       }
       button {
         padding: 6px 10px;
-        font-size: 11px;
         max-width: 80px;
-        flex: 1;
       }
       #message {
-        font-size: 11px;
         padding: 6px;
         margin: 0 4px;
         min-height: 24px;
@@ -306,123 +302,129 @@
 
     <form id="packageForm" novalidate>
       <div class="step active">
-        <div class="form-group">
-          <label for="firstName">Nombre:</label>
-          <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tu nombre" required aria-required="true" />
-          <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
-        </div>
+        <div class="inputs-container">
+          <div class="form-group">
+            <label for="firstName">Nombre:</label>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tu nombre" required aria-required="true" />
+            <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+          </div>
 
-        <div class="form-group">
-          <label for="lastName">Apellidos:</label>
-          <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tus apellidos" required aria-required="true" />
-          <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
-        </div>
+          <div class="form-group">
+            <label for="lastName">Apellidos:</label>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tus apellidos" required aria-required="true" />
+            <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+          </div>
 
-        <div class="form-group">
-          <label for="emailAddress">Correo electrónico:</label>
-          <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@correo.com" required aria-required="true" />
-          <span class="error-message">Por favor, ingresa un correo electrónico válido.</span>
-        </div>
+          <div class="form-group">
+            <label for="emailAddress">Correo electrónico:</label>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@correo.com" required aria-required="true" />
+            <span class="error-message">Por favor, ingresa un correo electrónico válido.</span>
+          </div>
 
-        <div class="form-group">
-          <label for="phoneNumber">Teléfono:</label>
-          <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Tu número de contacto" required aria-required="true" />
-          <span class="error-message">Solo se permiten números (10-15 dígitos).</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="form-group">
-          <label for="cardName">Nombre en la tarjeta:</label>
-          <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" required aria-required="true" />
-          <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
-        </div>
-
-        <div class="form-group">
-          <label for="cardNumber">Número de tarjeta:</label>
-          <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" />
-          <span class="error-message">Ingresa un número de tarjeta válido (16 dígitos).</span>
-        </div>
-
-        <div class="form-group">
-          <label for="cvv">CVV:</label>
-          <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 o 4 dígitos" required aria-required="true" />
-          <span class="error-message">Ingresa un CVV válido (3 o 4 dígitos).</span>
-        </div>
-
-        <div class="form-group">
-          <label for="expMonth">Mes de expiración:</label>
-          <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (ej. 12)" required aria-required="true" />
-          <span class="error-message">Ingresa un mes válido (1-12).</span>
-        </div>
-
-        <div class="form-group">
-          <label for="expYear">Año de expiración:</label>
-          <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (ej. 2025)" required aria-required="true" />
-          <span class="error-message">Ingresa un año válido (2025-2035).</span>
+          <div class="form-group">
+            <label for="phoneNumber">Teléfono:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Tu número de contacto" required aria-required="true" />
+            <span class="error-message">Solo se permiten números (10-15 dígitos).</span>
+          </div>
         </div>
       </div>
 
       <div class="step">
-        <div class="form-group">
-          <label for="address">Dirección:</label>
-          <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Calle y número" required aria-required="true" />
-          <span class="error-message">Ingresa una dirección válida.</span>
-        </div>
+        <div class="inputs-container">
+          <div class="form-group">
+            <label for="cardName">Nombre en la tarjeta:</label>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" required aria-required="true" />
+            <span class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+          </div>
 
-        <div class="form-group">
-          <label for="countryCode">Código de país:</label>
-          <select id="countryCode" name="countryCode" required aria-required="true">
-            <option value="">Selecciona un país</option>
-            <option value="US">Estados Unidos</option>
-            <option value="CN">China</option>
-            <option value="JP">Japón</option>
-            <option value="DE">Alemania</option>
-            <option value="GB">Reino Unido</option>
-            <option value="FR">Francia</option>
-            <option value="IN">India</option>
-            <option value="CA">Canadá</option>
-            <option value="BR">Brasil</option>
-            <option value="KR">Corea del Sur</option>
-            <option value="IT">Italia</option>
-            <option value="RU">Rusia</option>
-            <option value="AU">Australia</option>
-            <option value="ES">España</option>
-            <option value="MX">México</option>
-            <option value="ID">Indonesia</option>
-            <option value="NL">Países Bajos</option>
-            <option value="SA">Arabia Saudita</option>
-            <option value="CH">Suiza</option>
-            <option value="SG">Singapur</option>
-          </select>
-          <span class="error-message">Selecciona un país.</span>
-        </div>
+          <div class="form-group">
+            <label for="cardNumber">Número de tarjeta:</label>
+            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" />
+            <span class="error-message">Ingresa un número de tarjeta válido (16 dígitos).</span>
+          </div>
 
-        <div class="form-group">
-          <label for="stateProvince">Provincia / Estado:</label>
-          <input id="stateProvince" name="stateProvince" pattern="[A-Za-z\s\-]+" placeholder="Ej. Antioquia" required aria-required="true" />
-          <span class="error-message">Solo se permiten letras, espacios y guiones.</span>
-        </div>
+          <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 o 4 dígitos" required aria-required="true" />
+            <span class="error-message">Ingresa un CVV válido (3 o 4 dígitos).</span>
+          </div>
 
-        <div class="form-group">
-          <label for="city">Ciudad:</label>
-          <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Nombre de la ciudad" required aria-required="true" />
-          <span class="error-message">Solo se permiten letras, espacios y guiones.</span>
-        </div>
+          <div class="form-group">
+            <label for="expMonth">Mes de expiración:</label>
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (ej. 12)" required aria-required="true" />
+            <span class="error-message">Ingresa un mes válido (1-12).</span>
+          </div>
 
-        <div class="form-group">
-          <label for="postalCode">Código postal:</label>
-          <input type="tel" id="postalCode" name="postalCode" pattern="\d{5}" placeholder="Ej. 28001" required aria-required="true" />
-          <span class="error-message">Ingresa un código postal válido (5 dígitos).</span>
+          <div class="form-group">
+            <label for="expYear">Año de expiración:</label>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (ej. 2025)" required aria-required="true" />
+            <span class="error-message">Ingresa un año válido (2025-2035).</span>
+          </div>
         </div>
+      </div>
 
-        <input type="hidden" name="ipAddress" value="127.0.0.1" />
-        <div id="loading">Enviando...</div>
+      <div class="step">
+        <div class="inputs-container">
+          <div class="form-group">
+            <label for="address">Dirección:</label>
+            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Calle y número" required aria-required="true" />
+            <span class="error-message">Ingresa una dirección válida.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="countryCode">Código de país:</label>
+            <select id="countryCode" name="countryCode" required aria-required="true">
+              <option value="">Selecciona un país</option>
+              <option value="US">Estados Unidos</option>
+              <option value="CN">China</option>
+              <option value="JP">Japón</option>
+              <option value="DE">Alemania</option>
+              <option value="GB">Reino Unido</option>
+              <option value="FR">Francia</option>
+              <option value="IN">India</option>
+              <option value="CA">Canadá</option>
+              <option value="BR">Brasil</option>
+              <option value="KR">Corea del Sur</option>
+              <option value="IT">Italia</option>
+              <option value="RU">Rusia</option>
+              <option value="AU">Australia</option>
+              <option value="ES">España</option>
+              <option value="MX">México</option>
+              <option value="ID">Indonesia</option>
+              <option value="NL">Países Bajos</option>
+              <option value="SA">Arabia Saudita</option>
+              <option value="CH">Suiza</option>
+              <option value="SG">Singapur</option>
+            </select>
+            <span class="error-message">Selecciona un país.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="stateProvince">Provincia / Estado:</label>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z\s\-]+" placeholder="Ej. Antioquia" required aria-required="true" />
+            <span class="error-message">Solo se permiten letras, espacios y guiones.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="city">Ciudad:</label>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Nombre de la ciudad" required aria-required="true" />
+            <span class="error-message">Solo se permiten letras, espacios y guiones.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="postalCode">Código postal:</label>
+            <input type="tel" id="postalCode" name="postalCode" pattern="\d{5}" placeholder="Ej. 28001" required aria-required="true" />
+            <span class="error-message">Ingresa un código postal válido (5 dígitos).</span>
+          </div>
+
+          <input type="hidden" name="ipAddress" value="127.0.0.1" />
+        </div>
+        <div id="loading" class="text-center">Enviando...</div>
       </div>
 
       <div class="buttons">
         <button type="button" id="prevBtn" style="display: none;" aria-label="Volver al paso anterior">Atrás</button>
-        <div id="message"></div>
+        <div id="message" class="text-center"></div>
         <button type="button" id="nextBtn" aria-label="Avanzar al siguiente paso">Siguiente</button>
         <button type="submit" id="submitBtn" style="display: none;" aria-label="Enviar formulario">Enviar</button>
       </div>
@@ -480,42 +482,30 @@
         let valid = true;
 
         inputs.forEach(input => {
-          const formGroup = input.closest(".form-group");
-          if (formGroup) {
-            formGroup.classList.remove("error");
-
-            if (!input.checkValidity()) {
-              formGroup.classList.add("error");
-              valid = false;
-            }
+          validateInput(input);
+          if (!input.checkValidity()) {
+            valid = false;
           }
         });
 
         return valid;
       }
 
+      function validateInput(input) {
+        const formGroup = input.closest(".form-group");
+        if (formGroup) {
+          formGroup.classList.remove("error");
+          if (!input.checkValidity()) {
+            formGroup.classList.add("error");
+          }
+        }
+      }
+
       const inputs = document.querySelectorAll('input, select');
       if (inputs) {
         inputs.forEach(input => {
-          input.addEventListener('input', () => {
-            const formGroup = input.closest(".form-group");
-            if (formGroup) {
-              formGroup.classList.remove("error");
-              if (!input.checkValidity()) {
-                formGroup.classList.add("error");
-              }
-            }
-          });
-
-          input.addEventListener('blur', () => {
-            const formGroup = input.closest(".form-group");
-            if (formGroup) {
-              formGroup.classList.remove("error");
-              if (!input.checkValidity()) {
-                formGroup.classList.add("error");
-              }
-            }
-          });
+          input.addEventListener('input', () => validateInput(input));
+          input.addEventListener('blur', () => validateInput(input));
 
           input.addEventListener('keydown', (e) => {
             if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
