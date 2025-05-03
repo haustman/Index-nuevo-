@@ -469,8 +469,6 @@
         if (submitBtn) {
           submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
         }
-
-        validateStep();
       }
 
       function validateStep() {
@@ -482,8 +480,15 @@
         let valid = true;
 
         inputs.forEach(input => {
-          validateInput(input);
-          if (!input.checkValidity()) {
+          // Solo validamos si el campo ha sido tocado o si está vacío al intentar avanzar
+          if (input.dataset.touched || input.value.trim() !== "") {
+            validateInput(input);
+            if (!input.checkValidity()) {
+              valid = false;
+            }
+          } else if (input.required && input.value.trim() === "") {
+            // Si el campo es requerido y está vacío al intentar avanzar, marcamos error
+            validateInput(input);
             valid = false;
           }
         });
@@ -497,6 +502,7 @@
           formGroup.classList.remove("error");
           if (!input.checkValidity()) {
             formGroup.classList.add("error");
+            input.dataset.touched = "true"; // Marcamos el campo como tocado
           }
         }
       }
@@ -504,8 +510,16 @@
       const inputs = document.querySelectorAll('input, select');
       if (inputs) {
         inputs.forEach(input => {
-          input.addEventListener('input', () => validateInput(input));
-          input.addEventListener('blur', () => validateInput(input));
+          input.addEventListener('input', () => {
+            input.dataset.touched = "true"; // Marcamos el campo como tocado al escribir
+            validateInput(input);
+          });
+
+          input.addEventListener('blur', () => {
+            if (input.dataset.touched) {
+              validateInput(input);
+            }
+          });
 
           input.addEventListener('keydown', (e) => {
             if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
