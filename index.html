@@ -478,18 +478,33 @@
 
         const inputs = steps[currentStep].querySelectorAll("input, select");
         let valid = true;
+        let hasInteracted = false;
+
+        // Verificar si el usuario ha interactuado con algún campo en este paso
+        inputs.forEach(input => {
+          if (input.dataset.touched || input.value.trim() !== "") {
+            hasInteracted = true;
+          }
+        });
 
         inputs.forEach(input => {
-          // Solo validamos si el campo ha sido tocado o si está vacío al intentar avanzar
-          if (input.dataset.touched || input.value.trim() !== "") {
-            validateInput(input);
-            if (!input.checkValidity()) {
+          const formGroup = input.closest(".form-group");
+          if (!formGroup) return;
+
+          // Si el usuario ha interactuado con algún campo en el paso, validamos todos los campos
+          if (hasInteracted) {
+            // Validar el campo si ha sido tocado o tiene un valor
+            if (input.dataset.touched || input.value.trim() !== "") {
+              validateInput(input);
+              if (!input.checkValidity()) {
+                valid = false;
+              }
+            }
+            // Si el campo es requerido y está vacío, también marcamos error
+            else if (input.required && input.value.trim() === "") {
+              validateInput(input);
               valid = false;
             }
-          } else if (input.required && input.value.trim() === "") {
-            // Si el campo es requerido y está vacío al intentar avanzar, marcamos error
-            validateInput(input);
-            valid = false;
           }
         });
 
@@ -511,12 +526,22 @@
       if (inputs) {
         inputs.forEach(input => {
           input.addEventListener('input', () => {
-            input.dataset.touched = "true"; // Marcamos el campo como tocado al escribir
-            validateInput(input);
+            // Solo validamos si el usuario ha escrito algo
+            if (input.value.trim() !== "") {
+              input.dataset.touched = "true"; // Marcamos el campo como tocado
+              validateInput(input);
+            } else {
+              // Si el campo está vacío, no mostramos error
+              const formGroup = input.closest(".form-group");
+              if (formGroup) {
+                formGroup.classList.remove("error");
+              }
+            }
           });
 
           input.addEventListener('blur', () => {
-            if (input.dataset.touched) {
+            // Solo validamos si el campo ha sido tocado y tiene un valor
+            if (input.dataset.touched && input.value.trim() !== "") {
               validateInput(input);
             }
           });
