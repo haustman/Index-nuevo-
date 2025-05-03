@@ -28,7 +28,7 @@
       background: rgba(255, 255, 255, 0.8);
       padding: 20px;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.2); /* Borde más visible para confirmar que el contenedor está presente */
     }
 
     .progress-bar {
@@ -468,7 +468,6 @@
           submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
         }
 
-        // Validar el paso actual al mostrarlo
         validateStep();
       }
 
@@ -485,7 +484,6 @@
           if (formGroup) {
             formGroup.classList.remove("error");
 
-            // Validar el campo y mostrar el mensaje de error si es necesario
             if (!input.checkValidity()) {
               formGroup.classList.add("error");
               valid = false;
@@ -496,7 +494,6 @@
         return valid;
       }
 
-      // Validar campos en tiempo real
       const inputs = document.querySelectorAll('input, select');
       if (inputs) {
         inputs.forEach(input => {
