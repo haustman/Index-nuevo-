@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Formulario de Paquete - Prazoom Business</title>
+  <!-- Título eliminado para un formulario más limpio -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -13,9 +13,9 @@
 
     body {
       font-family: 'Outfit', sans-serif;
-      background: #1C2526; /* Restaurado el fondo azul oscuro de Prazoom */
+      background: #1C2526;
       color: #ffffff;
-      padding: 30px 20px; /* Aumentado para más espacio */
+      padding: 30px 20px;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -23,24 +23,24 @@
     }
 
     .form-wrapper {
-      max-width: 600px; /* Aumentado para un formulario más grande */
+      max-width: 600px;
       width: 100%;
       background: #ffffff;
-      padding: 30px; /* Aumentado */
-      border-radius: 10px; /* Aumentado */
+      padding: 30px;
+      border-radius: 10px;
       box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
     }
 
     .progress-bar {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 25px; /* Aumentado */
+      margin-bottom: 25px;
     }
 
     .progress-step {
       flex: 1;
       text-align: center;
-      font-size: 16px; /* Aumentado */
+      font-size: 16px;
       color: #b0b0b0;
       font-weight: 400;
     }
@@ -52,12 +52,12 @@
 
     .progress-step::before {
       content: '';
-      width: 14px; /* Aumentado */
-      height: 14px; /* Aumentado */
+      width: 14px;
+      height: 14px;
       background: #dfe6e9;
       border-radius: 50%;
       display: block;
-      margin: 0 auto 8px; /* Aumentado */
+      margin: 0 auto 8px;
     }
 
     .progress-step.active::before {
@@ -91,7 +91,7 @@
     }
 
     .form-group {
-      margin-bottom: 25px; /* Aumentado */
+      margin-bottom: 25px;
       position: relative;
     }
 
@@ -99,16 +99,16 @@
       display: block;
       font-weight: 400;
       color: #1C2526;
-      margin-bottom: 8px; /* Aumentado */
-      font-size: 16px; /* Aumentado */
+      margin-bottom: 8px;
+      font-size: 16px;
     }
 
     input, select {
       width: 100%;
-      padding: 12px 15px; /* Aumentado */
+      padding: 12px 15px;
       border: 1px solid #e0e0e0;
-      border-radius: 5px; /* Aumentado */
-      font-size: 16px; /* Aumentado */
+      border-radius: 5px;
+      font-size: 16px;
       background: #f5f5f5;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -127,10 +127,10 @@
     .error-message {
       display: none;
       color: #e74c3c;
-      font-size: 14px; /* Aumentado */
-      margin-top: 8px; /* Aumentado */
+      font-size: 14px;
+      margin-top: 8px;
       position: absolute;
-      bottom: -22px; /* Ajustado */
+      bottom: -22px;
       left: 0;
     }
 
@@ -147,18 +147,22 @@
     .buttons {
       display: flex;
       justify-content: space-between;
-      gap: 15px; /* Aumentado */
-      margin-top: 30px; /* Aumentado */
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
     }
 
     button {
-      padding: 12px 25px; /* Aumentado */
+      padding: 12px 25px;
       border: none;
-      border-radius: 5px; /* Aumentado */
-      font-size: 16px; /* Aumentado */
+      border-radius: 5px;
+      font-size: 16px;
       font-weight: 500;
       cursor: pointer;
       transition: background 0.3s ease;
+      flex: 1;
+      max-width: 150px;
     }
 
     button:disabled {
@@ -190,16 +194,17 @@
       text-align: center;
       font-style: italic;
       color: #7f8c8d;
-      margin-top: 20px; /* Aumentado */
-      font-size: 14px; /* Aumentado */
+      margin-top: 20px;
+      font-size: 14px;
     }
 
     #message {
-      margin-top: 25px; /* Aumentado */
-      padding: 12px; /* Aumentado */
-      border-radius: 5px; /* Aumentado */
+      flex: 2;
       text-align: center;
-      font-size: 16px; /* Aumentado */
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 0 10px;
     }
 
     #message.success {
@@ -258,19 +263,18 @@
       button {
         padding: 10px;
         font-size: 14px;
+        max-width: 100%;
       }
       #message {
-        font-size: 14px;
-        padding: 10px;
-        margin-top: 20px;
+        font-size: 12px;
+        padding: 8px;
+        margin: 10px 0;
       }
     }
   </style>
 </head>
 <body>
   <div class="form-wrapper">
-    <!-- Título eliminado -->
-    
     <!-- Indicador de progreso -->
     <div class="progress-bar">
       <div class="progress-step active">Paso 1: Datos Personales</div>
@@ -399,17 +403,17 @@
 
       <div class="buttons">
         <button type="button" id="prevBtn" style="display: none;" aria-label="Volver al paso anterior">Atrás</button>
+        <div id="message"></div>
         <button type="button" id="nextBtn" aria-label="Avanzar al siguiente paso">Siguiente</button>
         <button type="submit" id="submitBtn" style="display: none;" aria-label="Enviar formulario">Enviar</button>
       </div>
     </form>
-
-    <div id="message"></div>
   </div>
 
   <script>
-    const steps = document.querySelectorAll(".step");
-    const progressSteps = document.querySelectorAll(".progress-step");
+    // Seleccionar los elementos solo si existen
+    const steps = document.querySelectorAll(".step") || [];
+    const progressSteps = document.querySelectorAll(".progress-step") || [];
     const nextBtn = document.getElementById("nextBtn");
     const prevBtn = document.getElementById("prevBtn");
     const submitBtn = document.getElementById("submitBtn");
@@ -419,53 +423,81 @@
     let currentStep = 0;
 
     function showStep(index) {
-      steps.forEach((step, i) => {
-        step.classList.toggle("active", i === index);
-      });
-      progressSteps.forEach((step, i) => {
-        step.classList.toggle("active", i <= index);
-      });
-      prevBtn.style.display = index > 0 ? "inline-block" : "none";
-      nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
-      submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
+      if (steps.length > 0) {
+        steps.forEach((step, i) => {
+          if (step) {
+            step.classList.toggle("active", i === index);
+          }
+        });
+      }
+
+      if (progressSteps.length > 0) {
+        progressSteps.forEach((step, i) => {
+          if (step) {
+            step.classList.toggle("active", i <= index);
+          }
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.style.display = index > 0 ? "inline-block" : "none";
+      }
+      if (nextBtn) {
+        nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
+      }
+      if (submitBtn) {
+        submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
+      }
     }
 
     function validateStep() {
+      if (steps.length === 0 || !steps[currentStep]) {
+        return false;
+      }
+
       const inputs = steps[currentStep].querySelectorAll("input, select");
       let valid = true;
 
       inputs.forEach(input => {
         const formGroup = input.closest(".form-group");
-        formGroup.classList.remove("error");
+        if (formGroup) {
+          formGroup.classList.remove("error");
 
-        if (!input.checkValidity()) {
-          formGroup.classList.add("error");
-          valid = false;
+          if (!input.checkValidity()) {
+            formGroup.classList.add("error");
+            valid = false;
+          }
         }
       });
 
       return valid;
     }
 
-    nextBtn.addEventListener("click", () => {
-      if (validateStep() && currentStep < steps.length - 1) {
-        currentStep++;
-        showStep(currentStep);
-      }
-    });
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        if (validateStep() && currentStep < steps.length - 1) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      });
+    }
 
-    prevBtn.addEventListener("click", () => {
-      if (currentStep > 0) {
-        currentStep--;
-        showStep(currentStep);
-      }
-    });
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        if (currentStep > 0) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      });
+    }
 
     showStep(currentStep);
 
     function handleApiResponse(data) {
       const { status, statusReason, redirectUrl } = data;
       const msgDiv = document.getElementById('message');
+      if (!msgDiv) return;
+
       let html = '';
       let messageClass = '';
 
@@ -509,103 +541,116 @@
       msgDiv.innerHTML = html;
     }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!validateStep()) return;
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!validateStep()) return;
 
-      submitBtn.disabled = true;
-      nextBtn.disabled = true;
-      loading.style.display = "block";
+        if (submitBtn) submitBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        if (loading) loading.style.display = "block";
 
-      const formData = new FormData(form);
-      const jsonData = { planReferenceId: "Professional" };
-      formData.forEach((value, key) => {
-        if (key === "cardNumber") {
-          jsonData[key] = value.replace(/\s/g, "");
-        } else if (isNaN(value) || ["cvv", "postalCode", "phoneNumber"].includes(key)) {
-          jsonData[key] = value;
-        } else {
-          jsonData[key] = Number(value);
+        const formData = new FormData(form);
+        const jsonData = { planReferenceId: "Professional" };
+        formData.forEach((value, key) => {
+          if (key === "cardNumber") {
+            jsonData[key] = value.replace(/\s/g, "");
+          } else if (isNaN(value) || ["cvv", "postalCode", "phoneNumber"].includes(key)) {
+            jsonData[key] = value;
+          } else {
+            jsonData[key] = Number(value);
+          }
+        });
+
+        try {
+          // Comenta la solicitud fetch para evitar el error de CORS
+          /*
+          const res = await fetch(
+            "https://duelazo-2a8ce83c75f7.herokuapp.com/packages",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(jsonData),
+            }
+          );
+          if (!res.ok) {
+            throw new Error(`Error en la solicitud: ${res.status} ${res.statusText}`);
+          }
+          const data = await res.json();
+          handleApiResponse(data);
+          */
+
+          // Usa una respuesta simulada para probar
+          const data = { status: "Approved", statusReason: "Todo bien", redirectUrl: "https://ejemplo.com" };
+          handleApiResponse(data);
+        } catch (err) {
+          const msgDiv = document.getElementById('message');
+          if (msgDiv) {
+            msgDiv.className = 'error';
+            msgDiv.innerHTML = `<p>⚠️ Error de red: ${err.message}</p>`;
+          }
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+          if (nextBtn) nextBtn.disabled = false;
+          if (loading) loading.style.display = "none";
         }
       });
+    }
 
-      try {
-        // Comenta la solicitud fetch para evitar el error de CORS
-        /*
-        const res = await fetch(
-          "https://duelazo-2a8ce83c75f7.herokuapp.com/packages",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(jsonData),
-          }
-        );
-        if (!res.ok) {
-          throw new Error(`Error en la solicitud: ${res.status} ${res.statusText}`);
-        }
-        const data = await res.json();
-        handleApiResponse(data);
-        */
-
-        // Usa una respuesta simulada para probar
-        const data = { status: "Approved", statusReason: "Todo bien", redirectUrl: "https://ejemplo.com" };
-        handleApiResponse(data);
-      } catch (err) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.className = 'error';
-        msgDiv.innerHTML = `<p>⚠️ Error de red: ${err.message}</p>`;
-      } finally {
-        submitBtn.disabled = false;
-        nextBtn.disabled = false;
-        loading.style.display = "none";
-      }
-    });
-
-    // Formateo automático del número de tarjeta
-    document.getElementById('cardNumber').addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\D/g, '');
-      value = value.replace(/(\d{4})/g, '$1 ').trim();
-      e.target.value = value;
-    });
-
-    // Validación en tiempo real
-    document.querySelectorAll('input, select').forEach(input => {
-      input.addEventListener('input', () => {
-        const formGroup = input.closest(".form-group");
-        formGroup.classList.remove("error");
-        if (!input.checkValidity()) {
-          formGroup.classList.add("error");
-        }
+    const cardNumberInput = document.getElementById('cardNumber');
+    if (cardNumberInput) {
+      cardNumberInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{4})/g, '$1 ').trim();
+        e.target.value = value;
       });
+    }
 
-      input.addEventListener('keydown', (e) => {
-        if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
+    const inputs = document.querySelectorAll('input, select');
+    if (inputs) {
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          const formGroup = input.closest(".form-group");
+          if (formGroup) {
+            formGroup.classList.remove("error");
+            if (!input.checkValidity()) {
+              formGroup.classList.add("error");
+            }
+          }
+        });
 
-        if (['firstName', 'lastName', 'cardName'].includes(input.id)) {
-          if (!/^[A-Za-z\s\-']$/.test(e.key)) {
-            e.preventDefault();
+        input.addEventListener('keydown', (e) => {
+          if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
+
+          if (['firstName', 'lastName', 'cardName'].includes(input.id)) {
+            if (!/^[A-Za-z\s\-']$/.test(e.key)) {
+              e.preventDefault();
+            }
+          } else if (['phoneNumber', 'cvv', 'postalCode'].includes(input.id)) {
+            if (!/^\d$/.test(e.key)) {
+              e.preventDefault();
+            }
+          } else if (input.id === 'cardNumber') {
+            if (!/^\d$/.test(e.key) && e.key !== ' ') {
+              e.preventDefault();
+            }
+          } else if (['address', 'stateProvince', 'city'].includes(input.id)) {
+            if (!/^[A-Za-z0-9\s\-,.]$/.test(e.key)) {
+              e.preventDefault();
+            }
           }
-        } else if (['phoneNumber', 'cvv', 'postalCode'].includes(input.id)) {
-          if (!/^\d$/.test(e.key)) {
-            e.preventDefault();
-          }
-        } else if (input.id === 'cardNumber') {
-          if (!/^\d$/.test(e.key) && e.key !== ' ') {
-            e.preventDefault();
-          }
-        } else if (['address', 'stateProvince', 'city'].includes(input.id)) {
-          if (!/^[A-Za-z0-9\s\-,.]$/.test(e.key)) {
-            e.preventDefault();
-          }
-        }
+        });
       });
-    });
+    }
 
-    document.querySelectorAll('#expMonth, #expYear').forEach(input => {
-      input.addEventListener('input', () => {
-        input.value = input.value.replace(/[^0-9]/g, '');
+    const expInputs = document.querySelectorAll('#expMonth, #expYear');
+    if (expInputs) {
+      expInputs.forEach(input => {
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/[^0-9]/g, '');
+        });
       });
-    });
+    }
   </script>
 </body>
 </html>
