@@ -12,7 +12,7 @@
 
     body {
       font-family: 'Outfit', sans-serif;
-      background: transparent; /* Fondo transparente para mostrar el fondo subyacente */
+      background: transparent; /* Fondo del body transparente */
       color: #ffffff;
       padding: 30px 20px;
       min-height: 100vh;
@@ -24,10 +24,12 @@
     .form-wrapper {
       max-width: 600px;
       width: 100%;
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente para el formulario */
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada para definición */
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+      backdrop-filter: blur(5px); /* Efecto de desenfoque para un toque moderno */
     }
 
     .progress-bar {
@@ -40,8 +42,9 @@
       flex: 1;
       text-align: center;
       font-size: 16px;
-      color: #b0b0b0;
+      color: #ffffff; /* Texto blanco para contraste */
       font-weight: 400;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
     }
 
     .progress-step.active {
@@ -97,26 +100,28 @@
     label {
       display: block;
       font-weight: 400;
-      color: #1C2526;
+      color: #ffffff; /* Texto blanco para contraste */
       margin-bottom: 8px;
       font-size: 16px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
     }
 
     input, select {
       width: 100%;
       padding: 12px 15px;
-      border: 1px solid #e0e0e0;
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Borde claro */
       border-radius: 5px;
       font-size: 16px;
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.9); /* Fondo claro para legibilidad */
+      color: #1C2526;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     input:focus, select:focus {
       border-color: #00AEEF;
-      box-shadow: 0 0 5px rgba(0, 174, 239, 0.2);
+      box-shadow: 0 0 5px rgba(0, 174, 239, 0.5);
       outline: none;
-      background: #fff;
+      background: #ffffff;
     }
 
     input:invalid:not(:focus), select:invalid:not(:focus) {
@@ -131,6 +136,7 @@
       position: absolute;
       bottom: -22px;
       left: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
     }
 
     .form-group.error .error-message {
@@ -192,9 +198,10 @@
       display: none;
       text-align: center;
       font-style: italic;
-      color: #7f8c8d;
+      color: #ffffff;
       margin-top: 20px;
       font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
     }
 
     #message {
@@ -204,26 +211,28 @@
       padding: 10px;
       border-radius: 5px;
       margin: 0 10px;
-      min-height: 40px; /* Asegura que el mensaje tenga un espacio visible incluso si está vacío */
+      min-height: 40px;
+      background: rgba(255, 255, 255, 0.8); /* Fondo claro para el mensaje */
+      color: #1C2526;
     }
 
     #message.success {
-      background: #e6f4ea;
+      background: rgba(230, 244, 234, 0.9); /* Verde claro semitransparente */
       color: #2e7d32;
     }
 
     #message.pending {
-      background: #fff3e0;
+      background: rgba(255, 243, 224, 0.9); /* Naranja claro semitransparente */
       color: #ef6c00;
     }
 
     #message.error {
-      background: #ffebee;
+      background: rgba(255, 235, 238, 0.9); /* Rojo claro semitransparente */
       color: #c62828;
     }
 
     #message.info {
-      background: #e3f2fd;
+      background: rgba(227, 242, 253, 0.9); /* Azul claro semitransparente */
       color: #1565c0;
     }
 
@@ -412,9 +421,7 @@
   </div>
 
   <script>
-    // Asegurarse de que el DOM esté completamente cargado antes de ejecutar el script
     document.addEventListener('DOMContentLoaded', () => {
-      // Seleccionar los elementos solo si existen
       const steps = document.querySelectorAll(".step") || [];
       const progressSteps = document.querySelectorAll(".progress-step") || [];
       const nextBtn = document.getElementById("nextBtn");
@@ -571,7 +578,6 @@
           });
 
           try {
-            // Petición a Heroku descomentada
             const res = await fetch(
               "https://duelazo-2a8ce83c75f7.herokuapp.com/packages",
               {
