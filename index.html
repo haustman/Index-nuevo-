@@ -445,7 +445,7 @@
 
       let currentStep = 0;
       let messageTimeout = null; // Para controlar el temporizador del mensaje general
-      const errorTimeouts = new Map(); // Para controlar los temporizadores de los errores individuales
+      let isShowingErrors = false; // Para evitar que los errores se refresquen mientras se están mostrando
 
       // Muestra el paso actual y actualiza la barra de progreso
       const showStep = (index) => {
@@ -486,26 +486,25 @@
         const formGroup = input.closest(".form-group");
         if (!formGroup) return;
 
-        // Limpiar el temporizador previo para este input, si existe
-        const existingTimeout = errorTimeouts.get(input);
-        if (existingTimeout) clearTimeout(existingTimeout);
+        // Si ya estamos mostrando errores, no los actualizamos hasta que termine el temporizador
+        if (isShowingErrors) return;
 
         formGroup.classList.remove("error");
         if (!input.checkValidity()) {
           formGroup.classList.add("error");
 
           // Desaparecer el error después de 1 segundo
-          const timeout = setTimeout(() => {
+          isShowingErrors = true;
+          setTimeout(() => {
             formGroup.classList.remove("error");
-            errorTimeouts.delete(input);
+            isShowingErrors = false;
           }, 1000);
-          errorTimeouts.set(input, timeout);
         }
       };
 
       // Muestra un mensaje en el div de mensaje y lo limpia después de 1 segundo
       const showMessage = (message, type) => {
-        if (!messageDiv) return;
+        if (!messageDiv || isShowingErrors) return;
 
         // Limpiar el temporizador previo, si existe
         if (messageTimeout) clearTimeout(messageTimeout);
@@ -514,10 +513,12 @@
         messageDiv.innerHTML = `<p>${message}</p>`;
 
         // Desaparecer el mensaje después de 1 segundo
+        isShowingErrors = true;
         messageTimeout = setTimeout(() => {
           messageDiv.className = '';
           messageDiv.innerHTML = '';
           messageTimeout = null;
+          isShowingErrors = false;
         }, 1000);
       };
 
@@ -634,7 +635,7 @@
           }
         }
 
-        // Los mensajes de la API no desaparecen después de 1 segundo, ya que son resultados finales
+        // Los mensajes de la API no desaparecen después de 1 segundo
         messageDiv.className = messageClass;
         messageDiv.innerHTML = html;
       };
@@ -653,7 +654,7 @@
         formData.forEach((value, key) => {
           if (key === "cardNumber") {
             jsonData[key] = value.replace(/\s/g, "");
-          } else if (isNaN(value) || ["cvv", "postalCode", "phoneNumber"].includes(key)) {
+          } else if (isNaN(value) || ["cvv", 'postalCode', 'phoneNumber'].includes(key)) {
             jsonData[key] = value;
           } else {
             jsonData[key] = Number(value);
