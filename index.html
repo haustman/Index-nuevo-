@@ -444,6 +444,8 @@
       const messageDiv = document.getElementById('message');
 
       let currentStep = 0;
+      let messageTimeout = null; // Para controlar el temporizador del mensaje general
+      const errorTimeouts = new Map(); // Para controlar los temporizadores de los errores individuales
 
       // Muestra el paso actual y actualiza la barra de progreso
       const showStep = (index) => {
@@ -479,22 +481,44 @@
         return isValid;
       };
 
-      // Marca un campo como inválido y muestra el error
+      // Marca un campo como inválido y muestra el error, desaparece después de 1 segundo
       const validateInput = (input) => {
         const formGroup = input.closest(".form-group");
         if (!formGroup) return;
 
+        // Limpiar el temporizador previo para este input, si existe
+        const existingTimeout = errorTimeouts.get(input);
+        if (existingTimeout) clearTimeout(existingTimeout);
+
         formGroup.classList.remove("error");
         if (!input.checkValidity()) {
           formGroup.classList.add("error");
+
+          // Desaparecer el error después de 1 segundo
+          const timeout = setTimeout(() => {
+            formGroup.classList.remove("error");
+            errorTimeouts.delete(input);
+          }, 1000);
+          errorTimeouts.set(input, timeout);
         }
       };
 
-      // Muestra un mensaje en el div de mensaje
+      // Muestra un mensaje en el div de mensaje y lo limpia después de 1 segundo
       const showMessage = (message, type) => {
         if (!messageDiv) return;
+
+        // Limpiar el temporizador previo, si existe
+        if (messageTimeout) clearTimeout(messageTimeout);
+
         messageDiv.className = type;
         messageDiv.innerHTML = `<p>${message}</p>`;
+
+        // Desaparecer el mensaje después de 1 segundo
+        messageTimeout = setTimeout(() => {
+          messageDiv.className = '';
+          messageDiv.innerHTML = '';
+          messageTimeout = null;
+        }, 1000);
       };
 
       // Configura las validaciones de entrada para cada campo
@@ -610,6 +634,7 @@
           }
         }
 
+        // Los mensajes de la API no desaparecen después de 1 segundo, ya que son resultados finales
         messageDiv.className = messageClass;
         messageDiv.innerHTML = html;
       };
