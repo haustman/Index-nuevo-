@@ -433,6 +433,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Selección de elementos del DOM
       const steps = document.querySelectorAll(".step") || [];
       const progressSteps = document.querySelectorAll(".progress-step") || [];
       const nextBtn = document.getElementById("nextBtn");
@@ -440,154 +441,131 @@
       const submitBtn = document.getElementById("submitBtn");
       const form = document.getElementById("packageForm");
       const loading = document.getElementById("loading");
+      const messageDiv = document.getElementById('message');
 
       let currentStep = 0;
 
-      function showStep(index) {
-        if (steps.length > 0) {
-          steps.forEach((step, i) => {
-            if (step) {
-              step.classList.toggle("active", i === index);
-            }
-          });
-        }
+      // Muestra el paso actual y actualiza la barra de progreso
+      const showStep = (index) => {
+        steps.forEach((step, i) => step?.classList.toggle("active", i === index));
+        progressSteps.forEach((step, i) => step?.classList.toggle("active", i <= index));
+        if (prevBtn) prevBtn.style.display = index > 0 ? "inline-block" : "none";
+        if (nextBtn) nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
+        if (submitBtn) submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
+      };
 
-        if (progressSteps.length > 0) {
-          progressSteps.forEach((step, i) => {
-            if (step) {
-              step.classList.toggle("active", i <= index);
-            }
-          });
-        }
-
-        if (prevBtn) {
-          prevBtn.style.display = index > 0 ? "inline-block" : "none";
-        }
-        if (nextBtn) {
-          nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
-        }
-        if (submitBtn) {
-          submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
-        }
-      }
-
-      function validateStep() {
-        if (steps.length === 0 || !steps[currentStep]) {
-          return false;
-        }
+      // Valida todos los campos requeridos del paso actual
+      const validateStep = () => {
+        if (!steps[currentStep]) return false;
 
         const inputs = steps[currentStep].querySelectorAll("input, select");
-        let valid = true;
+        let isValid = true;
 
-        // Validar todos los campos requeridos en el paso actual
         inputs.forEach(input => {
           const formGroup = input.closest(".form-group");
           if (!formGroup) return;
 
-          // Validar el campo
+          // Validar el campo y mostrar error si es necesario
           validateInput(input);
 
-          // Si el campo es requerido y está vacío, o no cumple con las reglas, marcamos como inválido
+          // Si el campo es requerido y está vacío o no cumple con las reglas, marcamos como inválido
           if (input.required && (input.value.trim() === "" || !input.checkValidity())) {
-            valid = false;
-            input.dataset.touched = "true"; // Marcamos como tocado para mostrar el error
-            validateInput(input); // Mostramos el error visualmente
+            isValid = false;
+            input.dataset.touched = "true";
+            validateInput(input);
           }
         });
 
-        return valid;
-      }
+        return isValid;
+      };
 
-      function validateInput(input) {
+      // Marca un campo como inválido y muestra el error
+      const validateInput = (input) => {
         const formGroup = input.closest(".form-group");
-        if (formGroup) {
-          formGroup.classList.remove("error");
-          if (!input.checkValidity()) {
-            formGroup.classList.add("error");
-          }
-        }
-      }
+        if (!formGroup) return;
 
-      const inputs = document.querySelectorAll('input, select');
-      if (inputs) {
+        formGroup.classList.remove("error");
+        if (!input.checkValidity()) {
+          formGroup.classList.add("error");
+        }
+      };
+
+      // Muestra un mensaje en el div de mensaje
+      const showMessage = (message, type) => {
+        if (!messageDiv) return;
+        messageDiv.className = type;
+        messageDiv.innerHTML = `<p>${message}</p>`;
+      };
+
+      // Configura las validaciones de entrada para cada campo
+      const setupInputValidations = () => {
+        const inputs = document.querySelectorAll('input, select');
         inputs.forEach(input => {
+          // Validación en tiempo real mientras el usuario escribe
           input.addEventListener('input', () => {
-            // Solo validamos si el usuario ha escrito algo
             if (input.value.trim() !== "") {
-              input.dataset.touched = "true"; // Marcamos el campo como tocado
+              input.dataset.touched = "true";
               validateInput(input);
             } else {
-              // Si el campo está vacío, no mostramos error hasta que se intente avanzar
-              const formGroup = input.closest(".form-group");
-              if (formGroup) {
-                formGroup.classList.remove("error");
-              }
+              input.closest(".form-group")?.classList.remove("error");
             }
           });
 
+          // Validación al perder el foco
           input.addEventListener('blur', () => {
-            // Solo validamos si el campo ha sido tocado y tiene un valor
             if (input.dataset.touched && input.value.trim() !== "") {
               validateInput(input);
             }
           });
 
+          // Restricciones de entrada según el tipo de campo
           input.addEventListener('keydown', (e) => {
-            if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
+            const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+            if (allowedKeys.includes(e.key)) return;
 
-            if (['firstName', 'lastName', 'cardName'].includes(input.id)) {
-              if (!/^[A-Za-z\s\-']$/.test(e.key)) {
-                e.preventDefault();
-              }
-            } else if (['phoneNumber', 'cvv', 'postalCode'].includes(input.id)) {
-              if (!/^\d$/.test(e.key)) {
-                e.preventDefault();
-              }
-            } else if (input.id === 'cardNumber') {
-              if (!/^\d$/.test(e.key) && e.key !== ' ') {
-                e.preventDefault();
-              }
-            } else if (['address', 'stateProvince', 'city'].includes(input.id)) {
-              if (!/^[A-Za-z0-9\s\-,.]$/.test(e.key)) {
-                e.preventDefault();
-              }
+            const key = e.key;
+            const inputId = input.id;
+
+            if (['firstName', 'lastName', 'cardName'].includes(inputId)) {
+              if (!/^[A-Za-z\s\-']$/.test(key)) e.preventDefault();
+            } else if (['phoneNumber', 'cvv', 'postalCode'].includes(inputId)) {
+              if (!/^\d$/.test(key)) e.preventDefault();
+            } else if (inputId === 'cardNumber') {
+              if (!/^\d$/.test(key) && key !== ' ') e.preventDefault();
+            } else if (['address', 'stateProvince', 'city'].includes(inputId)) {
+              if (!/^[A-Za-z0-9\s\-,.]$/.test(key)) e.preventDefault();
             }
           });
         });
-      }
+      };
 
-      if (nextBtn) {
-        nextBtn.addEventListener("click", () => {
-          if (validateStep() && currentStep < steps.length - 1) {
-            currentStep++;
-            showStep(currentStep);
-          } else {
-            // Si la validación falla, mostramos un mensaje en el div de mensaje
-            const msgDiv = document.getElementById('message');
-            if (msgDiv) {
-              msgDiv.className = 'error';
-              msgDiv.innerHTML = `<p>⚠️ Por favor, completa todos los campos correctamente antes de avanzar.</p>`;
-            }
-          }
+      // Configura el formato del número de tarjeta
+      const setupCardNumberFormatting = () => {
+        const cardNumberInput = document.getElementById('cardNumber');
+        if (cardNumberInput) {
+          cardNumberInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+          });
+        }
+      };
+
+      // Configura la validación de los campos de expiración (solo números)
+      const setupExpirationInputs = () => {
+        const expInputs = document.querySelectorAll('#expMonth, #expYear');
+        expInputs.forEach(input => {
+          input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '');
+          });
         });
-      }
+      };
 
-      if (prevBtn) {
-        prevBtn.addEventListener("click", () => {
-          if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-          }
-        });
-      }
+      // Maneja la respuesta de la API y muestra un mensaje
+      const handleApiResponse = (data) => {
+        if (!messageDiv) return;
 
-      showStep(currentStep);
-
-      function handleApiResponse(data) {
         const { status, statusReason, redirectUrl } = data || {};
-        const msgDiv = document.getElementById('message');
-        if (!msgDiv) return;
-
         let html = '';
         let messageClass = '';
 
@@ -600,7 +578,7 @@
               messageClass = 'success';
               html = `
                 <p>✅ Pago aprobado: ${statusReason || 'Transacción exitosa'}</p>
-                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}','_blank')">Ir a pasarela</button>` : ''}
+                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Ir a pasarela</button>` : ''}
               `;
               break;
             case 'Complete':
@@ -611,7 +589,7 @@
               messageClass = 'pending';
               html = `
                 <p>⌛ Pago pendiente: ${statusReason || 'Esperando confirmación'}</p>
-                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}','_blank')">Continuar pago</button>` : ''}
+                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Continuar pago</button>` : ''}
               `;
               break;
             case 'Declined':
@@ -632,76 +610,89 @@
           }
         }
 
-        msgDiv.className = messageClass;
-        msgDiv.innerHTML = html;
-      }
+        messageDiv.className = messageClass;
+        messageDiv.innerHTML = html;
+      };
 
-      if (form) {
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          if (!validateStep()) return;
+      // Maneja el envío del formulario
+      const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        if (!validateStep()) return;
 
-          if (submitBtn) submitBtn.disabled = true;
-          if (nextBtn) nextBtn.disabled = true;
-          if (loading) loading.style.display = "block";
+        if (submitBtn) submitBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        if (loading) loading.style.display = "block";
 
-          const formData = new FormData(form);
-          const jsonData = { planReferenceId: "Professional" };
-          formData.forEach((value, key) => {
-            if (key === "cardNumber") {
-              jsonData[key] = value.replace(/\s/g, "");
-            } else if (isNaN(value) || ["cvv", "postalCode", "phoneNumber"].includes(key)) {
-              jsonData[key] = value;
-            } else {
-              jsonData[key] = Number(value);
-            }
-          });
-
-          try {
-            const res = await fetch(
-              "https://duelazo-2a8ce83c75f7.herokuapp.com/packages",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(jsonData),
-              }
-            );
-            if (!res.ok) {
-              throw new Error(`Error en la solicitud: ${res.status} ${res.statusText}`);
-            }
-            const data = await res.json();
-            handleApiResponse(data);
-          } catch (err) {
-            const msgDiv = document.getElementById('message');
-            if (msgDiv) {
-              msgDiv.className = 'error';
-              msgDiv.innerHTML = `<p>⚠️ Error de red: ${err.message}</p>`;
-            }
-          } finally {
-            if (submitBtn) submitBtn.disabled = false;
-            if (nextBtn) nextBtn.disabled = false;
-            if (loading) loading.style.display = "none";
+        const formData = new FormData(form);
+        const jsonData = { planReferenceId: "Professional" };
+        formData.forEach((value, key) => {
+          if (key === "cardNumber") {
+            jsonData[key] = value.replace(/\s/g, "");
+          } else if (isNaN(value) || ["cvv", "postalCode", "phoneNumber"].includes(key)) {
+            jsonData[key] = value;
+          } else {
+            jsonData[key] = Number(value);
           }
         });
-      }
 
-      const cardNumberInput = document.getElementById('cardNumber');
-      if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', (e) => {
-          let value = e.target.value.replace(/\D/g, '');
-          value = value.replace(/(\d{4})/g, '$1 ').trim();
-          e.target.value = value;
-        });
-      }
-
-      const expInputs = document.querySelectorAll('#expMonth, #expYear');
-      if (expInputs) {
-        expInputs.forEach(input => {
-          input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^0-9]/g, '');
+        try {
+          const res = await fetch("https://duelazo-2a8ce83c75f7.herokuapp.com/packages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(jsonData),
           });
-        });
-      }
+          if (!res.ok) {
+            throw new Error(`Error en la solicitud: ${res.status} ${res.statusText}`);
+          }
+          const data = await res.json();
+          handleApiResponse(data);
+        } catch (err) {
+          showMessage(`⚠️ Error de red: ${err.message}`, 'error');
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+          if (nextBtn) nextBtn.disabled = false;
+          if (loading) loading.style.display = "none";
+        }
+      };
+
+      // Configura los eventos del formulario
+      const setupFormEvents = () => {
+        if (nextBtn) {
+          nextBtn.addEventListener("click", () => {
+            if (validateStep() && currentStep < steps.length - 1) {
+              currentStep++;
+              showStep(currentStep);
+            } else {
+              showMessage("⚠️ Por favor, completa todos los campos requeridos correctamente antes de avanzar.", "error");
+            }
+          });
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener("click", () => {
+            if (currentStep > 0) {
+              currentStep--;
+              showStep(currentStep);
+            }
+          });
+        }
+
+        if (form) {
+          form.addEventListener("submit", handleFormSubmit);
+        }
+      };
+
+      // Inicialización del formulario
+      const initializeForm = () => {
+        setupInputValidations();
+        setupCardNumberFormatting();
+        setupExpirationInputs();
+        setupFormEvents();
+        showStep(currentStep);
+      };
+
+      // Inicia el formulario
+      initializeForm();
     });
   </script>
 </body>
