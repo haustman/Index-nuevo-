@@ -298,25 +298,25 @@
         <div class="inputs-container">
           <div class="form-group">
             <label for="firstName">Nombre:</label>
-            <input id="firstName" name="firstName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Escribe tu nombre" required aria-required="true" aria-describedby="firstName-error" />
+            <input id="firstName" name="firstName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" aria-describedby="firstName-error" />
             <span id="firstName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
           </div>
 
           <div class="form-group">
             <label for="lastName">Apellidos:</label>
-            <input id="lastName" name="lastName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Escribe tus apellidos" required aria-required="true" aria-describedby="lastName-error" />
+            <input id="lastName" name="lastName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" aria-describedby="lastName-error" />
             <span id="lastName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
           </div>
 
           <div class="form-group">
             <label for="emailAddress">Correo electrónico:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@correo.com" required aria-required="true" aria-describedby="emailAddress-error" />
-            <span id="emailAddress-error" class="error-message">Ingresa un correo válido (ej. usuario@dominio.com).</span>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@email.com" required aria-required="true" aria-describedby="emailAddress-error" />
+            <span id="emailAddress-error" class="error-message">Ingresa un correo válido (ej. user@domain.com).</span>
           </div>
 
           <div class="form-group">
             <label for="phoneNumber">Teléfono:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Tu número de contacto" required aria-required="true" aria-describedby="phoneNumber-error" />
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Your contact number" required aria-required="true" aria-describedby="phoneNumber-error" />
             <span id="phoneNumber-error" class="error-message">Solo se permiten números (10-15 dígitos).</span>
           </div>
         </div>
@@ -326,7 +326,7 @@
         <div class="inputs-container">
           <div class="form-group">
             <label for="cardName">Nombre en la tarjeta:</label>
-            <input id="cardName" name="cardName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" required aria-required="true" aria-describedby="cardName-error" />
+            <input id="cardName" name="cardName" type="text" pattern="[A-Za-z\s\-']+" placeholder="As it appears on the card" required aria-required="true" aria-describedby="cardName-error" />
             <span id="cardName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
           </div>
 
@@ -338,19 +338,19 @@
 
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 o 4 dígitos" required aria-required="true" aria-describedby="cvv-error" />
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 or 4 digits" required aria-required="true" aria-describedby="cvv-error" />
             <span id="cvv-error" class="error-message">Ingresa un CVV válido (3 o 4 dígitos).</span>
           </div>
 
           <div class="form-group">
             <label for="expMonth">Mes de expiración:</label>
-            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (ej. 12)" required aria-required="true" aria-describedby="expMonth-error" />
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (e.g. 12)" required aria-required="true" aria-describedby="expMonth-error" />
             <span id="expMonth-error" class="error-message">Ingresa un mes válido (1-12).</span>
           </div>
 
           <div class="form-group">
             <label for="expYear">Año de expiración:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (ej. 2025)" required aria-required="true" aria-describedby="expYear-error" />
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (e.g. 2025)" required aria-required="true" aria-describedby="expYear-error" />
             <span id="expYear-error" class="error-message">Ingresa un año válido (2025-2035).</span>
           </div>
         </div>
@@ -360,65 +360,64 @@
         <div class="inputs-container">
           <div class="form-group">
             <label for="address">Dirección:</label>
-            <input id="address" name="address" type="text" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Calle y número" required aria-required="true" aria-describedby="address-error" />
+            <input id="address" name="address" type="text" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Street and number" required aria-required="true" aria-describedby="address-error" />
             <span id="address-error" class="error-message">Ingresa una dirección válida.</span>
           </div>
 
           <div class="form-group">
             <label for="countryCode">Código de país:</label>
             <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCode-error">
-              <option value="">Selecciona un país</option>
-              <option value="US">Estados Unidos</option>
+              <option value="">Select a country</option>
+              <option value="US">United States</option>
               <option value="CN">China</option>
-              <option value="JP">Japón</option>
-              <option value="DE">Alemania</option>
-              <option value="GB">Reino Unido</option>
-              <option value="FR">Francia</option>
+              <option value="JP">Japan</option>
+              <option value="DE">Germany</option>
+              <option value="GB">United Kingdom</option>
+              <option value="FR">France</option>
               <option value="IN">India</option>
-              <option value="CA">Canadá</option>
-              <option value="BR">Brasil</option>
-              <option value="KR">Corea del Sur</option>
-              <option value="IT">Italia</option>
-              <option value="RU">Rusia</option>
+              <option value="CA">Canada</option>
+              <option value="BR">Brazil</option>
+              <option value="KR">South Korea</option>
+              <option value="IT">Italy</option>
+              <option value="RU">Russia</option>
               <option value="AU">Australia</option>
-              <option value="ES">España</option>
-              <option value="MX">México</option>
+              <option value="ES">Spain</option>
+              <option value="MX">Mexico</option>
               <option value="ID">Indonesia</option>
-              <option value="NL">Países Bajos</option>
-              <option value="SA">Arabia Saudita</option>
-              <option value="CH">Suiza</option>
-              <option value="SG">Singapur</option>
+              <option value="NL">Netherlands</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="CH">Switzerland</option>
+              <option value="SG">Singapore</option>
             </select>
             <span id="countryCode-error" class="error-message">Selecciona un país.</span>
           </div>
 
           <div class="form-group">
             <label for="stateProvince">Provincia / Estado:</label>
-            <input id="stateProvince" name="stateProvince" type="text" pattern="[A-Za-z\s\-]+" placeholder="Ej. Antioquia" required aria-required="true" aria-describedby="stateProvince-error" />
+            <input id="stateProvince" name="stateProvince" type="text" pattern="[A-Za-z\s\-]+" placeholder="e.g. Ontario" required aria-required="true" aria-describedby="stateProvince-error" />
             <span id="stateProvince-error" class="error-message">Solo se permiten letras, espacios y guiones.</span>
           </div>
 
           <div class="form-group">
             <label for="city">Ciudad:</label>
-            <input id="city" name="city" type="text" pattern="[A-Za-z\s\-]+" placeholder="Nombre de la ciudad" required aria-required="true" aria-describedby="city-error" />
+            <input id="city" name="city" type="text" pattern="[A-Za-z\s\-]+" placeholder="City name" required aria-required="true" aria-describedby="city-error" />
             <span id="city-error" class="error-message">Solo se permiten letras, espacios y guiones.</span>
           </div>
 
           <div class="form-group">
             <label for="postalCode">Código postal:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{3,10}" placeholder="Ej. 28001 o A1A 1A1" required aria-required="true" aria-describedby="postalCode-error" />
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{3,10}" placeholder="e.g. 28001 or A1A 1A1" required aria-required="true" aria-describedby="postalCode-error" />
             <span id="postalCode-error" class="error-message">Ingresa un código postal válido (3-10 caracteres).</span>
           </div>
         </div>
         <div id="loading" class="text-center">Enviando...</div>
       </div>
 
-      <!-- Moviendo los botones dentro del formulario -->
       <div class="buttons">
-        <button type="button" id="prevBtn" aria-label="Volver al paso anterior">Atrás</button>
+        <button type="button" id="prevBtn" aria-label="Go back to previous step">Atrás</button>
         <div id="message" class="text-center" aria-live="polite"></div>
-        <button type="button" id="nextBtn" aria-label="Avanzar al siguiente paso">Siguiente</button>
-        <button type="submit" id="submitBtn" aria-label="Enviar formulario">Enviar</button>
+        <button type="button" id="nextBtn" aria-label="Go to next step">Siguiente</button>
+        <button type="submit" id="submitBtn" aria-label="Submit form">Enviar</button>
       </div>
     </form>
   </div>
@@ -464,7 +463,7 @@
           const formGroup = monthInput.closest('.form-group');
           if (formGroup) {
             formGroup.classList.add('error');
-            formGroup.querySelector('.error-message').textContent = 'La tarjeta está expirada.';
+            formGroup.querySelector('.error-message').textContent = 'The card is expired.';
             isShowingErrors = true;
             setTimeout(() => {
               formGroup.classList.remove('error');
@@ -533,7 +532,7 @@
         if (input.id === 'cardNumber') {
           isValid = isValid && isValidLuhn(input.value);
           if (!isValidLuhn(input.value)) {
-            formGroup.querySelector('.error-message').textContent = 'El número de tarjeta no es válido.';
+            formGroup.querySelector('.error-message').textContent = 'The card number is not valid.';
           }
         }
 
@@ -573,7 +572,8 @@
             if (input.value.trim() !== "") {
               input.dataset.touched = "true";
               validateInput(input);
-            } else {
+            } else 
+            {
               const formGroup = input.closest(".form-group");
               if (formGroup) formGroup.classList.remove("error");
             }
@@ -639,38 +639,38 @@
 
         if (!status) {
           messageClass = 'error';
-          html = `<p>⚠️ Error: No se recibió una respuesta válida del servidor.</p>`;
+          html = `<p>⚠️ Error: No valid response received from the server.</p>`;
         } else {
           switch (status) {
             case 'Approved':
               messageClass = 'success';
               html = `
-                <p>✅ Pago aprobado: ${statusReason || 'Transacción exitosa'}</p>
-                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Ir a pasarela</button>` : ''}
+                <p>✅ Payment approved: ${statusReason || 'Transaction successful'}</p>
+                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Go to payment gateway</button>` : ''}
               `;
               break;
             case 'Complete':
               messageClass = 'info';
-              html = `<p>ℹ️ Operación completa: ${statusReason || 'Completada'}</p>`;
+              html = `<p>ℹ️ Operation complete: ${statusReason || 'Completed'}</p>`;
               break;
             case 'Pending':
               messageClass = 'pending';
               html = `
-                <p>⌛ Pago pendiente: ${statusReason || 'Esperando confirmación'}</p>
-                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Continuar pago</button>` : ''}
+                <p>⌛ Payment pending: ${statusReason || 'Waiting for confirmation'}</p>
+                ${redirectUrl ? `<button onclick="window.open('${redirectUrl}', '_blank')">Continue payment</button>` : ''}
               `;
               break;
             case 'Declined':
               messageClass = 'error';
-              html = `<p>❌ Pago declinado: ${statusReason || 'Transacción rechazada'}</p>`;
+              html = `<p>❌ Payment declined: ${statusReason || 'Transaction rejected'}</p>`;
               break;
             case 'Rejected':
               messageClass = 'error';
-              html = `<p>🚫 Pago rechazado: ${statusReason || 'Transacción no autorizada'}</p>`;
+              html = `<p>🚫 Payment rejected: ${statusReason || 'Transaction not authorized'}</p>`;
               break;
             case 'Error':
               messageClass = 'error';
-              html = `<p>⚠️ Error de procesamiento: ${statusReason || 'Error desconocido'}</p>`;
+              html = `<p>⚠️ Processing error: ${statusReason || 'Unknown error'}</p>`;
               break;
             default:
               messageClass = 'info';
@@ -710,12 +710,12 @@
             body: JSON.stringify(jsonData),
           });
           if (!res.ok) {
-            throw new Error(`Error en la solicitud: ${res.status} ${res.statusText}`);
+            throw new Error(`Request error: ${res.status} ${res.statusText}`);
           }
           const data = await res.json();
           handleApiResponse(data);
         } catch (err) {
-          showMessage(`⚠️ Error de red: ${err.message}`, 'error');
+          showMessage(`⚠️ Network error: ${err.message}`, 'error');
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (nextBtn) nextBtn.disabled = false;
@@ -731,7 +731,7 @@
               currentStep++;
               showStep(currentStep);
             } else {
-              showMessage("⚠️ Por favor, completa todos los campos requeridos correctamente antes de avanzar.", "error");
+              showMessage("⚠️ Please complete all required fields correctly before proceeding.", "error");
             }
           });
         }
