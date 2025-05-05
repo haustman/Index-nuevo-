@@ -413,6 +413,7 @@
         <div id="loading" class="text-center">Enviando...</div>
       </div>
 
+      <!-- Moviendo los botones dentro del formulario -->
       <div class="buttons">
         <button type="button" id="prevBtn" aria-label="Volver al paso anterior">Atrás</button>
         <div id="message" class="text-center" aria-live="polite"></div>
@@ -501,7 +502,6 @@
 
         inputs.forEach(input => {
           const formGroup = input.closest(".form-group");
-          // Si no hay formGroup, saltamos este input para evitar errores
           if (!formGroup) return;
 
           validateInput(input);
@@ -513,7 +513,6 @@
           }
         });
 
-        // Validar la fecha de expiración en el paso de pago (paso 1, índice 1)
         if (currentStep === 1 && !validateExpirationDate()) {
           isValid = false;
         }
