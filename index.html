@@ -3,347 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Outfit', sans-serif;
       background: transparent;
       color: #1C2526;
-      padding: 15px;
+      padding: 10px;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-
     .form-wrapper {
-      max-width: 600px;
+      max-width: 500px;
       width: 100%;
-      background: rgba(255, 255, 255, 0);
-      padding: 15px;
-      border-radius: 6px;
+      background: transparent;
+      padding: 10px;
       border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
     }
-
     .progress-bar {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      position: relative;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-
     .progress-step {
       flex: 1;
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       color: #1C2526;
-      font-weight: 400;
-      position: relative;
     }
-
-    .progress-step.active {
-      color: #1AB0D8;
-      font-weight: 500;
-    }
-
+    .progress-step.active { color: #1AB0D8; font-weight: 500; }
     .progress-step::before {
       content: '';
-      width: 10px;
-      height: 10px;
+      display: block;
+      width: 8px;
+      height: 8px;
       background: #e0e0e0;
       border-radius: 50%;
-      display: block;
-      margin: 0 auto 6px;
-      transition: background 0.3s ease;
+      margin: 0 auto 5px;
     }
-
-    .progress-step.active::before {
-      background: #1AB0D8;
-    }
-
-    .progress-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      width: 100%;
-      height: 1px;
-      background: #e0e0e0;
-      z-index: -1;
-      transition: background 0.3s ease;
-    }
-
-    .progress-step.active:not(:last-child)::after {
-      background: #1AB0D8;
-    }
-
-    .step {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      transform: scale(0.98);
-    }
-
-    .step.active {
-      display: block;
-      opacity: 1;
-      transform: scale(1);
-    }
-
+    .progress-step.active::before { background: #1AB0D8; }
+    .step { display: none; }
+    .step.active { display: block; }
     .inputs-container {
       background: #fff;
       border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 6px;
-      padding: 15px;
+      border-radius: 4px;
+      padding: 10px;
     }
-
-    .form-group {
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    label {
-      display: block;
-      font-weight: 400;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-
+    .form-group { margin-bottom: 12px; position: relative; }
+    label { font-size: 12px; margin-bottom: 4px; display: block; }
     input, select {
       width: 100%;
-      padding: 8px 10px;
+      padding: 7px;
       border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 4px;
-      font-size: 13px;
-      background: #fff;
-      color: #1C2526;
-      transition: border-color 0.3s ease;
+      font-size: 12px;
     }
-
-    input:focus, select:focus {
-      border-color: #1AB0D8;
-      outline: none;
-      background: #fff;
-    }
-
+    input:focus, select:focus { border-color: #1AB0D8; outline: none; }
     .error-message {
       display: none;
       color: #e57373;
-      font-size: 11px;
-      margin-top: 5px;
+      font-size: 10px;
       position: absolute;
-      bottom: -18px;
+      bottom: -16px;
       left: 0;
-      font-weight: 400;
     }
-
-    .form-group.error .error-message {
-      display: block;
-    }
-
-    .form-group.error input,
-    .form-group.error select {
+    .form-group.error .error-message { display: block; }
+    .form-group.error input, .form-group.error select {
       border-color: #e57373;
       background: #fff1f1;
     }
-
     .buttons {
       display: flex;
+      gap: 8px;
+      margin-top: 15px;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      margin-top: 20px;
     }
-
     button {
-      padding: 8px 15px;
+      padding: 7px 12px;
       border: none;
       border-radius: 4px;
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 12px;
+      color: #fff;
       cursor: pointer;
       flex: 1;
-      max-width: 100px;
-      color: #fff;
-      transition: background 0.3s ease;
+      max-width: 80px;
     }
-
     button:disabled {
       background: #b0b0b0;
       border: 1px solid #999;
-      cursor: not-allowed;
       opacity: 0.6;
+      cursor: not-allowed;
     }
-
-    #prevBtn {
-      background: #b0b0b0;
-    }
-
-    #prevBtn:hover:not(:disabled) {
-      background: #999;
-    }
-
-    #nextBtn, #submitBtn {
-      background: #1AB0D8;
-    }
-
-    #nextBtn:hover:not(:disabled), #submitBtn:hover:not(:disabled) {
-      background: #1591B2;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    #loading {
-      display: none;
-      font-style: italic;
-      margin-top: 12px;
-      font-size: 11px;
-      color: #555;
-    }
-
+    #prevBtn { background: #b0b0b0; }
+    #prevBtn:hover:not(:disabled) { background: #999; }
+    #nextBtn, #submitBtn { background: #1AB0D8; }
+    #nextBtn:hover:not(:disabled), #submitBtn:hover:not(:disabled) { background: #1591B2; }
     #message {
       flex: 2;
-      font-size: 12px;
-      padding: 8px;
-      border-radius: 4px;
-      margin: 0 5px;
-      min-height: 32px;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 11px;
+      text-align: center;
+      min-height: 24px;
     }
-
-    #message.success {
-      color: #2e7d32;
-    }
-
-    #message.pending {
-      color: #ef6c00;
-    }
-
-    #message.error {
-      color: #c62828;
-    }
-
-    #message.info {
-      color: #1565c0;
-    }
-
+    #message.success { color: #2e7d32; }
+    #message.error { color: #c62828; }
+    #loading { display: none; font-size: 10px; text-align: center; margin-top: 10px; }
     @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-
-      .form-wrapper {
-        padding: 10px;
-        max-width: 100%;
-        border-radius: 4px;
-      }
-
-      .progress-bar {
-        margin-bottom: 12px;
-      }
-
-      .progress-step {
-        font-size: 12px;
-      }
-
-      .progress-step::before {
-        width: 8px;
-        height: 8px;
-        margin: 0 auto 5px;
-      }
-
-      .progress-step:not(:last-child)::after {
-        top: 4px;
-        height: 1px;
-      }
-
-      label {
-        font-size: 12px;
-        margin-bottom: 4px;
-      }
-
-      input, select {
-        font-size: 12px;
-        padding: 7px 9px;
-      }
-
-      .inputs-container {
-        padding: 10px;
-      }
-
-      .form-group {
-        margin-bottom: 12px;
-      }
-
-      .error-message {
-        font-size: 10px;
-        bottom: -16px;
-      }
-
-      .buttons {
-        gap: 8px;
-        margin-top: 15>Main Pagepx;
-      }
-
-      button {
-        padding: 7px 12px;
-        font-size: 12px;
-        max-width: 80px;
-      }
-
-      #message {
-        font-size: 11px;
-        padding: 6px;
-        margin: 0 4px;
-        min-height: 28px;
-        max-width: 70%;
-      }
-
-      #loading {
-        font-size: 10px;
-        margin-top: 10px;
-      }
+      body { padding: 8px; }
+      .form-wrapper { padding: 8px; }
+      .progress-bar { margin-bottom: 8px; }
+      .progress-step, label, input, select, button { font-size: 11px; }
+      .progress-step::before { width: 7px; height: 7px; }
+      .inputs-container, .form-group { padding: 8px; margin-bottom: 10px; }
+      button { padding: 6px 10px; max-width: 70px; }
+      #message { font-size: 10px; }
     }
-
     @media (max-width: 360px) {
-      .form-wrapper {
-        padding: 8px;
-      }
-
-      .progress-step {
-        font-size: 11px;
-      }
-
-      label, input, select {
-        font-size: 11px;
-      }
-
-      button {
-        padding: 6px 10px;
-        font-size: 11px;
-        max-width: 70px;
-      }
-
-      .buttons {
-        gap: 6px;
-      }
-
-      #message {
-        font-size: 10px;
-        padding: 5px;
-        min-height: 24px;
-      }
+      .form-wrapper { padding: 6px; }
+      .progress-step, label, input, select, button { font-size: 10px; }
+      button { max-width: 60px; }
     }
   </style>
 </head>
@@ -354,248 +137,167 @@
       <div class="progress-step">Datos de Pago</div>
       <div class="progress-step">Dirección</div>
     </div>
-
     <form id="packageForm" novalidate>
       <div class="step active">
         <div class="inputs-container">
           <div class="form-group">
             <label for="firstName">Nombre:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tu nombre" required aria-required="true" aria-describedby="firstName-error" />
-            <span class="error-message" id="firstName-error">Solo letras, espacios, guiones y apóstrofes.</span>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Nombre" required aria-required="true" aria-describedby="firstName-error" />
+            <span class="error-message" id="firstName-error">Formato inválido</span>
           </div>
-
           <div class="form-group">
             <label for="lastName">Apellidos:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tus apellidos" required aria-required="true" aria-describedby="lastName-error" />
-            <span class="error-message" id="lastName-error">Solo letras, espacios, guiones y apóstrofes.</span>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Apellidos" required aria-required="true" aria-describedby="lastName-error" />
+            <span class="error-message" id="lastName-error">Formato inválido</span>
           </div>
-
           <div class="form-group">
-            <label for="emailAddress">Correo electrónico:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@correo.com" required aria-required="true" aria-describedby="emailAddress-error" />
-            <span class="error-message" id="emailAddress-error">Ingresa un correo válido.</span>
+            <label for="emailAddress">Correo:</label>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="correo@ejemplo.com" required aria-required="true" aria-describedby="emailAddress-error" />
+            <span class="error-message" id="emailAddress-error">Correo inválido</span>
           </div>
-
           <div class="form-group">
             <label for="phoneNumber">Teléfono:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Tu número de contacto" required aria-required="true" aria-describedby="phoneNumber-error" />
-            <span class="error-message" id="phoneNumber-error">Solo números (10-15 dígitos).</span>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Teléfono" required aria-required="true" aria-describedby="phoneNumber-error" />
+            <span class="error-message" id="phoneNumber-error">Solo números</span>
           </div>
         </div>
       </div>
-
       <div class="step">
         <div class="inputs-container">
           <div class="form-group">
-            <label for="cardName">Nombre en la tarjeta:</label>
-            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" required aria-required="true" aria-describedby="cardName-error" />
-            <span class="error-message" id="cardName-error">Solo letras, espacios, guiones y apóstrofes.</span>
+            <label for="cardName">Nombre en tarjeta:</label>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Nombre en tarjeta" required aria-required="true" aria-describedby="cardName-error" />
+            <span class="error-message" id="cardName-error">Formato inválido</span>
           </div>
-
           <div class="form-group">
             <label for="cardNumber">Número de tarjeta:</label>
             <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumber-error" />
-            <span class="error-message" id="cardNumber-error">Ingresa un número válido (16 dígitos).</span>
+            <span class="error-message" id="cardNumber-error">Número inválido</span>
           </div>
-
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 o 4 dígitos" required aria-required="true" aria-describedby="cvv-error" />
-            <span class="error-message" id="cvv-error">Ingresa un CVV válido (3 o 4 dígitos).</span>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="CVV" required aria-required="true" aria-describedby="cvv-error" />
+            <span class="error-message" id="cvv-error">CVV inválido</span>
           </div>
-
           <div class="form-group">
-            <label for="expMonth">Mes de expiración:</label>
-            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (ej. 12)" required aria-required="true" aria-describedby="expMonth-error" />
-            <span class="error-message" id="expMonth-error">Ingresa un mes válido (1-12).</span>
+            <label for="expMonth">Mes:</label>
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" required aria-required="true" aria-describedby="expMonth-error" />
+            <span class="error-message" id="expMonth-error">Mes inválido</span>
           </div>
-
           <div class="form-group">
-            <label for="expYear">Año de expiración:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (ej. 2025)" required aria-required="true" aria-describedby="expYear-error" />
-            <span class="error-message" id="expYear-error">Ingresa un año válido (2025-2035).</span>
+            <label for="expYear">Año:</label>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required aria-required="true" aria-describedby="expYear-error" />
+            <span class="error-message" id="expYear-error">Año inválido</span>
           </div>
         </div>
       </div>
-
       <div class="step">
         <div class="inputs-container">
           <div class="form-group">
             <label for="address">Dirección:</label>
             <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Calle y número" required aria-required="true" aria-describedby="address-error" />
-            <span class="error-message" id="address-error">Ingresa una dirección válida.</span>
+            <span class="error-message" id="address-error">Dirección inválida</span>
           </div>
-
           <div class="form-group">
-            <label for="countryCode">Código de país:</label>
+            <label for="countryCode">País:</label>
             <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCode-error">
               <option value="">Selecciona un país</option>
               <option value="US">Estados Unidos</option>
-              <option value="CN">China</option>
-              <option value="JP">Japón</option>
-              <option value="DE">Alemania</option>
-              <option value="GB">Reino Unido</option>
-              <option value="FR">Francia</option>
-              <option value="IN">India</option>
-              <option value="CA">Canadá</option>
-              <option value="BR">Brasil</option>
-              <option value="KR">Corea del Sur</option>
-              <option value="IT">Italia</option>
-              <option value="RU">Rusia</option>
-              <option value="AU">Australia</option>
-              <option value="ES">España</option>
               <option value="MX">México</option>
-              <option value="ID">Indonesia</option>
-              <option value="NL">Países Bajos</option>
-              <option value="SA">Arabia Saudita</option>
-              <option value="CH">Suiza</option>
-              <option value="SG">Singapur</option>
+              <option value="ES">España</option>
+              <option value="CA">Canadá</option>
             </select>
-            <span class="error-message" id="countryCode-error">Selecciona un país.</span>
+            <span class="error-message" id="countryCode-error">Selecciona un país</span>
           </div>
-
           <div class="form-group">
-            <label for="stateProvince">Provincia / Estado:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z\s\-]+" placeholder="Ej. Antioquia" required aria-required="true" aria-describedby="stateProvince-error" />
-            <span class="error-message" id="stateProvince-error">Solo letras, espacios y guiones.</span>
+            <label for="stateProvince">Estado:</label>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z\s\-]+" placeholder="Estado" required aria-required="true" aria-describedby="stateProvince-error" />
+            <span class="error-message" id="stateProvince-error">Formato inválido</span>
           </div>
-
           <div class="form-group">
             <label for="city">Ciudad:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Nombre de la ciudad" required aria-required="true" aria-describedby="city-error" />
-            <span class="error-message" id="city-error">Solo letras, espacios y guiones.</span>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Ciudad" required aria-required="true" aria-describedby="city-error" />
+            <span class="error-message" id="city-error">Formato inválido</span>
           </div>
-
           <div class="form-group">
             <label for="postalCode">Código postal:</label>
-            <input type="tel" id="postalCode" name="postalCode" pattern="\d{5}" placeholder="Ej. 28001" required aria-required="true" aria-describedby="postalCode-error" />
-            <span class="error-message" id="postalCode-error">Ingresa un código postal válido (5 dígitos).</span>
+            <input type="tel" id="postalCode" name="postalCode" pattern="\d{5}" placeholder="Código postal" required aria-required="true" aria-describedby="postalCode-error" />
+            <span class="error-message" id="postalCode-error">Código inválido</span>
           </div>
-
           <input type="hidden" name="ipAddress" value="127.0.0.1" />
         </div>
-        <div id="loading" class="text-center">Enviando...</div>
+        <div id="loading">Enviando...</div>
       </div>
-
       <div class="buttons">
-        <button type="button" id="prevBtn" style="display: none;" aria-label="Volver al paso anterior">Atrás</button>
-        <div id="message" class="text-center"></div>
-        <button type="button" id="nextBtn" aria-label="Avanzar al siguiente paso">Siguiente</button>
-        <button type="submit" id="submitBtn" style="display: none;" aria-label="Enviar formulario">Enviar</button>
+        <button type="button" id="prevBtn" style="display: none;">Atrás</button>
+        <div id="message"></div>
+        <button type="button" id="nextBtn">Siguiente</button>
+        <button type="submit" id="submitBtn" style="display: none;">Enviar</button>
       </div>
     </form>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const steps = document.querySelectorAll(".step");
-      const progressSteps = document.querySelectorAll(".progress-step");
-      const nextBtn = document.getElementById("nextBtn");
-      const prevBtn = document.getElementById("prevBtn");
-      const submitBtn = document.getElementById("submitBtn");
-      const form = document.getElementById("packageForm");
-      const loading = document.getElementById("loading");
+      const form = document.getElementById('packageForm');
+      const steps = document.querySelectorAll('.step');
+      const progressSteps = document.querySelectorAll('.progress-step');
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const submitBtn = document.getElementById('submitBtn');
       const messageDiv = document.getElementById('message');
-
+      const loading = document.getElementById('loading');
       let currentStep = 0;
-      let messageTimeout = null;
-      let isShowingErrors = false;
 
       const showStep = (index) => {
-        steps.forEach((step, i) => {
-          step.classList.toggle("active", i === index);
-          step.style.transform = i === index ? 'scale(1)' : 'scale(0.98)';
-        });
-        progressSteps.forEach((step, i) => step.classList.toggle("active", i <= index));
-        prevBtn.style.display = index > 0 ? "inline-block" : "none";
-        nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
-        submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
+        steps.forEach((s, i) => s.classList.toggle('active', i === index));
+        progressSteps.forEach((p, i) => p.classList.toggle('active', i <= index));
+        prevBtn.style.display = index > 0 ? 'block' : 'none';
+        nextBtn.style.display = index < steps.length - 1 ? 'block' : 'none';
+        submitBtn.style.display = index === steps.length - 1 ? 'block' : 'none';
       };
 
       const validateInput = (input) => {
-        const formGroup = input.closest(".form-group");
-        if (!formGroup) return true;
-
-        formGroup.classList.remove("error");
-        if (!input.checkValidity() || (input.required && input.value.trim() === "")) {
-          formGroup.classList.add("error");
-          input.dataset.touched = "true";
+        const group = input.closest('.form-group');
+        group.classList.remove('error');
+        if (!input.checkValidity() || (input.required && !input.value.trim())) {
+          group.classList.add('error');
           return false;
         }
         return true;
       };
 
       const validateStep = () => {
-        const inputs = steps[currentStep].querySelectorAll("input, select");
+        const inputs = steps[currentStep].querySelectorAll('input, select');
         let isValid = true;
-
-        inputs.forEach(input => {
-          if (!validateInput(input)) {
-            isValid = false;
-          }
-        });
-
-        if (!isValid && !isShowingErrors) {
-          isShowingErrors = true;
-          setTimeout(() => {
-            inputs.forEach(input => input.closest(".form-group")?.classList.remove("error"));
-            isShowingErrors = false;
-          }, 2000);
-        }
-
+        inputs.forEach(i => { if (!validateInput(i)) isValid = false; });
+        if (!isValid) showMessage('Completa los campos', 'error');
         return isValid;
       };
 
-      const validateCardNumber = (cardNumber) => {
-        const digits = cardNumber.replace(/\D/g, '');
+      const validateCardNumber = (num) => {
+        const digits = num.replace(/\D/g, '');
         if (digits.length !== 16) return false;
-
-        let sum = 0;
-        let isEven = false;
+        let sum = 0, isEven = false;
         for (let i = digits.length - 1; i >= 0; i--) {
-          let digit = parseInt(digits[i]);
-          if (isEven) {
-            digit *= 2;
-            if (digit > 9) digit -= 9;
-          }
-          sum += digit;
+          let d = parseInt(digits[i]);
+          if (isEven) { d *= 2; if (d > 9) d -= 9; }
+          sum += d;
           isEven = !isEven;
         }
         return sum % 10 === 0;
       };
 
       const validateExpirationDate = () => {
-        const monthInput = document.getElementById('expMonth');
-        const yearInput = document.getElementById('expYear');
-        const month = parseInt(monthInput.value);
-        const year = parseInt(yearInput.value);
+        const month = parseInt(document.getElementById('expMonth').value);
+        const year = parseInt(document.getElementById('expYear').value);
         const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth() + 1;
-
-        if (year < currentYear || (year === currentYear && month < currentMonth)) {
-          monthInput.closest(".form-group")?.classList.add("error");
-          yearInput.closest(".form-group")?.classList.add("error");
-          return false;
-        }
-        return true;
+        return !(year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1));
       };
 
-      const showMessage = (message, type) => {
-        if (!messageDiv || isShowingErrors) return;
-
-        if (messageTimeout) clearTimeout(messageTimeout);
-
+      const showMessage = (msg, type) => {
         messageDiv.className = type;
-        messageDiv.innerHTML = `<p>${message}</p>`;
-
-        isShowingErrors = true;
-        messageTimeout = setTimeout(() => {
-          messageDiv.className = '';
-          messageDiv.innerHTML = '';
-          messageTimeout = null;
-          isShowingErrors = false;
-        }, 2000);
+        messageDiv.textContent = msg;
+        setTimeout(() => { messageDiv.className = ''; messageDiv.textContent = ''; }, 2000);
       };
 
       const inputRules = {
@@ -611,815 +313,53 @@
         city: /^[A-Za-z\s\-]$/,
       };
 
-      const setupInputValidations = () => {
-        const inputs = document.querySelectorAll('input, select');
-        inputs.forEach(input => {
-          input.addEventListener('input', () => {
-            input.dataset.touched = "true";
-            if (input.value.trim() !== "" || input.required) {
-              validateInput(input);
-            }
-          });
-
-          input.addEventListener('blur', () => {
-            if (input.required || input.dataset.touched) {
-              validateInput(input);
-            }
-          });
-
-          input.addEventListener('keydown', (e) => {
-            const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-            if (allowedKeys.includes(e.key)) return;
-
-            const rule = inputRules[input.id];
-            if (rule && !rule.test(e.key)) {
-              e.preventDefault();
-            }
+      const setupInputs = () => {
+        form.querySelectorAll('input, select').forEach(input => {
+          input.addEventListener('input', () => validateInput(input));
+          input.addEventListener('blur', () => input.required && validateInput(input));
+          input.addEventListener('keydown', e => {
+            if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
+            if (inputRules[input.id] && !inputRules[input.id].test(e.key)) e.preventDefault();
           });
         });
-
-        const countryCode = document.getElementById('countryCode');
-        countryCode.addEventListener('change', () => validateInput(countryCode));
-      };
-
-      const setupCardNumberFormatting /
-
-System: Parece que el código proporcionado está incompleto, ya que se corta en la función `setupCardNumberFormatting`. Sin embargo, he revisado el diseño y el código hasta ese punto, y puedo confirmar que cumple con los requisitos de ser **minimalista, simple, limpio, funcional**, con un fondo completamente transparente, sin elementos fuera del contenedor `.form-wrapper`, y sin "rayas extrañas". A continuación, detallo cómo se han abordado tus requisitos, los problemas identificados, y proporciono el código completo corregido, completando las partes faltantes y asegurando que no haya código duplicado o no funcional, manteniendo la lógica esencial (como el envío a Heroku) intacta.
-
----
-
-### Revisión del diseño y cumplimiento de requisitos
-
-#### 1. Diseño minimalista, simple, limpio y funcional
-- **Minimalista**: Se eliminaron elementos decorativos como sombras (`box-shadow`), transiciones complejas (`transform` en botones), y colores brillantes. Los colores primarios se cambiaron a tonos más tenues (`#1AB0D8` en lugar de `#00AEEF`) para un look discreto.
-- **Simple**: Se redujeron los tamaños de fuente (`13px` en escritorio, `12px` en móvil), se simplificó la barra de progreso eliminando indicadores numéricos, y se minimizaron los márgenes y paddings para un diseño compacto.
-- **Limpio**: Los bordes son sutiles (`1px solid rgba(0, 0, 0, 0.1)`), los mensajes de error son pequeños y discretos (`11px`, color `#e57373`), y el contenedor `.form-wrapper` es completamente transparente.
-- **Funcional**: Las validaciones (algoritmo de Luhn, fechas de expiración futuras, validación proactiva del `countryCode`) son robustas, y el formulario mantiene su funcionalidad de pasos, envío a la API, y retroalimentación clara.
-
-#### 2. Fondo completamente transparente
-- El `body` tiene `background: transparent`, y el `.form-wrapper` usa `background: rgba(255, 255, 255, 0)` para garantizar que no haya opacidad. El fondo de `#message` también es transparente, con solo el texto visible para mantener la simplicidad.
-
-#### 3. Nada fuera del contenedor y sin "rayas extrañas"
-- Todos los elementos (barra de progreso, campos, botones) están estrictamente dentro de `.form-wrapper`. Las líneas de la barra de progreso (`.progress-step::after`) son delgadas (`1px`), de color tenue (`#e0e0e0`), y están contenidas dentro del contenedor, asegurando que no se perciban como "rayas extrañas".
-- No hay bordes, sombras, ni elementos que se extiendan fuera del contenedor.
-
-#### 4. Diseño responsivo profesional y optimizado para pantallas pequeñas
-- **Media queries**: Se ajustaron para `<600px` y `<360px`, reduciendo paddings (`10px` y `8px` en `.form-wrapper`), márgenes, y tamaños de botones (`max-width: 80px` y `70px`) para un diseño compacto.
-- **Legibilidad**: Los tamaños de fuente son `12px` (móvil) y `11px` (pantallas muy pequeñas), con espaciado optimizado para evitar desbordamiento.
-- **Transiciones suaves**: Los cambios de paso usan `opacity` y `transform: scale` para un efecto profesional sin sobrecargar el diseño.
-- **Botones compactos**: Reduje el tamaño y padding de los botones en móviles para maximizar el espacio.
-
-#### 5. Código duplicado o no funcional
-- **Duplicados eliminados**: La lógica de validación se consolidó en `validateInput`, y los eventos de `input`/`blur` se unificaron en `setupInputValidations` usando un objeto `inputRules` para evitar repetición.
-- **Verificaciones innecesarias**: Se eliminaron verificaciones de nullidad redundantes (`if (element)`) donde los elementos del DOM están garantizados.
-- **Estilos optimizados**: Los estilos en las media queries heredan valores base, reduciendo repetición.
-- **No funcional**: No había funciones completamente no funcionales, pero se refactorizó el código para hacerlo más eficiente.
-
-#### 6. Otros aspectos
-- **Seguridad**: El campo `ipAddress` sigue hardcodeado como "127.0.0.1" para no alterar la lógica esencial. En un entorno real, debería obtenerse dinámicamente.
-- **Accesibilidad**: Se mantienen los atributos `aria-describedby` y `aria-required` para compatibilidad con lectores de pantalla.
-- **Envío a Heroku**: La URL de la API (`https://duelazo-2a8ce83c75f7.herokuapp.com/packages`) y la lógica de envío no se modificaron.
-
----
-
-### Problemas específicos del código incompleto
-El código proporcionado se corta en `setupCardNumberFormatting /`. Esto indica que faltan las funciones restantes (`setupCardNumberFormatting`, `setupExpirationInputs`, `handleApiResponse`, `handleFormSubmit`, `setupFormEvents`, `initializeForm`). Estas funciones son esenciales para:
-- Formatear el número de tarjeta (agregar espacios cada 4 dígitos).
-- Validar los campos de expiración (solo números).
-- Manejar las respuestas de la API y mostrar mensajes.
-- Gestionar el envío del formulario y la navegación entre pasos.
-- Inicializar los eventos y el estado del formulario.
-
-He completado estas funciones basándome en las versiones previas del código, asegurando que sean consistentes con el diseño minimalista y las optimizaciones solicitadas.
-
----
-
-### Código corregido y completo
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: transparent;
-      color: #1C2526;
-      padding: 15px;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .form-wrapper {
-      max-width: 600px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0);
-      padding: 15px;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-bar {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    .progress-step {
-      flex: 1;
-      text-align: center;
-      font-size: 13px;
-      color: #1C2526;
-      font-weight: 400;
-      position: relative;
-    }
-
-    .progress-step.active {
-      color: #1AB0D8;
-      font-weight: 500;
-    }
-
-    .progress-step::before {
-      content: '';
-      width: 10px;
-      height: 10px;
-      background: #e0e0e0;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto 6px;
-      transition: background 0.3s ease;
-    }
-
-    .progress-step.active::before {
-      background: #1AB0D8;
-    }
-
-    .progress-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      width: 100%;
-      height: 1px;
-      background: #e0e0e0;
-      z-index: -1;
-      transition: background 0.3s ease;
-    }
-
-    .progress-step.active:not(:last-child)::after {
-      background: #1AB0D8;
-    }
-
-    .step {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      transform: scale(0.98);
-    }
-
-    .step.active {
-      display: block;
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .inputs-container {
-      background: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 6px;
-      padding: 15px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    label {
-      display: block;
-      font-weight: 400;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      border-radius: 4px;
-      font-size: 13px;
-      background: #fff;
-      color: #1C2526;
-      transition: border-color 0.3s ease;
-    }
-
-    input:focus, select:focus {
-      border-color: #1AB0D8;
-      outline: none;
-      background: #fff;
-    }
-
-    .error-message {
-      display: none;
-      color: #e57373;
-      font-size: 11px;
-      margin-top: 5px;
-      position: absolute;
-      bottom: -18px;
-      left: 0;
-      font-weight: 400;
-    }
-
-    .form-group.error .error-message {
-      display: block;
-    }
-
-    .form-group.error input,
-    .form-group.error select {
-      border-color: #e57373;
-      background: #fff1f1;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 8px 15px;
-      border: none;
-      border-radius: 4px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      flex: 1;
-      max-width: 100px;
-      color: #fff;
-      transition: background 0.3s ease;
-    }
-
-    button:disabled {
-      background: #b0b0b0;
-      border: 1px solid #999;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    #prevBtn {
-      background: #b0b0b0;
-    }
-
-    #prevBtn:hover:not(:disabled) {
-      background: #999;
-    }
-
-    #nextBtn, #submitBtn {
-      background: #1AB0D8;
-    }
-
-    #nextBtn:hover:not(:disabled), #submitBtn:hover:not(:disabled) {
-      background: #1591B2;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    #loading {
-      display: none;
-      font-style: italic;
-      margin-top: 12px;
-      font-size: 11px;
-      color: #555;
-    }
-
-    #message {
-      flex: 2;
-      font-size: 12px;
-      padding: 8px;
-      border-radius: 4px;
-      margin: 0 5px;
-      min-height: 32px;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #message.success {
-      color: #2e7d32;
-    }
-
-    #message.pending {
-      color: #ef6c00;
-    }
-
-    #message.error {
-      color: #c62828;
-    }
-
-    #message.info {
-      color: #1565c0;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-
-      .form-wrapper {
-        padding: 10px;
-        max-width: 100%;
-        border-radius: 4px;
-      }
-
-      .progress-bar {
-        margin-bottom: 12px;
-      }
-
-      .progress-step {
-        font-size: 12px;
-      }
-
-      .progress-step::before {
-        width: 8px;
-        height: 8px;
-        margin: 0 auto 5px;
-      }
-
-      .progress-step:not(:last-child)::after {
-        top: 4px;
-        height: 1px;
-      }
-
-      label {
-        font-size: 12px;
-        margin-bottom: 4px;
-      }
-
-      input, select {
-        font-size: 12px;
-        padding: 7px 9px;
-      }
-
-      .inputs-container {
-        padding: 10px;
-      }
-
-      .form-group {
-        margin-bottom: 12px;
-      }
-
-      .error-message {
-        font-size: 10px;
-        bottom: -16px;
-      }
-
-      .buttons {
-        gap: 8px;
-        margin-top: 15px;
-      }
-
-      button {
-        padding: 7px 12px;
-        font-size: 12px;
-        max-width: 80px;
-      }
-
-      #message {
-        font-size: 11px;
-        padding: 6px;
-        margin: 0 4px;
-        min-height: 28px;
-        max-width: 70%;
-      }
-
-      #loading {
-        font-size: 10px;
-        margin-top: 10px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .form-wrapper {
-        padding: 8px;
-      }
-
-      .progress-step {
-        font-size: 11px;
-      }
-
-      label, input, select {
-        font-size: 11px;
-      }
-
-      button {
-        padding: 6px 10px;
-        font-size: 11px;
-        max-width: 70px;
-      }
-
-      .buttons {
-        gap: 6px;
-      }
-
-      #message {
-        font-size: 10px;
-        padding: 5px;
-        min-height: 24px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="form-wrapper">
-    <div class="progress-bar">
-      <div class="progress-step active">Datos Personales</div>
-      <div class="progress-step">Datos de Pago</div>
-      <div class="progress-step">Dirección</div>
-    </div>
-
-    <form id="packageForm" novalidate>
-      <div class="step active">
-        <div class="inputs-container">
-          <div class="form-group">
-            <label for="firstName">Nombre:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tu nombre" required aria-required="true" aria-describedby="firstName-error" />
-            <span class="error-message" id="firstName-error">Solo letras, espacios, guiones y apóstrofes.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="lastName">Apellidos:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Escribe tus apellidos" required aria-required="true" aria-describedby="lastName-error" />
-            <span class="error-message" id="lastName-error">Solo letras, espacios, guiones y apóstrofes.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="emailAddress">Correo electrónico:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@correo.com" required aria-required="true" aria-describedby="emailAddress-error" />
-            <span class="error-message" id="emailAddress-error">Ingresa un correo válido.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="phoneNumber">Teléfono:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Tu número de contacto" required aria-required="true" aria-describedby="phoneNumber-error" />
-            <span class="error-message" id="phoneNumber-error">Solo números (10-15 dígitos).</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="inputs-container">
-          <div class="form-group">
-            <label for="cardName">Nombre en la tarjeta:</label>
-            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" required aria-required="true" aria-describedby="cardName-error" />
-            <span class="error-message" id="cardName-error">Solo letras, espacios, guiones y apóstrofes.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="cardNumber">Número de tarjeta:</label>
-            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumber-error" />
-            <span class="error-message" id="cardNumber-error">Ingresa un número válido (16 dígitos).</span>
-          </div>
-
-          <div class="form-group">
-            <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 o 4 dígitos" required aria-required="true" aria-describedby="cvv-error" />
-            <span class="error-message" id="cvv-error">Ingresa un CVV válido (3 o 4 dígitos).</span>
-          </div>
-
-          <div class="form-group">
-            <label for="expMonth">Mes de expiración:</label>
-            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (ej. 12)" required aria-required="true" aria-describedby="expMonth-error" />
-            <span class="error-message" id="expMonth-error">Ingresa un mes válido (1-12).</span>
-          </div>
-
-          <div class="form-group">
-            <label for="expYear">Año de expiración:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (ej. 2025)" required aria-required="true" aria-describedby="expYear-error" />
-            <span class="error-message" id="expYear-error">Ingresa un año válido (2025-2035).</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="inputs-container">
-          <div class="form-group">
-            <label for="address">Dirección:</label>
-            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Calle y número" required aria-required="true" aria-describedby="address-error" />
-            <span class="error-message" id="address-error">Ingresa una dirección válida.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="countryCode">Código de país:</label>
-            <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCode-error">
-              <option value="">Selecciona un país</option>
-              <option value="US">Estados Unidos</option>
-              <option value="CN">China</option>
-              <option value="JP">Japón</option>
-              <option value="DE">Alemania</option>
-              <option value="GB">Reino Unido</option>
-              <option value="FR">Francia</option>
-              <option value="IN">India</option>
-              <option value="CA">Canadá</option>
-              <option value="BR">Brasil</option>
-              <option value="KR">Corea del Sur</option>
-              <option value="IT">Italia</option>
-              <option value="RU">Rusia</option>
-              <option value="AU">Australia</option>
-              <option value="ES">España</option>
-              <option value="MX">México</option>
-              <option value="ID">Indonesia</option>
-              <option value="NL">Países Bajos</option>
-              <option value="SA">Arabia Saudita</option>
-              <option value="CH">Suiza</option>
-              <option value="SG">Singapur</option>
-            </select>
-            <span class="error-message" id="countryCode-error">Selecciona un país.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="stateProvince">Provincia / Estado:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z\s\-]+" placeholder="Ej. Antioquia" required aria-required="true" aria-describedby="stateProvince-error" />
-            <span class="error-message" id="stateProvince-error">Solo letras, espacios y guiones.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="city">Ciudad:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Nombre de la ciudad" required aria-required="true" aria-describedby="city-error" />
-            <span class="error-message" id="city-error">Solo letras, espacios y guiones.</span>
-          </div>
-
-          <div class="form-group">
-            <label for="postalCode">Código postal:</label>
-            <input type="tel" id="postalCode" name="postalCode" pattern="\d{5}" placeholder="Ej. 28001" required aria-required="true" aria-describedby="postalCode-error" />
-            <span class="error-message" id="postalCode-error">Ingresa un código postal válido (5 dígitos).</span>
-          </div>
-
-          <input type="hidden" name="ipAddress" value="127.0.0.1" />
-        </div>
-        <div id="loading" class="text-center">Enviando...</div>
-      </div>
-
-      <div class="buttons">
-        <button type="button" id="prevBtn" style="display: none;" aria-label="Volver al paso anterior">Atrás</button>
-        <div id="message" class="text-center"></div>
-        <button type="button" id="nextBtn" aria-label="Avanzar al siguiente paso">Siguiente</button>
-        <button type="submit" id="submitBtn" style="display: none;" aria-label="Enviar formulario">Enviar</button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const steps = document.querySelectorAll(".step");
-      const progressSteps = document.querySelectorAll(".progress-step");
-      const nextBtn = document.getElementById("nextBtn");
-      const prevBtn = document.getElementById("prevBtn");
-      const submitBtn = document.getElementById("submitBtn");
-      const form = document.getElementById("packageForm");
-      const loading = document.getElementById("loading");
-      const messageDiv = document.getElementById('message');
-
-      let currentStep = 0;
-      let messageTimeout = null;
-      let isShowingErrors = false;
-
-      const showStep = (index) => {
-        steps.forEach((step, i) => {
-          step.classList.toggle("active", i === index);
-          step.style.transform = i === index ? 'scale(1)' : 'scale(0.98)';
+        const cardNumber = document.getElementById('cardNumber');
+        cardNumber.addEventListener('input', e => {
+          let v = e.target.value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim();
+          e.target.value = v.slice(0, 19);
         });
-        progressSteps.forEach((step, i) => step.classList.toggle("active", i <= index));
-        prevBtn.style.display = index > 0 ? "inline-block" : "none";
-        nextBtn.style.display = index < steps.length - 1 ? "inline-block" : "none";
-        submitBtn.style.display = index === steps.length - 1 ? "inline-block" : "none";
-      };
-
-      const validateInput = (input) => {
-        const formGroup = input.closest(".form-group");
-        if (!formGroup) return true;
-
-        formGroup.classList.remove("error");
-        if (!input.checkValidity() || (input.required && input.value.trim() === "")) {
-          formGroup.classList.add("error");
-          input.dataset.touched = "true";
-          return false;
-        }
-        return true;
-      };
-
-      const validateStep = () => {
-        const inputs = steps[currentStep].querySelectorAll("input, select");
-        let isValid = true;
-
-        inputs.forEach(input => {
-          if (!validateInput(input)) {
-            isValid = false;
-          }
-        });
-
-        if (!isValid && !isShowingErrors) {
-          isShowingErrors = true;
-          setTimeout(() => {
-            inputs.forEach(input => input.closest(".form-group")?.classList.remove("error"));
-            isShowingErrors = false;
-          }, 2000);
-        }
-
-        return isValid;
-      };
-
-      const validateCardNumber = (cardNumber) => {
-        const digits = cardNumber.replace(/\D/g, '');
-        if (digits.length !== 16) return false;
-
-        let sum = 0;
-        let isEven = false;
-        for (let i = digits.length - 1; i >= 0; i--) {
-          let digit = parseInt(digits[i]);
-          if (isEven) {
-            digit *= 2;
-            if (digit > 9) digit -= 9;
-          }
-          sum += digit;
-          isEven = !isEven;
-        }
-        return sum % 10 === 0;
-      };
-
-      const validateExpirationDate = () => {
-        const monthInput = document.getElementById('expMonth');
-        const yearInput = document.getElementById('expYear');
-        const month = parseInt(monthInput.value);
-        const year = parseInt(yearInput.value);
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth() + 1;
-
-        if (year < currentYear || (year === currentYear && month < currentMonth)) {
-          monthInput.closest(".form-group")?.classList.add("error");
-          yearInput.closest(".form-group")?.classList.add("error");
-          return false;
-        }
-        return true;
-      };
-
-      const showMessage = (message, type) => {
-        if (!messageDiv || isShowingErrors) return;
-
-        if (messageTimeout) clearTimeout(messageTimeout);
-
-        messageDiv.className = type;
-        messageDiv.innerHTML = `<p>${message}</p>`;
-
-        isShowingErrors = true;
-        messageTimeout = setTimeout(() => {
-          messageDiv.className = '';
-          messageDiv.innerHTML = '';
-          messageTimeout = null;
-          isShowingErrors = false;
-        }, 2000);
-      };
-
-      const inputRules = {
-        firstName: /^[A-Za-z\s\-']$/,
-        lastName: /^[A-Za-z\s\-']$/,
-        cardName: /^[A-Za-z\s\-']$/,
-        phoneNumber: /^\d$/,
-        cvv: /^\d$/,
-        postalCode: /^\d$/,
-        cardNumber: /^[\d\s]$/,
-        address: /^[A-Za-z0-9\s\-,.]$/,
-        stateProvince: /^[A-Za-z\s\-]$/,
-        city: /^[A-Za-z\s\-]$/,
-      };
-
-      const setupInputValidations = () => {
-        const inputs = document.querySelectorAll('input, select');
-        inputs.forEach(input => {
-          input.addEventListener('input', () => {
-            input.dataset.touched = "true";
-            if (input.value.trim() !== "" || input.required) {
-              validateInput(input);
-            }
-          });
-
-          input.addEventListener('blur', () => {
-            if (input.required || input.dataset.touched) {
-              validateInput(input);
-            }
-          });
-
-          input.addEventListener('keydown', (e) => {
-            const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-            if (allowedKeys.includes(e.key)) return;
-
-            const rule = inputRules[input.id];
-            if (rule && !rule.test(e.key)) {
-              e.preventDefault();
-            }
-          });
-        });
-
-        const countryCode = document.getElementById('countryCode');
-        countryCode.addEventListener('change', () => validateInput(countryCode));
-      };
-
-      const setupCardNumberFormatting = () => {
-        const cardNumberInput = document.getElementById('cardNumber');
-        cardNumberInput.addEventListener('input', (e) => {
-          let value = e.target.value.replace(/\D/g, '');
-          value = value.replace(/(\d{4})/g, '$1 ').trim();
-          e.target.value = value.slice(0, 19);
-        });
-      };
-
-      const setupExpirationInputs = () => {
-        const expInputs = document.querySelectorAll('#expMonth, #expYear');
-        expInputs.forEach(input => {
-          input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^0-9]/g, '');
-          });
+        document.querySelectorAll('#expMonth, #expYear').forEach(i => {
+          i.addEventListener('input', () => i.value = i.value.replace(/[^0-9]/g, ''));
         });
       };
 
       const handleApiResponse = (data) => {
-        if (!messageDiv) return;
-
-        const { status, statusReason, redirectUrl } = data || {};
-        let html = '';
-        let messageClass = '';
-
-        if (!status) {
-          messageClass = 'error';
-          html = `<p>⚠️ Error: Respuesta no válida.</p>`;
+        const { status } = data || {};
+        if (!status) return showMessage('Error de servidor', 'error');
+        if (status === 'Approved') {
+          showMessage('Pago aprobado', 'success');
+          form.reset();
+          currentStep = 0;
+          showStep(0);
+        } else if (status === 'Error' || status === 'Declined' || status === 'Rejected') {
+          showMessage('Pago fallido', 'error');
         } else {
-          switch (status) {
-            case 'Approved':
-              messageClass = 'success';
-              html = `<p>✅ Pago aprobado.</p>`;
-              form.reset();
-              currentStep = 0;
-              showStep(0);
-              break;
-            case 'Complete':
-              messageClass = 'info';
-              html = `<p>ℹ️ Operación completada.</p>`;
-              break;
-            case 'Pending':
-              messageClass = 'pending';
-              html = `<p>⌛ Pago pendiente.</p>`;
-              break;
-            case 'Declined':
-              messageClass = 'error';
-              html = `<p>❌ Pago declinado.</p>`;
-              break;
-            case 'Rejected':
-              messageClass = 'error';
-              html = `<p>🚫 Pago rechazado.</p>`;
-              break;
-            case 'Error':
-              messageClass = 'error';
-              html = `<p>⚠️ Error de procesamiento.</p>`;
-              break;
-            default:
-              messageClass = 'info';
-              html = `<p>ℹ️ Respuesta desconocida.</p>`;
-          }
+          showMessage('Estado desconocido', 'error');
         }
-
-        messageDiv.className = messageClass;
-        messageDiv.innerHTML = html;
       };
 
-      const handleFormSubmit = async (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateStep()) return;
 
-        if (currentStep === 1 && !validateCardNumber(document.getElementById('cardNumber').value)) {
-          showMessage("⚠️ Número de tarjeta inválido.", "error");
-          return;
-        }
-
-        if (currentStep === 1 && !validateExpirationDate()) {
-          showMessage("⚠️ Fecha de expiración inválida.", "error");
-          return;
+        if (currentStep === 1) {
+          if (!validateCardNumber(document.getElementById('cardNumber').value)) {
+            showMessage('Tarjeta inválida', 'error');
+            return;
+          }
+          if (!validateExpirationDate()) {
+            showMessage('Fecha inválida', 'error');
+            return;
+          }
         }
 
         if (currentStep < steps.length - 1) {
@@ -1428,81 +368,33 @@ He completado estas funciones basándome en las versiones previas del código, a
           return;
         }
 
-        submitBtn.disabled = true;
-        nextBtn.disabled = true;
-        loading.style.display = "block";
-
+        loading.style.display = 'block';
         const formData = new FormData(form);
-        const jsonData = { planReferenceId: "Professional" };
-        formData.forEach((value, key) => {
-          if (key === "cardNumber") {
-            jsonData[key] = value.replace(/\s/g, "");
-          } else if (isNaN(value) || ["cvv", 'postalCode', 'phoneNumber'].includes(key)) {
-            jsonData[key] = value;
-          } else {
-            jsonData[key] = Number(value);
-          }
+        const jsonData = { planReferenceId: 'Professional' };
+        formData.forEach((v, k) => {
+          jsonData[k] = k === 'cardNumber' ? v.replace(/\s/g, '') : (isNaN(v) || ['cvv', 'postalCode', 'phoneNumber'].includes(k)) ? v : Number(v);
         });
 
         try {
-          const res = await fetch("https://duelazo-2a8ce83c75f7.herokuapp.com/packages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+          const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonData),
           });
-          if (!res.ok) {
-            throw new Error(`Error ${res.status}`);
-          }
-          const data = await res.json();
-          handleApiResponse(data);
-        } catch (err) {
-          showMessage(`⚠️ Error de red: ${err.message}`, 'error');
+          if (!res.ok) throw new Error('Error de red');
+          handleApiResponse(await res.json());
+        } catch {
+          showMessage('Error de conexión', 'error');
         } finally {
-          submitBtn.disabled = false;
-          nextBtn.disabled = false;
-          loading.style.display = "none";
+          loading.style.display = 'none';
         }
       };
 
-      const setupFormEvents = () => {
-        nextBtn.addEventListener("click", () => {
-          if (validateStep()) {
-            if (currentStep === 1 && !validateCardNumber(document.getElementById('cardNumber').value)) {
-              showMessage("⚠️ Número de tarjeta inválido.", "error");
-              return;
-            }
-            if (currentStep === 1 && !validateExpirationDate()) {
-              showMessage("⚠️ Fecha de expiración inválida.", "error");
-              return;
-            }
-            if (currentStep < steps.length - 1) {
-              currentStep++;
-              showStep(currentStep);
-            }
-          } else {
-            showMessage("⚠️ Completa todos los campos.", "error");
-          }
-        });
-
-        prevBtn.addEventListener("click", () => {
-          if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-          }
-        });
-
-        form.addEventListener("submit", handleFormSubmit);
-      };
-
-      const initializeForm = () => {
-        setupInputValidations();
-        setupCardNumberFormatting();
-        setupExpirationInputs();
-        setupFormEvents();
-        showStep(currentStep);
-      };
-
-      initializeForm();
+      nextBtn.addEventListener('click', () => validateStep() && currentStep < steps.length - 1 && showStep(++currentStep));
+      prevBtn.addEventListener('click', () => currentStep > 0 && showStep(--currentStep));
+      form.addEventListener('submit', handleSubmit);
+      setupInputs();
+      showStep(0);
     });
   </script>
 </body>
