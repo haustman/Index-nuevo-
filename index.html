@@ -297,27 +297,27 @@
       <div class="step active">
         <div class="inputs-container">
           <div class="form-group">
-            <label for="firstName">Nombre:</label>
+            <label for="firstName">First Name:</label>
             <input id="firstName" name="firstName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" aria-describedby="firstName-error" />
-            <span id="firstName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+            <span id="firstName-error" class="error-message">Only letters, spaces, hyphens, and apostrophes allowed.</span>
           </div>
 
           <div class="form-group">
-            <label for="lastName">Apellidos:</label>
+            <label for="lastName">Last Name:</label>
             <input id="lastName" name="lastName" type="text" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" aria-describedby="lastName-error" />
-            <span id="lastName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+            <span id="lastName-error" class="error-message">Only letters, spaces, hyphens, and apostrophes allowed.</span>
           </div>
 
           <div class="form-group">
-            <label for="emailAddress">Correo electrónico:</label>
+            <label for="emailAddress">Email Address:</label>
             <input type="email" id="emailAddress" name="emailAddress" placeholder="example@email.com" required aria-required="true" aria-describedby="emailAddress-error" />
-            <span id="emailAddress-error" class="error-message">Ingresa un correo válido (ej. user@domain.com).</span>
+            <span id="emailAddress-error" class="error-message">Enter a valid email (e.g. user@domain.com).</span>
           </div>
 
           <div class="form-group">
-            <label for="phoneNumber">Teléfono:</label>
+            <label for="phoneNumber">Phone Number:</label>
             <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="Your contact number" required aria-required="true" aria-describedby="phoneNumber-error" />
-            <span id="phoneNumber-error" class="error-message">Solo se permiten números (10-15 dígitos).</span>
+            <span id="phoneNumber-error" class="error-message">Only numbers allowed (10-15 digits).</span>
           </div>
         </div>
       </div>
@@ -325,33 +325,33 @@
       <div class="step">
         <div class="inputs-container">
           <div class="form-group">
-            <label for="cardName">Nombre en la tarjeta:</label>
+            <label for="cardName">Cardholder Name:</label>
             <input id="cardName" name="cardName" type="text" pattern="[A-Za-z\s\-']+" placeholder="As it appears on the card" required aria-required="true" aria-describedby="cardName-error" />
-            <span id="cardName-error" class="error-message">Solo se permiten letras, espacios, guiones y apóstrofes.</span>
+            <span id="cardName-error" class="error-message">Only letters, spaces, hyphens, and apostrophes allowed.</span>
           </div>
 
           <div class="form-group">
-            <label for="cardNumber">Número de tarjeta:</label>
+            <label for="cardNumber">Card Number:</label>
             <input type="text" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumber-error" />
-            <span id="cardNumber-error" class="error-message">Ingresa un número de tarjeta válido (16 dígitos).</span>
+            <span id="cardNumber-error" class="error-message">Enter a valid card number (16 digits).</span>
           </div>
 
           <div class="form-group">
             <label for="cvv">CVV:</label>
             <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3 or 4 digits" required aria-required="true" aria-describedby="cvv-error" />
-            <span id="cvv-error" class="error-message">Ingresa un CVV válido (3 o 4 dígitos).</span>
+            <span id="cvv-error" class="error-message">Enter a valid CVV (3 or 4 digits).</span>
           </div>
 
           <div class="form-group">
-            <label for="expMonth">Mes de expiración:</label>
+            <label for="expMonth">Expiration Month:</label>
             <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM (e.g. 12)" required aria-required="true" aria-describedby="expMonth-error" />
-            <span id="expMonth-error" class="error-message">Ingresa un mes válido (1-12).</span>
+            <span id="expMonth-error" class="error-message">Enter a valid month (1-12).</span>
           </div>
 
           <div class="form-group">
-            <label for="expYear">Año de expiración:</label>
+            <label for="expYear">Expiration Year:</label>
             <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY (e.g. 2025)" required aria-required="true" aria-describedby="expYear-error" />
-            <span id="expYear-error" class="error-message">Ingresa un año válido (2025-2035).</span>
+            <span id="expYear-error" class="error-message">Enter a valid year (2025-2035).</span>
           </div>
         </div>
       </div>
@@ -359,13 +359,13 @@
       <div class="step">
         <div class="inputs-container">
           <div class="form-group">
-            <label for="address">Dirección:</label>
+            <label for="address">Address:</label>
             <input id="address" name="address" type="text" pattern="[A-Za-z0-9\s\-,.]+" placeholder="Street and number" required aria-required="true" aria-describedby="address-error" />
-            <span id="address-error" class="error-message">Ingresa una dirección válida.</span>
+            <span id="address-error" class="error-message">Enter a valid address.</span>
           </div>
 
           <div class="form-group">
-            <label for="countryCode">Código de país:</label>
+            <label for="countryCode">Country Code:</label>
             <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCode-error">
               <option value="">Select a country</option>
               <option value="US">United States</option>
@@ -389,25 +389,25 @@
               <option value="CH">Switzerland</option>
               <option value="SG">Singapore</option>
             </select>
-            <span id="countryCode-error" class="error-message">Selecciona un país.</span>
+            <span id="countryCode-error" class="error-message">Select a country.</span>
           </div>
 
           <div class="form-group">
-            <label for="stateProvince">Provincia / Estado:</label>
+            <label for="stateProvince">State/Province:</label>
             <input id="stateProvince" name="stateProvince" type="text" pattern="[A-Za-z\s\-]+" placeholder="e.g. Ontario" required aria-required="true" aria-describedby="stateProvince-error" />
-            <span id="stateProvince-error" class="error-message">Solo se permiten letras, espacios y guiones.</span>
+            <span id="stateProvince-error" class="error-message">Only letters, spaces, and hyphens allowed.</span>
           </div>
 
           <div class="form-group">
-            <label for="city">Ciudad:</label>
+            <label for="city">City:</label>
             <input id="city" name="city" type="text" pattern="[A-Za-z\s\-]+" placeholder="City name" required aria-required="true" aria-describedby="city-error" />
-            <span id="city-error" class="error-message">Solo se permiten letras, espacios y guiones.</span>
+            <span id="city-error" class="error-message">Only letters, spaces, and hyphens allowed.</span>
           </div>
 
           <div class="form-group">
-            <label for="postalCode">Código postal:</label>
+            <label for="postalCode">Postal Code:</label>
             <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{3,10}" placeholder="e.g. 28001 or A1A 1A1" required aria-required="true" aria-describedby="postalCode-error" />
-            <span id="postalCode-error" class="error-message">Ingresa un código postal válido (3-10 caracteres).</span>
+            <span id="postalCode-error" class="error-message">Enter a valid postal code (3-10 characters).</span>
           </div>
         </div>
         <div id="loading" class="text-center">Enviando...</div>
@@ -572,8 +572,7 @@
             if (input.value.trim() !== "") {
               input.dataset.touched = "true";
               validateInput(input);
-            } else 
-            {
+            } else {
               const formGroup = input.closest(".form-group");
               if (formGroup) formGroup.classList.remove("error");
             }
