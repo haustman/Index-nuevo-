@@ -192,8 +192,6 @@
 
     .preset-button:active { transform: scale(0.98); }
 
-    #customDonationAmount { text-align: center; font-size: 1.1em; }
-
     .buttons {
       display: flex;
       justify-content: space-between;
@@ -309,7 +307,7 @@
 
     #donationSummaryDetails p strong {
       color: var(--text-color);
-      display: INLINE-block;
+      display: inline-block;
       margin-right: 10px;
       font-weight: 500;
     }
@@ -360,13 +358,10 @@
               <button type="button" class="preset-button" data-amount="200">$200</button>
               <button type="button" class="preset-button" data-amount="500">$500</button>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="customDonationAmount">Or enter a custom amount ($):</label>
-            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount" min="1" step="any" aria-describedby="customDonationError" required aria-required="true" />
-            <span class="error-message" id="customDonationError">Please enter a valid positive amount.</span>
+            <span class="error-message" id="donationError" style="display: none;">Please select a donation amount.</span>
           </div>
           <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
+          <input type="hidden" id="selectedPackage" name="selectedPackage" required aria-required="true">
         </div>
       </div>
 
@@ -411,7 +406,7 @@
             <span class="error-message" id="cardNumberError">Enter a valid 16-digit card number.</span>
           </div>
           <div class="form-group">
-            cvv
+            <label for="cvv">CVV:</label>
             <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" aria-describedby="cvvError" required aria-required="true" />
             <span class="error-message" id="cvvError">3 or 4 digits.</span>
           </div>
@@ -476,6 +471,7 @@
     <div id="donationSummaryDetails">
       <div class="summary-section">
         <h4>Donation Details</h4>
+        <p><strong>Package:</strong> <span class="summary-value" id="summaryPackage">-</span></p>
         <p><strong>Amount:</strong> <span class="summary-value" id="summaryDonationAmount">-</span></p>
       </div>
       <div class="summary-section">
@@ -508,14 +504,26 @@
       const loading = document.getElementById('loading');
       const messageDiv = document.getElementById('message');
       const presetAmountButtons = document.querySelectorAll('.preset-button');
-      const customDonationInput = document.getElementById('customDonationAmount');
       const finalDonationInput = document.getElementById('finalDonationAmount');
+      const selectedPackageInput = document.getElementById('selectedPackage');
+      const donationError = document.getElementById('donationError');
 
       let currentStep = 0;
       let messageTimeout = null;
 
+      // Mapeo de cantidades a nombres de paquetes (nombres exactos del backend)
+      const packageMapping = {
+        '10': 'Donation1',
+        '30': 'Donation2',
+        '50': 'Donation3',
+        '100': 'Donation4',
+        '200': 'Donation5',
+        '500': 'Donation6'
+      };
+
       // Elementos del resumen
       const summaryElements = {
+        package: document.getElementById('summaryPackage'),
         donationAmount: document.getElementById('summaryDonationAmount'),
         firstName: document.getElementById('summaryFirstName'),
         lastName: document.getElementById('summaryLastName'),
@@ -532,6 +540,7 @@
       const updateDonationSummary = () => {
         const donationVal = parseFloat(finalDonationInput.value);
         summaryElements.donationAmount.textContent = (!isNaN(donationVal) && donationVal > 0) ? `$${donationVal.toFixed(2)}` : '-';
+        summaryElements.package.textContent = selectedPackageInput.value || '-';
         summaryElements.firstName.textContent = document.getElementById('firstName').value || '-';
         summaryElements.lastName.textContent = document.getElementById('lastName').value || '-';
         summaryElements.email.textContent = document.getElementById('emailAddress').value || '-';
@@ -565,14 +574,14 @@
 
         if (stepIndex === 0) {
           const donationValue = parseFloat(finalDonationInput.value);
-          const formGroup = customDonationInput.closest('.form-group');
-          const errorMsg = formGroup.querySelector('.error-message');
-          if (isNaN(donationValue) || donationValue <= 0) {
+          const formGroup = finalDonationInput.closest('.form-group');
+          if (isNaN(donationValue) || donationValue <= 0 || !selectedPackageInput.value) {
             valid = false;
             formGroup.classList.add('error');
-            errorMsg.textContent = 'Please select or enter a valid donation amount.';
+            donationError.style.display = 'block';
           } else {
             formGroup.classList.remove('error');
+            donationError.style.display = 'none';
           }
         }
 
@@ -617,27 +626,12 @@
           presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
-          customDonationInput.value = '';
           finalDonationInput.value = amount;
-          customDonationInput.closest('.form-group').classList.remove('error');
+          selectedPackageInput.value = packageMapping[amount]; // Asignar nombre del paquete
+          finalDonationInput.closest('.form-group').classList.remove('error');
+          donationError.style.display = 'none';
           updateDonationSummary();
         });
-      });
-
-      // Validación en tiempo real para customDonationAmount
-      customDonationInput.addEventListener('input', () => {
-        console.log(`Custom donation input: ${customDonationInput.value}`); // Depuración
-        presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
-        const customAmount = parseFloat(customDonationInput.value);
-        const formGroup = customDonationInput.closest('.form-group');
-        if (!isNaN(customAmount) && customAmount > 0) {
-          finalDonationInput.value = customAmount;
-          formGroup.classList.remove('error');
-        } else {
-          finalDonationInput.value = '';
-          formGroup.classList.add('error');
-        }
-        updateDonationSummary();
       });
 
       // Validación en tiempo real para cardNumber
@@ -680,13 +674,13 @@
         prevBtn.disabled = true;
         loading.style.display = 'block';
         const fd = new FormData(form);
-        const json = { planReferenceId: 'Donation' };
+        const json = { planReferenceId: selectedPackageInput.value }; // Usar el nombre del paquete
 
         fd.forEach((value, key) => {
           if (key === 'cardNumber') json[key] = value.replace(/\s/g, '');
           else if (key === 'donationAmount' || key === 'expMonth' || key === 'expYear') {
             json[key] = (value.trim() === '' || isNaN(value)) ? null : Number(value);
-          } else {
+          } else if (key !== 'selectedPackage') {
             json[key] = value;
           }
         });
@@ -708,7 +702,7 @@
             showStep(currentStep);
             presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
             finalDonationInput.value = '';
-            customDonationInput.value = '';
+            selectedPackageInput.value = '';
             updateDonationSummary();
           }
         } catch (err) {
