@@ -351,7 +351,7 @@
           </div>
           <div class="form-group">
             <label for="customDonationAmount">Or enter a custom amount ($):</label>
-            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount (1-10000)" min="1" max="10000" step="0.01" class="form-control" aria-describedby="customDonationAmountError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46)" />
+            <input type="text" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount (1-10000)" aria-describedby="customDonationAmountError" />
             <span class="error-message" id="customDonationAmountError">Please enter a valid amount between $1 and $10,000.</span>
           </div>
           <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
@@ -363,12 +363,12 @@
           <h3 class="step-title">Your Personal Details</h3>
           <div class="form-group">
             <label for="firstName">First Name:</label>
-            <input id="firstName" name="firstName" pattern="[\p{L}\s\-']{2,50}" placeholder="Enter your first name (2-50 characters)" required aria-required="true" aria-describedby="firstNameError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 39 || event.charCode == 45 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="firstName" name="firstName" pattern="[A-Za-zÀ-ÿ\s\-']{2,50}" placeholder="Enter your first name (2-50 characters)" required aria-required="true" aria-describedby="firstNameError" />
             <span class="error-message" id="firstNameError">2-50 characters (letters, spaces, hyphens, apostrophes).</span>
           </div>
           <div class="form-group">
             <label for="lastName">Last Name:</label>
-            <input id="lastName" name="lastName" pattern="[\p{L}\s\-']{2,50}" placeholder="Enter your last name (2-50 characters)" required aria-required="true" aria-describedby="lastNameError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 39 || event.charCode == 45 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="lastName" name="lastName" pattern="[A-Za-zÀ-ÿ\s\-']{2,50}" placeholder="Enter your last name (2-50 characters)" required aria-required="true" aria-describedby="lastNameError" />
             <span class="error-message" id="lastNameError">2-50 characters (letters, spaces, hyphens, apostrophes).</span>
           </div>
           <div class="form-group">
@@ -378,7 +378,7 @@
           </div>
           <div class="form-group">
             <label for="phoneNumber">Phone Number:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" pattern="\+?\d{1,4}[\s-]?\d{1,15}" placeholder="e.g., +1234567890" required aria-required="true" aria-describedby="phoneNumberError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 43 || event.charCode == 32 || event.charCode == 45)" />
+            <input type="text" id="phoneNumber" name="phoneNumber" pattern="\+?\d{1,4}[\s-]?\d{1,15}" placeholder="e.g., +1234567890" required aria-required="true" aria-describedby="phoneNumberError" />
             <span class="error-message" id="phoneNumberError">10-15 digits, may include + and spaces/hyphens.</span>
           </div>
         </div>
@@ -390,27 +390,27 @@
           <p style="text-align:center; font-size:0.9em; color:var(--label-color); margin-bottom:15px;">Your payment details are processed securely and will not be displayed in the summary.</p>
           <div class="form-group">
             <label for="cardName">Name on Card:</label>
-            <input id="cardName" name="cardName" pattern="[\p{L}\s\-']{2,50}" placeholder="As it appears on your card (2-50 characters)" required aria-required="true" aria-describedby="cardNameError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 39 || event.charCode == 45 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="cardName" name="cardName" pattern="[A-Za-zÀ-ÿ\s\-']{2,50}" placeholder="As it appears on your card (2-50 characters)" required aria-required="true" aria-describedby="cardNameError" />
             <span class="error-message" id="cardNameError">2-50 characters (letters, spaces, hyphens, apostrophes).</span>
           </div>
           <div class="form-group">
             <label for="cardNumber">Card Number:</label>
-            <input type="text" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{3,4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumberError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 32)" />
+            <input type="text" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{3,4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumberError" />
             <span class="error-message" id="cardNumberError">Enter a valid card number (15-16 digits).</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required aria-required="true" aria-describedby="cvvError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57))" />
+            <input type="text" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required aria-required="true" aria-describedby="cvvError" />
             <span class="error-message" id="cvvError">3 digits (Visa/MC) or 4 digits (AMEX).</span>
           </div>
           <div class="form-group">
             <label for="expMonth">Expiration Month:</label>
-            <input type="text" id="expMonth" name="expMonth" pattern="\d{1,2}" maxlength="2" placeholder="MM" required aria-required="true" aria-describedby="expMonthError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57))" />
+            <input type="text" id="expMonth" name="expMonth" pattern="\d{1,2}" maxlength="2" placeholder="MM" required aria-required="true" aria-describedby="expMonthError" />
             <span class="error-message" id="expMonthError">Enter a month (1–12) not in the past.</span>
           </div>
           <div class="form-group">
             <label for="expYear">Expiration Year:</label>
-            <input type="text" id="expYear" name="expYear" pattern="\d{4}" maxlength="4" placeholder="YYYY" required aria-required="true" aria-describedby="expYearError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57))" />
+            <input type="text" id="expYear" name="expYear" pattern="\d{4}" maxlength="4" placeholder="YYYY" required aria-required="true" aria-describedby="expYearError" />
             <span class="error-message" id="expYearError">Enter a year (2025–2035).</span>
           </div>
         </div>
@@ -421,7 +421,7 @@
           <h3 class="step-title">Your Address</h3>
           <div class="form-group">
             <label for="address">Street Address:</label>
-            <input id="address" name="address" pattern="[\p{L}\p{N}\s\-,.#\/]{5,100}" placeholder="Street name and number (5-100 characters)" required aria-required="true" aria-describedby="addressError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 32 || event.charCode == 45 || event.charCode == 44 || event.charCode == 46 || event.charCode == 35 || event.charCode == 47 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="address" name="address" pattern="[A-Za-zÀ-ÿ0-9\s\-,.#\/]{5,100}" placeholder="Street name and number (5-100 characters)" required aria-required="true" aria-describedby="addressError" />
             <span class="error-message" id="addressError">5-100 characters (letters, numbers, spaces, -,.#/).</span>
           </div>
           <div class="form-group">
@@ -434,17 +434,17 @@
           </div>
           <div class="form-group">
             <label for="stateProvince">State / Province:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[\p{L}\p{N}\s\-]{2,50}" placeholder="e.g., California (2-50 characters)" required aria-required="true" aria-describedby="stateProvinceError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 45 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-zÀ-ÿ\s\-]{2,50}" placeholder="e.g., California (2-50 characters)" required aria-required="true" aria-describedby="stateProvinceError" />
             <span class="error-message" id="stateProvinceError">2-50 characters (letters, spaces, hyphens).</span>
           </div>
           <div class="form-group">
             <label for="city">City:</label>
-            <input id="city" name="city" pattern="[\p{L}\s\-]{2,50}" placeholder="Enter your city (2-50 characters)" required aria-required="true" aria-describedby="cityError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 45 || (event.charCode >= 192 && event.charCode <= 255))" />
+            <input id="city" name="city" pattern="[A-Za-zÀ-ÿ\s\-]{2,50}" placeholder="Enter your city (2-50 characters)" required aria-required="true" aria-describedby="cityError" />
             <span class="error-message" id="cityError">2-50 characters (letters, spaces, hyphens).</span>
           </div>
           <div class="form-group">
             <label for="postalCode">Postal / Zip Code:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210 or SW1A 1AA" required aria-required="true" aria-describedby="postalCodeError" onkeypress="return (event.charCode != 8 && event.charCode == 0 || (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode == 32 || event.charCode == 45)" />
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210 or SW1A 1AA" required aria-required="true" aria-describedby="postalCodeError" />
             <span class="error-message" id="postalCodeError">1-10 characters (letters, numbers, spaces, hyphens).</span>
           </div>
         </div>
@@ -520,6 +520,112 @@
         div.textContent = value;
         return div.innerHTML;
       };
+
+      // Funciones para restringir entrada en tiempo real
+      const restrictLettersOnly = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir solo letras, espacios, guiones, apóstrofes y caracteres acentuados
+          input.value = value.replace(/[^A-Za-zÀ-ÿ\s\-']/g, '');
+          validateInput(input);
+        });
+      };
+
+      const restrictNumbersOnly = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir solo dígitos
+          input.value = value.replace(/\D/g, '');
+          validateInput(input);
+        });
+      };
+
+      const restrictPhoneNumber = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir dígitos, +, espacios y guiones
+          input.value = value.replace(/[^0-9+\s-]/g, '');
+          validateInput(input);
+        });
+      };
+
+      const restrictCardNumber = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir dígitos y espacios
+          input.value = value.replace(/[^0-9\s]/g, '');
+          validateInput(input);
+        });
+      };
+
+      const restrictCustomAmount = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir dígitos y un punto decimal
+          input.value = value.replace(/[^0-9.]/g, '');
+          // Asegurar que solo haya un punto decimal
+          const parts = input.value.split('.');
+          if (parts.length > 2) {
+            input.value = parts[0] + '.' + parts.slice(1).join('');
+          }
+          validateInput(input);
+        });
+      };
+
+      const restrictAddress = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir letras, números, espacios, y caracteres específicos
+          input.value = value.replace(/[^A-Za-zÀ-ÿ0-9\s\-,.#\/]/g, '');
+          validateInput(input);
+        });
+      };
+
+      const restrictPostalCode = (input) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          // Permitir letras, números, espacios y guiones
+          input.value = value.replace(/[^A-Za-z0-9\s\-]/g, '');
+          validateInput(input);
+        });
+      };
+
+      const validateInput = (input) => {
+        const formGroup = input.closest('.form-group');
+        if (!input.checkValidity()) {
+          formGroup.classList.add('error');
+        } else {
+          formGroup.classList.remove('error');
+        }
+      };
+
+      // Aplicar restricciones a los campos
+      const letterFields = ['firstName', 'lastName', 'cardName', 'stateProvince', 'city'];
+      letterFields.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) restrictLettersOnly(input);
+      });
+
+      const numberFields = ['cvv', 'expMonth', 'expYear'];
+      numberFields.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) restrictNumbersOnly(input);
+      });
+
+      const phoneField = document.getElementById('phoneNumber');
+      if (phoneField) restrictPhoneNumber(phoneField);
+
+      const cardNumberField = document.getElementById('cardNumber');
+      if (cardNumberField) restrictCardNumber(cardNumberField);
+
+      const customAmountField = document.getElementById('customDonationAmount');
+      if (customAmountField) restrictCustomAmount(customAmountField);
+
+      const addressField = document.getElementById('address');
+      if (addressField) restrictAddress(addressField);
+
+      const postalCodeField = document.getElementById('postalCode');
+      if (postalCodeField) restrictPostalCode(postalCodeField);
 
       function updateDonationSummary() {
           const donationVal = parseFloat(finalDonationInput.value);
@@ -694,18 +800,6 @@
           } else {
             if (formGroup) formGroup.classList.remove('error');
           }
-
-          const liveValidateOnError = function() {
-              if (input.checkValidity()) {
-                  if (formGroup) formGroup.classList.remove('error');
-              } else {
-                  if (formGroup) formGroup.classList.add('error');
-              }
-          };
-          input.removeEventListener('input', liveValidateOnError);
-          input.addEventListener('input', liveValidateOnError);
-          input.removeEventListener('blur', liveValidateOnError);
-          input.addEventListener('blur', liveValidateOnError);
         });
 
         return valid;
