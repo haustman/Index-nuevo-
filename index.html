@@ -479,9 +479,8 @@
       const donationError = document.getElementById('donationError');
 
       let currentStep = 0;
-      let hasManualSelection = false; // Bandera para rastrear si hubo una selección manual
+      let hasManualSelection = false;
 
-      // Mapeo de montos a nombres de paquetes
       const packageMapping = {
         '10': 'Donation1',
         '30': 'Donation2',
@@ -491,7 +490,6 @@
         '500': 'Donation6'
       };
 
-      // Elementos del resumen
       const summaryElements = {
         package: document.getElementById('summaryPackage'),
         donationAmount: document.getElementById('summaryDonationAmount'),
@@ -506,7 +504,6 @@
         country: document.getElementById('summaryCountry'),
       };
 
-      // Mostrar mensaje al usuario
       const showMessage = (msg, type, duration = 3000) => {
         if (!messageDiv) return;
         messageDiv.textContent = msg;
@@ -517,15 +514,14 @@
         }, duration);
       };
 
-      // Actualizar el resumen
       const updateSummary = () => {
         if (!summaryElements.package || !summaryElements.donationAmount) {
           console.error('Summary elements not found');
           return;
         }
-        const amount = parseFloat(selectedAmountInput.value);
+        const amount = parseFloat(selectedAmountInput?.value || 0);
         summaryElements.donationAmount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
-        summaryElements.package.textContent = selectedPackageInput.value || '-';
+        summaryElements.package.textContent = selectedPackageInput?.value || '-';
         summaryElements.firstName.textContent = document.getElementById('firstName')?.value || '-';
         summaryElements.lastName.textContent = document.getElementById('lastName')?.value || '-';
         summaryElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
@@ -543,7 +539,6 @@
         });
       };
 
-      // Mostrar el paso actual
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
@@ -557,8 +552,8 @@
         console.log(`Showing step ${stepIndex}`);
       };
 
-      // Guardar datos del formulario en localStorage
       const saveFormData = () => {
+        if (!form) return;
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
@@ -568,30 +563,25 @@
         console.log('Form data saved to localStorage:', data);
       };
 
-      // Cargar datos desde localStorage sin simular selección
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
         if (savedData) {
           const data = JSON.parse(savedData);
           Object.keys(data).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
+            const input = form?.querySelector(`[name="${key}"]`);
             if (input) {
               input.value = data[key];
-              // Solo establecer los valores, sin marcar botones ni actualizar el resumen
               if (key === 'selectedAmount') {
                 const amount = data[key];
-                selectedAmountInput.value = amount;
-                selectedPackageInput.value = packageMapping[amount];
-                // No marcamos ningún botón como .selected ni actualizamos el resumen
+                if (selectedAmountInput) selectedAmountInput.value = amount;
+                if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
               }
             }
           });
           console.log('Form data loaded from localStorage:', data);
-          // No llamamos a updateSummary() aquí para evitar simular una selección
         }
       };
 
-      // Validar cada paso
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
         if (!step) {
@@ -602,14 +592,14 @@
         let valid = true;
 
         if (stepIndex === 0) {
-          if (!hasManualSelection || !selectedPackageInput.value) {
+          if (!hasManualSelection || !selectedPackageInput?.value) {
             valid = false;
             if (donationError) donationError.style.display = 'block';
             showMessage('Please select a donation amount.', 'error');
           } else {
             if (donationError) donationError.style.display = 'none';
           }
-          console.log(`Validating step 0: package=${selectedPackageInput.value}, valid=${valid}, hasManualSelection=${hasManualSelection}`);
+          console.log(`Validating step 0: package=${selectedPackageInput?.value || 'none'}, valid=${valid}, hasManualSelection=${hasManualSelection}`);
         } else {
           const inputs = step.querySelectorAll('input[required], select[required]');
           inputs.forEach(input => {
@@ -642,9 +632,8 @@
         return valid;
       };
 
-      // Validación adicional antes de enviar
       const validateBeforeSubmit = () => {
-        if (!hasManualSelection || !selectedPackageInput.value) {
+        if (!hasManualSelection || !selectedPackageInput?.value) {
           showMessage('No donation amount selected. Please go back to Step 1.', 'error');
           return false;
         }
@@ -653,7 +642,7 @@
           showMessage('Please enter a valid email address.', 'error');
           return false;
         }
-        const cardNumber = document.getElementById('cardNumber')?.value.replace(/\s/g, '');
+        const cardNumber = document.getElementById('cardNumber')?.value?.replace(/\s/g, '');
         if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
           showMessage('Please enter a valid 16-digit card number.', 'error');
           return false;
@@ -701,24 +690,22 @@
         return true;
       };
 
-      // Manejar clics en los botones de donación
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
           console.log(`Button clicked: ${button.getAttribute('data-amount')}`);
           presetButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
-          selectedAmountInput.value = amount;
-          selectedPackageInput.value = packageMapping[amount];
-          hasManualSelection = true; // Marcar que hubo una selección manual
+          if (selectedAmountInput) selectedAmountInput.value = amount;
+          if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
+          hasManualSelection = true;
           if (donationError) donationError.style.display = 'none';
           saveFormData();
           updateSummary();
         });
       });
 
-      // Navegación: Botón "Next"
-      nextBtn.addEventListener('click', () => {
+      nextBtn?.addEventListener('click', () => {
         if (validateStep(currentStep)) {
           currentStep++;
           showStep(currentStep);
@@ -728,14 +715,12 @@
         }
       });
 
-      // Navegación: Botón "Previous"
-      prevBtn.addEventListener('click', () => {
+      prevBtn?.addEventListener('click', () => {
         currentStep--;
         showStep(currentStep);
         updateSummary();
       });
 
-      // Función para enviar la solicitud con reintentos
       const sendRequestWithRetry = async (json, retries = 3, delay = 2000) => {
         for (let attempt = 1; attempt <= retries; attempt++) {
           try {
@@ -753,6 +738,9 @@
           } catch (err) {
             console.error(`Attempt ${attempt} failed:`, err);
             if (attempt === retries) {
+              if (err.message.includes('Failed to fetch')) {
+                return { success: false, error: new Error('CORS error: The server is not configured to accept requests from this origin (https://unique-fudge-77f3e1.netlify.app). Please contact support to resolve this issue.') };
+              }
               return { success: false, error: err };
             }
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -760,8 +748,7 @@
         }
       };
 
-      // Enviar el formulario
-      form.addEventListener('submit', async (e) => {
+      form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
           showMessage('Please complete all required fields.', 'error');
@@ -769,6 +756,11 @@
         }
 
         if (!validateBeforeSubmit()) {
+          return;
+        }
+
+        if (!selectedPackageInput?.value) {
+          showMessage('No donation package selected. Please go back to Step 1.', 'error');
           return;
         }
 
@@ -800,16 +792,22 @@
             currentStep = 0;
             showStep(currentStep);
             presetButtons.forEach(btn => btn.classList.remove('selected'));
-            selectedAmountInput.value = '';
-            selectedPackageInput.value = '';
-            hasManualSelection = false; // Resetear la bandera
+            if (selectedAmountInput) selectedAmountInput.value = '';
+            if (selectedPackageInput) selectedPackageInput.value = '';
+            hasManualSelection = false;
             updateSummary();
           } else {
             throw result.error;
           }
         } catch (err) {
           console.error('Submission error:', err);
-          showMessage('We couldn’t process your donation right now. Please check your internet connection and try again, or contact support if the issue persists.', 'error', 5000);
+          if (err.message.includes('CORS')) {
+            showMessage('Unable to process your donation due to a server configuration issue (CORS). The server does not allow requests from this site. Please contact support.', 'error', 5000);
+          } else if (err.message.includes('Server error')) {
+            showMessage(`The server rejected the request: ${err.message}. Please try again or contact support.`, 'error', 5000);
+          } else {
+            showMessage('We couldn’t process your donation right now. Please check your internet connection and try again, or contact support if the issue persists.', 'error', 5000);
+          }
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (prevBtn) prevBtn.disabled = false;
@@ -817,7 +815,6 @@
         }
       });
 
-      // Cargar países
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
         .then(response => {
           if (!response.ok) {
@@ -846,7 +843,6 @@
           loadFormData();
         });
 
-      // Inicialización
       showStep(currentStep);
       updateSummary();
     });
