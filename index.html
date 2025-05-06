@@ -6,26 +6,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Luminaroots Inspired Palette */
-      --primary-color: #FFC107; /* Gold/Yellow */
-      --primary-hover: #E0A800; /* Darker Gold/Yellow for hover */
-      --primary-shadow-color: rgba(255, 193, 7, 0.5); /* Shadow for focus */
-      --secondary-color: #007BFF; /* Blue for preset donation buttons */
+      --primary-color: #FFC107;
+      --primary-hover: #E0A800;
+      --primary-shadow-color: rgba(255, 193, 7, 0.5);
+      --secondary-color: #007BFF;
       --secondary-hover: #0056B3;
       --button-preset-text-color: #FFFFFF;
-      --text-color: #212529; /* Dark gray for text */
-      --label-color: #495057; /* Medium-dark gray for labels */
-      --error-color: #DC3545; /* Red for errors */
-      --bg-body: #F8F9FA; /* Light gray for page background */
-      --bg-panel: #FFFFFF; /* White for form panel */
+      --text-color: #212529;
+      --label-color: #495057;
+      --error-color: #DC3545;
+      --bg-body: #F8F9FA;
+      --bg-panel: #FFFFFF;
       --input-bg: #FFFFFF;
-      --input-border-color: #CED4DA; /* Light gray for input borders */
+      --input-border-color: #CED4DA;
       --input-focus-border-color: var(--primary-color);
-      --button-text-color: #212529; /* Dark text on primary buttons */
-      --button-text-color-light: #FFFFFF; /* Light text for dark buttons */
-      --disabled-bg-color: #6C757D; /* Gray for disabled buttons */
-      --progress-dot-inactive: #CED4DA; /* Light gray for inactive progress dots */
-      --progress-text-inactive: #6C757D; /* Gray for inactive progress text */
+      --button-text-color: #212529;
+      --button-text-color-light: #FFFFFF;
+      --disabled-bg-color: #6C757D;
+      --progress-dot-inactive: #CED4DA;
+      --progress-text-inactive: #6C757D;
       --message-default-bg: transparent;
       --message-default-text: var(--text-color);
       --input-spacing: 12px;
@@ -310,7 +309,7 @@
 
     #donationSummaryDetails p strong {
       color: var(--text-color);
-      display: inline-block;
+      display: INLINE-block;
       margin-right: 10px;
       font-weight: 500;
     }
@@ -412,7 +411,7 @@
             <span class="error-message" id="cardNumberError">Enter a valid 16-digit card number.</span>
           </div>
           <div class="form-group">
-            <label for="cvv">CVV:</label>
+            cvv
             <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" aria-describedby="cvvError" required aria-required="true" />
             <span class="error-message" id="cvvError">3 or 4 digits.</span>
           </div>
@@ -614,6 +613,7 @@
       // Manejar botones de cantidad predefinida
       presetAmountButtons.forEach(button => {
         button.addEventListener('click', () => {
+          console.log(`Preset button clicked: ${button.getAttribute('data-amount')}`); // Depuración
           presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
@@ -626,6 +626,7 @@
 
       // Validación en tiempo real para customDonationAmount
       customDonationInput.addEventListener('input', () => {
+        console.log(`Custom donation input: ${customDonationInput.value}`); // Depuración
         presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
         const customAmount = parseFloat(customDonationInput.value);
         const formGroup = customDonationInput.closest('.form-group');
