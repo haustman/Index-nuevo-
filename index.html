@@ -358,7 +358,7 @@
               <button type="button" class="preset-button" data-amount="200">$200</button>
               <button type="button" class="preset-button" data-amount="500">$500</button>
             </div>
-            <span class="error-message" id="donationError" style="display: none;">Please select a donation amount.</span>
+            <span class="error-message" id="donationError">Please select a donation amount.</span>
           </div>
           <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
           <input type="hidden" id="selectedPackage" name="selectedPackage" required aria-required="true">
@@ -511,7 +511,7 @@
       let currentStep = 0;
       let messageTimeout = null;
 
-      // Mapeo de cantidades a nombres de paquetes (nombres exactos del backend)
+      // Mapeo de cantidades a nombres de paquetes
       const packageMapping = {
         '10': 'Donation1',
         '30': 'Donation2',
@@ -573,9 +573,8 @@
         let valid = true;
 
         if (stepIndex === 0) {
-          const donationValue = parseFloat(finalDonationInput.value);
           const formGroup = finalDonationInput.closest('.form-group');
-          if (isNaN(donationValue) || donationValue <= 0 || !selectedPackageInput.value) {
+          if (!selectedPackageInput.value) {
             valid = false;
             formGroup.classList.add('error');
             donationError.style.display = 'block';
@@ -583,6 +582,7 @@
             formGroup.classList.remove('error');
             donationError.style.display = 'none';
           }
+          console.log(`Validating step 0: package=${selectedPackageInput.value}, valid=${valid}`);
         }
 
         inputs.forEach(input => {
@@ -622,12 +622,12 @@
       // Manejar botones de cantidad predefinida
       presetAmountButtons.forEach(button => {
         button.addEventListener('click', () => {
-          console.log(`Preset button clicked: ${button.getAttribute('data-amount')}`); // Depuración
+          console.log(`Preset button clicked: ${button.getAttribute('data-amount')}`);
           presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
           finalDonationInput.value = amount;
-          selectedPackageInput.value = packageMapping[amount]; // Asignar nombre del paquete
+          selectedPackageInput.value = packageMapping[amount];
           finalDonationInput.closest('.form-group').classList.remove('error');
           donationError.style.display = 'none';
           updateDonationSummary();
@@ -674,11 +674,12 @@
         prevBtn.disabled = true;
         loading.style.display = 'block';
         const fd = new FormData(form);
-        const json = { planReferenceId: selectedPackageInput.value }; // Usar el nombre del paquete
+        const json = { planReferenceId: selectedPackageInput.value };
 
         fd.forEach((value, key) => {
-          if (key === 'cardNumber') json[key] = value.replace(/\s/g, '');
-          else if (key === 'donationAmount' || key === 'expMonth' || key === 'expYear') {
+          if (key === 'cardNumber') {
+            json[key] = value.replace(/\s/g, '');
+          } else if (key === 'donationAmount' || key === 'expMonth' || key === 'expYear') {
             json[key] = (value.trim() === '' || isNaN(value)) ? null : Number(value);
           } else if (key !== 'selectedPackage') {
             json[key] = value;
