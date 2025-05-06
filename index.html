@@ -722,6 +722,20 @@
             json.donationAmount = Number(json.donationAmount);
         }
 
+        // Validación adicional
+        const requiredFields = ['donationAmount', 'firstName', 'lastName', 'emailAddress', 'phoneNumber', 'cardName', 'cardNumber', 'cvv', 'expMonth', 'expYear', 'address', 'countryCode', 'stateProvince', 'city', 'postalCode'];
+        for (const field of requiredFields) {
+          if (!json[field] || json[field] === '' || json[field] === null) {
+            showMessageFunc('Missing or invalid field: ' + field + '. Please fill all required fields.', 'error', 5000);
+            submitBtn.disabled = false;
+            prevBtn.disabled = false;
+            loading.style.display = 'none';
+            return;
+          }
+        }
+
+        console.log("Datos enviados al servidor:", json);
+
         try {
           const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages/createPurchases', {
             method: 'POST',
