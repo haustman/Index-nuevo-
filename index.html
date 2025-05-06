@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donation Form - Luminaroots</title> <!-- Agregado título -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -95,8 +96,18 @@
     }
     .progress-step.active::before { background: var(--primary-color); }
     
-    .step { display: none; opacity: 0; transition: opacity 0.3s ease; }
-    .step.active { display: block; opacity: 1; }
+    .step {
+      display: none;
+      opacity: 0;
+      height: 0; /* Ayuda a evitar problemas de renderizado */
+      overflow: hidden;
+      transition: opacity 0.3s ease, height 0.3s ease; /* Transición ajustada */
+    }
+    .step.active {
+      display: block;
+      opacity: 1;
+      height: auto; /* Permite que el contenido se muestre correctamente */
+    }
     
     .inputs-container {
       background: var(--bg-panel);
@@ -187,7 +198,6 @@
         text-align: center;
         font-size: 1.1em;
     }
-
 
     .buttons {
       display: flex;
@@ -294,7 +304,6 @@
     }
     #donationSummaryDetails p strong {
       color: var(--text-color);
-      /* min-width: 130px; / / Removed for flex alignment */
       display: inline-block;
       margin-right: 10px;
       font-weight: 500;
@@ -305,7 +314,11 @@
         word-break: break-word;
     }
 
-
+    @media (max-width: 768px) { /* Añadido breakpoint intermedio */
+      .form-wrapper, .order-summary-wrapper { padding: 18px; }
+      .progress-step, label, input, select, #message, button { font-size: 14px; }
+      .buttons { gap: 9px; }
+    }
     @media (max-width: 600px) {
       body { padding: 10px; }
       .form-wrapper, .order-summary-wrapper { padding: 15px; max-width: 100%; }
@@ -337,20 +350,20 @@
         <div class="inputs-container">
           <h3 class="step-title">Choose Your Donation Amount</h3>
           <div class="form-group">
-            <label>Select an amount:</label>
+            <label for="donationAmount">Select an amount:</label>
             <div class="preset-amounts">
-              <button type="button" class="preset-button" data-amount="10">$10</button>
-              <button type="button" class="preset-button" data-amount="30">$30</button>
-              <button type="button" class="preset-button" data-amount="50">$50</button>
-              <button type="button" class="preset-button" data-amount="100">$100</button>
-              <button type="button" class="preset-button" data-amount="200">$200</button>
-              <button type="button" class="preset-button" data-amount="500">$500</button>
+              <button type="button" class="preset-button" data-amount="10" aria-pressed="false">$10</button>
+              <button type="button" class="preset-button" data-amount="30" aria-pressed="false">$30</button>
+              <button type="button" class="preset-button" data-amount="50" aria-pressed="false">$50</button>
+              <button type="button" class="preset-button" data-amount="100" aria-pressed="false">$100</button>
+              <button type="button" class="preset-button" data-amount="200" aria-pressed="false">$200</button>
+              <button type="button" class="preset-button" data-amount="500" aria-pressed="false">$500</button>
             </div>
           </div>
           <div class="form-group">
             <label for="customDonationAmount">Or enter a custom amount ($):</label>
-            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount" min="1" step="any" class="form-control" />
-            <span class="error-message">Please enter a valid positive amount.</span>
+            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount" min="1" step="any" class="form-control" aria-describedby="customDonationAmountError" />
+            <span class="error-message" id="customDonationAmountError">Please enter a valid positive amount.</span>
           </div>
           <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
         </div>
@@ -361,23 +374,23 @@
           <h3 class="step-title">Your Personal Details</h3>
           <div class="form-group">
             <label for="firstName">First Name:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" />
-            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" aria-describedby="firstNameError" />
+            <span class="error-message" id="firstNameError">Only letters, spaces, hyphens, and apostrophes.</span>
           </div>
           <div class="form-group">
             <label for="lastName">Last Name:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" />
-            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" aria-describedby="lastNameError" />
+            <span class="error-message" id="lastNameError">Only letters, spaces, hyphens, and apostrophes.</span>
           </div>
           <div class="form-group">
             <label for="emailAddress">Email Address:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" required aria-required="true" />
-            <span class="error-message">Please enter a valid email address.</span>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" required aria-required="true" aria-describedby="emailAddressError" />
+            <span class="error-message" id="emailAddressError">Please enter a valid email address.</span>
           </div>
           <div class="form-group">
             <label for="phoneNumber">Phone Number:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" required aria-required="true" />
-            <span class="error-message">Numbers only (10–15 digits).</span>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" required aria-required="true" aria-describedby="phoneNumberError" />
+            <span class="error-message" id="phoneNumberError">Numbers only (10–15 digits).</span>
           </div>
         </div>
       </div>
@@ -388,28 +401,28 @@
           <p style="text-align:center; font-size:0.9em; color:var(--label-color); margin-bottom:15px;">Your payment details are processed securely and will not be displayed in the summary.</p>
           <div class="form-group">
             <label for="cardName">Name on Card:</label>
-            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" required aria-required="true" />
-            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" required aria-required="true" aria-describedby="cardNameError" />
+            <span class="error-message" id="cardNameError">Only letters, spaces, hyphens, and apostrophes.</span>
           </div>
           <div class="form-group">
             <label for="cardNumber">Card Number:</label>
-            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" />
-            <span class="error-message">Enter a valid 16-digit card number.</span>
+            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" aria-describedby="cardNumberError" />
+            <span class="error-message" id="cardNumberError">Enter a valid 16-digit card number.</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required aria-required="true" />
-            <span class="error-message">3 or 4 digits.</span>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required aria-required="true" aria-describedby="cvvError" />
+            <span class="error-message" id="cvvError">3 or 4 digits.</span>
           </div>
           <div class="form-group">
             <label for="expMonth">Expiration Month:</label>
-            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" required aria-required="true" />
-            <span class="error-message">Enter a month (1–12).</span>
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" required aria-required="true" aria-describedby="expMonthError" />
+            <span class="error-message" id="expMonthError">Enter a month (1–12).</span>
           </div>
           <div class="form-group">
             <label for="expYear">Expiration Year:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required aria-required="true" />
-            <span class="error-message">Enter a year (e.g., 2025–2035).</span>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required aria-required="true" aria-describedby="expYearError" />
+            <span class="error-message" id="expYearError">Enter a year (e.g., 2025–2035).</span>
           </div>
         </div>
       </div>
@@ -419,32 +432,33 @@
           <h3 class="step-title">Your Address</h3>
           <div class="form-group">
             <label for="address">Street Address:</label>
-            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" required aria-required="true" />
-            <span class="error-message">Please enter a valid address.</span>
+            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" required aria-required="true" aria-describedby="addressError" />
+            <span class="error-message" id="addressError">Please enter a valid address.</span>
           </div>
           <div class="form-group">
             <label for="countryCode">Country:</label>
-            <select id="countryCode" name="countryCode" required aria-required="true">
+            <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCodeError">
               <option value="">Select a country</option>
+              <option value="US">United States</option> <!-- Opción predeterminada -->
             </select>
-            <span class="error-message">Please select your country.</span>
+            <span class="error-message" id="countryCodeError">Please select your country.</span>
           </div>
           <div class="form-group">
             <label for="stateProvince">State / Province:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California or Ontario" required aria-required="true" />
-            <span class="error-message">Letters, numbers, spaces, hyphens allowed.</span>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California or Ontario" required aria-required="true" aria-describedby="stateProvinceError" />
+            <span class="error-message" id="stateProvinceError">Letters, numbers, spaces, hyphens allowed.</span>
           </div>
           <div class="form-group">
             <label for="city">City:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" required aria-required="true" />
-            <span class="error-message">Letters, spaces, hyphens allowed.</span>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" required aria-required="true" aria-describedby="cityError" />
+            <span class="error-message" id="cityError">Letters, spaces, hyphens allowed.</span>
           </div>
           <div class="form-group">
             <label for="postalCode">Postal / Zip Code:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210 or SW1A 1AA" required aria-required="true" />
-            <span class="error-message">1–10 characters (letters, numbers, spaces, hyphens).</span>
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210 or SW1A 1AA" required aria-required="true" aria-describedby="postalCodeError" />
+            <span class="error-message" id="postalCodeError">1–10 characters (letters, numbers, spaces, hyphens).</span>
           </div>
-          <input type="hidden" id="ipAddress" name="ipAddress" value="127.0.0.1" /> 
+          <!-- Eliminado ipAddress porque debe manejarse en el servidor -->
         </div>
         <div id="loading" class="text-center">Submitting...</div>
       </div>
@@ -456,7 +470,8 @@
         <button type="submit" id="submitBtn" style="display:none;" aria-label="Submit form">Submit Donation</button>
       </div>
     </form>
-  </div> <div class="order-summary-wrapper">
+  </div>
+  <div class="order-summary-wrapper">
     <h3>Your Donation Summary</h3>
     <div id="donationSummaryDetails">
         <div class="summary-section">
@@ -512,25 +527,29 @@
           country: document.getElementById('summaryCountry'),
       };
       
+      // Función para sanitizar valores y prevenir XSS
+      const sanitizeValue = (value) => {
+        const div = document.createElement('div');
+        div.textContent = value;
+        return div.innerHTML;
+      };
+
       function updateDonationSummary() {
           const donationVal = parseFloat(finalDonationInput.value);
           summaryElements.donationAmount.textContent = (!isNaN(donationVal) && donationVal > 0) ? '$' + donationVal.toFixed(2) : '-';
           
-          summaryElements.firstName.textContent = document.getElementById('firstName').value || '-';
-          summaryElements.lastName.textContent = document.getElementById('lastName').value || '-';
-          summaryElements.email.textContent = document.getElementById('emailAddress').value || '-';
-          summaryElements.phone.textContent = document.getElementById('phoneNumber').value || '-';
+          summaryElements.firstName.textContent = sanitizeValue(document.getElementById('firstName').value) || '-';
+          summaryElements.lastName.textContent = sanitizeValue(document.getElementById('lastName').value) || '-';
+          summaryElements.email.textContent = sanitizeValue(document.getElementById('emailAddress').value) || '-';
+          summaryElements.phone.textContent = sanitizeValue(document.getElementById('phoneNumber').value) || '-';
           
-          summaryElements.address.textContent = document.getElementById('address').value || '-';
-          summaryElements.city.textContent = document.getElementById('city').value || '-';
-          summaryElements.state.textContent = document.getElementById('stateProvince').value || '-';
-          summaryElements.postalCode.textContent = document.getElementById('postalCode').value || '-';
+          summaryElements.address.textContent = sanitizeValue(document.getElementById('address').value) || '-';
+          summaryElements.city.textContent = sanitizeValue(document.getElementById('city').value) || '-';
+          summaryElements.state.textContent = sanitizeValue(document.getElementById('stateProvince').value) || '-';
+          summaryElements.postalCode.textContent = sanitizeValue(document.getElementById('postalCode').value) || '-';
           
           const countrySelect = document.getElementById('countryCode');
-          summaryElements.country.textContent = (countrySelect.value && countrySelect.selectedIndex > 0) ? countrySelect.options[countrySelect.selectedIndex].text : '-';
-          
-          // Show summary if it was hidden, or just ensure it's visible
-          // document.querySelector('.order-summary-wrapper').style.display = 'block';
+          summaryElements.country.textContent = (countrySelect.value && countrySelect.selectedIndex > 0) ? sanitizeValue(countrySelect.options[countrySelect.selectedIndex].text) : '-';
       }
 
       const currentYear = new Date().getFullYear();
@@ -538,19 +557,19 @@
       if (expYearInput) {
         expYearInput.min = currentYear;
         expYearInput.placeholder = "YYYY";
-        // expYearInput.pattern = ^(${currentYear}|${Array.from({length: 11}, (_, i) => currentYear + i).join('|')})$;
         const expYearError = expYearInput.closest('.form-group').querySelector('.error-message');
         if (expYearError) {
-            expYearError.textContent = Enter a year (e.g., ${currentYear}–${currentYear + 10}).;
+            expYearError.textContent = `Enter a year (e.g., ${currentYear}–${currentYear + 10}).`;
         }
       }
 
-
       const showStep = (index) => {
-        steps.forEach((step, i) => step.classList.toggle('active', i === index));
+        steps.forEach((step, i) => {
+          step.classList.toggle('active', i === index);
+        });
         progressSteps.forEach((stepBar, i) => {
             stepBar.classList.remove('active');
-            if (i <= index) { // Mark current and all previous steps as active
+            if (i <= index) {
                 stepBar.classList.add('active'); 
             }
         });
@@ -558,7 +577,7 @@
         prevBtn.style.display = index > 0 ? 'inline-block' : 'none';
         nextBtn.style.display = index < steps.length - 1 ? 'inline-block' : 'none';
         submitBtn.style.display = index === steps.length - 1 ? 'inline-block' : 'none';
-        if(submitBtn.style.display === 'inline-block'){ // If submit is visible, change next button text
+        if (submitBtn.style.display === 'inline-block') {
             submitBtn.textContent = 'Submit Donation';
         }
       };
@@ -569,17 +588,51 @@
         const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
         let valid = true;
 
-        if (currentStep === 0) { // Donation Step
+        if (currentStep === 0) {
             const donationValue = parseFloat(finalDonationInput.value);
             const customDonationFormGroup = customDonationInput.closest('.form-group');
             const errorMsgSpan = customDonationFormGroup.querySelector('.error-message');
 
             if (isNaN(donationValue) || donationValue <= 0) {
                 valid = false;
-                if(customDonationFormGroup) customDonationFormGroup.classList.add('error');
-                if(errorMsgSpan) errorMsgSpan.textContent = 'Please select or enter a valid donation amount.';
+                if (customDonationFormGroup) customDonationFormGroup.classList.add('error');
+                if (errorMsgSpan) errorMsgSpan.textContent = 'Please select or enter a valid donation amount.';
             } else {
-                if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+                if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+            }
+        }
+
+        if (currentStep === 2) { // Payment Step
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const cvv = document.getElementById('cvv').value;
+            const expMonth = parseInt(document.getElementById('expMonth').value);
+            const expYear = parseInt(document.getElementById('expYear').value);
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentYearVal = currentDate.getFullYear();
+
+            if (cardNumber.length !== 16) {
+                const cardGroup = document.getElementById('cardNumber').closest('.form-group');
+                if (cardGroup) cardGroup.classList.add('error');
+                valid = false;
+            }
+
+            if (!/^\d{3,4}$/.test(cvv)) {
+                const cvvGroup = document.getElementById('cvv').closest('.form-group');
+                if (cvvGroup) cvvGroup.classList.add('error');
+                valid = false;
+            }
+
+            if (expMonth < 1 || expMonth > 12) {
+                const monthGroup = document.getElementById('expMonth').closest('.form-group');
+                if (monthGroup) monthGroup.classList.add('error');
+                valid = false;
+            }
+
+            if (expYear < currentYearVal || expYear > currentYearVal + 10 || (expYear === currentYearVal && expMonth < currentMonth)) {
+                const yearGroup = document.getElementById('expYear').closest('.form-group');
+                if (yearGroup) yearGroup.classList.add('error');
+                valid = false;
             }
         }
 
@@ -587,18 +640,21 @@
           const formGroup = input.closest('.form-group');
           input.dataset.touched = true; 
           if (!input.checkValidity()) {
-            if(formGroup) formGroup.classList.add('error');
+            if (formGroup) formGroup.classList.add('error');
             valid = false;
-            // Add live input validation feedback if already marked as error
-            input.addEventListener('input', function liveValidateOnError() {
-                if(input.checkValidity()){
-                    if(formGroup) formGroup.classList.remove('error');
+
+            // Evitar múltiples listeners
+            const liveValidateOnError = function() {
+                if (input.checkValidity()) {
+                    if (formGroup) formGroup.classList.remove('error');
                 } else {
-                    if(formGroup) formGroup.classList.add('error'); // Keep error if still invalid
+                    if (formGroup) formGroup.classList.add('error');
                 }
-            });
+            };
+            input.removeEventListener('input', liveValidateOnError);
+            input.addEventListener('input', liveValidateOnError);
           } else {
-            if(formGroup) formGroup.classList.remove('error');
+            if (formGroup) formGroup.classList.remove('error');
           }
         });
         return valid;
@@ -608,7 +664,7 @@
         clearTimeout(messageTimeout);
         messageDiv.className = 'text-center'; 
         messageDiv.classList.add(type); 
-        messageDiv.innerHTML = <p>${msg}</p>;
+        messageDiv.innerHTML = `<p>${sanitizeValue(msg)}</p>`;
         messageDiv.style.display = 'flex'; 
 
         messageTimeout = setTimeout(() => { 
@@ -620,32 +676,37 @@
       
       presetAmountButtons.forEach(button => {
         button.addEventListener('click', () => {
-          presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
+          presetAmountButtons.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.setAttribute('aria-pressed', 'false');
+          });
           button.classList.add('selected');
+          button.setAttribute('aria-pressed', 'true');
           const amount = button.getAttribute('data-amount');
           customDonationInput.value = ''; 
           finalDonationInput.value = amount;
           const customDonationFormGroup = customDonationInput.closest('.form-group');
-          if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+          if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
           updateDonationSummary();
         });
       });
 
       customDonationInput.addEventListener('input', () => {
-        presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
+        presetAmountButtons.forEach(btn => {
+          btn.classList.remove('selected');
+          btn.setAttribute('aria-pressed', 'false');
+        });
         const customAmount = parseFloat(customDonationInput.value);
         const customDonationFormGroup = customDonationInput.closest('.form-group');
 
         if (!isNaN(customAmount) && customAmount > 0) {
           finalDonationInput.value = customAmount;
-          if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+          if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
         } else {
           finalDonationInput.value = ''; 
-          // Optionally show error if user types invalid then blurs, handled by validateStep on Next
         }
         updateDonationSummary();
       });
-
 
       const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -673,51 +734,57 @@
         }
 
         try {
-          const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', { 
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(json)
+          const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages/createPurchases', { 
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Origin': 'https://www.luminaroots.org' // Añadido para CORS y returnUrl
+            },
+            body: JSON.stringify(json)
           });
           const data = await res.json();
           
           if (!res.ok) {
-            throw new Error(data.statusReason || Server error: ${res.status});
+            throw new Error(data.statusReason || `Server error: ${res.status}`);
           }
           showMessageFunc(data.statusReason || 'Thank you! Your donation has been processed successfully!', data.status === 'Approved' ? 'success' : 'info', 5000);
           if (data.status === 'Approved') {
-            // form.reset(); // Optionally reset form
-            // currentStep = 0; 
-            // showStep(currentStep);
-            // presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
-            // finalDonationInput.value = '';
-            // updateDonationSummary(); // Clear summary
+            form.reset();
+            currentStep = 0; 
+            showStep(currentStep);
+            presetAmountButtons.forEach(btn => {
+              btn.classList.remove('selected');
+              btn.setAttribute('aria-pressed', 'false');
+            });
+            finalDonationInput.value = '';
+            updateDonationSummary();
           }
         } catch(err) {
-          showMessageFunc(⚠️ Transaction Error: ${err.message}, 'error', 5000);
+          showMessageFunc(`⚠️ Transaction Error: ${err.message}`, 'error', 5000);
         } finally {
           submitBtn.disabled = false;
           prevBtn.disabled = false;
-          // Keep user on the current (last) step after submission attempt
-          // showStep(currentStep); // Not needed unless resetting
           loading.style.display = 'none';
         }
       };
 
       nextBtn.addEventListener('click', () => {
         if (validateStep()) { 
-            updateDonationSummary(); // Update summary before moving
+            updateDonationSummary();
             currentStep++; 
             showStep(currentStep); 
             messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
         } else {
              if (currentStep === 0 && (isNaN(parseFloat(finalDonationInput.value)) || parseFloat(finalDonationInput.value) <= 0)) {
                  showMessageFunc('⚠️ Please select or enter a valid donation amount to proceed.', 'error');
-            } else {
-                showMessageFunc('⚠️ Please complete the current step correctly before proceeding.', 'error');
-            }
+             } else {
+                 showMessageFunc('⚠️ Please complete the current step correctly before proceeding.', 'error');
+             }
         }
       });
 
       prevBtn.addEventListener('click', () => { 
-        updateDonationSummary(); // Update summary when going back too
+        updateDonationSummary();
         currentStep--; 
         showStep(currentStep); 
         messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
@@ -725,36 +792,35 @@
       
       form.addEventListener('submit', handleFormSubmit);
       
-      // Add blur listeners to update summary live
       const fieldsToSummarizeIds = ['firstName', 'lastName', 'emailAddress', 'phoneNumber', 'address', 'city', 'stateProvince', 'postalCode', 'countryCode'];
       fieldsToSummarizeIds.forEach(id => {
           const element = document.getElementById(id);
-          if(element) {
-              element.addEventListener('blur', () => {
-                  if(element.checkValidity() || element.value === '') { // Also update if field is cleared
+          if (element) {
+              const updateOnChange = () => {
+                  if (element.checkValidity() || element.value === '') {
                       updateDonationSummary();
                   }
-              });
+              };
+              element.addEventListener('blur', updateOnChange);
               if (element.tagName === 'SELECT') {
-                  element.addEventListener('change', updateDonationSummary);
+                  element.addEventListener('change', updateOnChange);
               }
           }
       });
 
       showStep(currentStep); 
-      updateDonationSummary(); // Initial call to set up summary with placeholders
+      updateDonationSummary();
       messageDiv.style.display = 'none';
-
 
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2') 
         .then(response => {
             if (!response.ok) {
-                throw new Error(Network response was not ok: ${response.statusText});
+                throw new Error(`Network response was not ok: ${response.statusText}`);
             }
             return response.json();
         })
         .then(data => {
-          data.sort((a,b)=> a.name.common.localeCompare(b.name.common));
+          data.sort((a, b) => a.name.common.localeCompare(b.name.common));
           const select = document.getElementById('countryCode');
           data.forEach(country => { 
             const opt = document.createElement('option');
@@ -765,11 +831,10 @@
         }).catch(error => {
             console.error('Error fetching country data:', error);
             const select = document.getElementById('countryCode');
-            if(select) {
-                select.innerHTML = '<option value="">Error loading countries</option>';
-                select.disabled = true;
+            if (select) {
+                select.innerHTML = '<option value="US">United States</option>';
             }
-            showMessageFunc('Could not load country list. Please try again later.', 'error', 5000);
+            showMessageFunc('Could not load country list. Defaulting to United States.', 'info', 5000);
         });
     });
   </script>
