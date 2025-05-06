@@ -294,7 +294,6 @@
     }
     #donationSummaryDetails p strong {
       color: var(--text-color);
-      /* min-width: 130px; / / Removed for flex alignment */
       display: inline-block;
       margin-right: 10px;
       font-weight: 500;
@@ -409,7 +408,7 @@
           <div class="form-group">
             <label for="expYear">Expiration Year:</label>
             <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required aria-required="true" />
-            <span class="error-message">Enter a year (e.g., 2025–2035).</span>
+            <span class="error-message">Enter a year (2025–2035).</span>
           </div>
         </div>
       </div>
@@ -528,29 +527,27 @@
           
           const countrySelect = document.getElementById('countryCode');
           summaryElements.country.textContent = (countrySelect.value && countrySelect.selectedIndex > 0) ? countrySelect.options[countrySelect.selectedIndex].text : '-';
-          
-          // Show summary if it was hidden, or just ensure it's visible
-          // document.querySelector('.order-summary-wrapper').style.display = 'block';
       }
 
+      // Set up expiration year validation
       const currentYear = new Date().getFullYear();
       const expYearInput = document.getElementById('expYear');
       if (expYearInput) {
         expYearInput.min = currentYear;
+        expYearInput.max = currentYear + 10;
         expYearInput.placeholder = "YYYY";
-        // expYearInput.pattern = ^(${currentYear}|${Array.from({length: 11}, (_, i) => currentYear + i).join('|')})$;
+        
         const expYearError = expYearInput.closest('.form-group').querySelector('.error-message');
         if (expYearError) {
-            expYearError.textContent = Enter a year (e.g., ${currentYear}–${currentYear + 10}).;
+            expYearError.textContent = `Enter a year (${currentYear}–${currentYear + 10}).`;
         }
       }
-
 
       const showStep = (index) => {
         steps.forEach((step, i) => step.classList.toggle('active', i === index));
         progressSteps.forEach((stepBar, i) => {
             stepBar.classList.remove('active');
-            if (i <= index) { // Mark current and all previous steps as active
+            if (i <= index) {
                 stepBar.classList.add('active'); 
             }
         });
@@ -558,7 +555,8 @@
         prevBtn.style.display = index > 0 ? 'inline-block' : 'none';
         nextBtn.style.display = index < steps.length - 1 ? 'inline-block' : 'none';
         submitBtn.style.display = index === steps.length - 1 ? 'inline-block' : 'none';
-        if(submitBtn.style.display === 'inline-block'){ // If submit is visible, change next button text
+        
+        if(submitBtn.style.display === 'inline-block') {
             submitBtn.textContent = 'Submit Donation';
         }
       };
@@ -569,32 +567,40 @@
         const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
         let valid = true;
 
-        if (currentStep === 0) { // Donation Step
+        // Special validation for donation step
+        if (currentStep === 0) {
             const donationValue = parseFloat(finalDonationInput.value);
             const customDonationFormGroup = customDonationInput.closest('.form-group');
             const errorMsgSpan = customDonationFormGroup.querySelector('.error-message');
 
-            if (isNaN(donationValue) || donationValue <= 0) {
+            if (isNaN(donationValue) {
                 valid = false;
-                if(customDonationFormGroup) customDonationFormGroup.classList.add('error');
-                if(errorMsgSpan) errorMsgSpan.textContent = 'Please select or enter a valid donation amount.';
+                customDonationFormGroup.classList.add('error');
+                errorMsgSpan.textContent = 'Please select or enter a donation amount.';
+            } else if (donationValue <= 0) {
+                valid = false;
+                customDonationFormGroup.classList.add('error');
+                errorMsgSpan.textContent = 'Donation amount must be greater than $0.';
             } else {
-                if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+                customDonationFormGroup.classList.remove('error');
             }
         }
 
+        // Validate all required fields in current step
         inputs.forEach(input => {
           const formGroup = input.closest('.form-group');
           input.dataset.touched = true; 
+          
           if (!input.checkValidity()) {
             if(formGroup) formGroup.classList.add('error');
             valid = false;
-            // Add live input validation feedback if already marked as error
+            
+            // Add live validation feedback
             input.addEventListener('input', function liveValidateOnError() {
                 if(input.checkValidity()){
                     if(formGroup) formGroup.classList.remove('error');
                 } else {
-                    if(formGroup) formGroup.classList.add('error'); // Keep error if still invalid
+                    if(formGroup) formGroup.classList.add('error');
                 }
             });
           } else {
@@ -604,11 +610,11 @@
         return valid;
       };
 
-      const showMessageFunc = (msg, type, duration = 3000) => {
+      const showMessage = (msg, type, duration = 3000) => {
         clearTimeout(messageTimeout);
         messageDiv.className = 'text-center'; 
         messageDiv.classList.add(type); 
-        messageDiv.innerHTML = <p>${msg}</p>;
+        messageDiv.innerHTML = `<p>${msg}</p>`;
         messageDiv.style.display = 'flex'; 
 
         messageTimeout = setTimeout(() => { 
@@ -618,6 +624,7 @@
         }, duration);
       };
       
+      // Handle preset donation button clicks
       presetAmountButtons.forEach(button => {
         button.addEventListener('click', () => {
           presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
@@ -631,26 +638,36 @@
         });
       });
 
+      // Handle custom donation input
       customDonationInput.addEventListener('input', () => {
         presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
         const customAmount = parseFloat(customDonationInput.value);
         const customDonationFormGroup = customDonationInput.closest('.form-group');
 
-        if (!isNaN(customAmount) && customAmount > 0) {
+        if (!isNaN(customAmount) {
           finalDonationInput.value = customAmount;
           if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
         } else {
           finalDonationInput.value = ''; 
-          // Optionally show error if user types invalid then blurs, handled by validateStep on Next
         }
         updateDonationSummary();
       });
 
+      // Format card number as user types
+      const cardNumberInput = document.getElementById('cardNumber');
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function(e) {
+          const value = e.target.value.replace(/\s+/g, '');
+          if (value.length > 0) {
+            e.target.value = value.match(/.{1,4}/g).join(' ');
+          }
+        });
+      }
 
       const handleFormSubmit = async (e) => {
         e.preventDefault();
         if (!validateStep()) {
-            showMessageFunc('⚠️ Please ensure all required fields are correctly filled in the current step.', 'error');
+            showMessage('⚠️ Please ensure all required fields are correctly filled in the current step.', 'error');
             return;
         }
         
@@ -674,53 +691,66 @@
 
         try {
           const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', { 
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(json)
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(json)
           });
           const data = await res.json();
           
           if (!res.ok) {
-            throw new Error(data.statusReason || Server error: ${res.status});
+            throw new Error(data.statusReason || `Server error: ${res.status}`);
           }
-          showMessageFunc(data.statusReason || 'Thank you! Your donation has been processed successfully!', data.status === 'Approved' ? 'success' : 'info', 5000);
+          
+          showMessage(
+            data.statusReason || 'Thank you! Your donation has been processed successfully!', 
+            data.status === 'Approved' ? 'success' : 'info', 
+            5000
+          );
+          
           if (data.status === 'Approved') {
-            // form.reset(); // Optionally reset form
-            // currentStep = 0; 
+            // Optionally reset form after successful submission
+            // form.reset();
+            // currentStep = 0;
             // showStep(currentStep);
             // presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
             // finalDonationInput.value = '';
-            // updateDonationSummary(); // Clear summary
+            // updateDonationSummary();
           }
         } catch(err) {
-          showMessageFunc(⚠️ Transaction Error: ${err.message}, 'error', 5000);
+          showMessage(`⚠️ Transaction Error: ${err.message}`, 'error', 5000);
         } finally {
           submitBtn.disabled = false;
           prevBtn.disabled = false;
-          // Keep user on the current (last) step after submission attempt
-          // showStep(currentStep); // Not needed unless resetting
           loading.style.display = 'none';
         }
       };
 
       nextBtn.addEventListener('click', () => {
         if (validateStep()) { 
-            updateDonationSummary(); // Update summary before moving
+            updateDonationSummary();
             currentStep++; 
             showStep(currentStep); 
-            messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
+            messageDiv.className = 'text-center'; 
+            messageDiv.innerHTML = ''; 
+            messageDiv.style.display = 'none';
         } else {
-             if (currentStep === 0 && (isNaN(parseFloat(finalDonationInput.value)) || parseFloat(finalDonationInput.value) <= 0)) {
-                 showMessageFunc('⚠️ Please select or enter a valid donation amount to proceed.', 'error');
+             if (currentStep === 0 && (isNaN(parseFloat(finalDonationInput.value)) {
+                 showMessage('⚠️ Please select or enter a valid donation amount to proceed.', 'error');
+            } else if (currentStep === 0 && parseFloat(finalDonationInput.value) <= 0) {
+                showMessage('⚠️ Donation amount must be greater than $0.', 'error');
             } else {
-                showMessageFunc('⚠️ Please complete the current step correctly before proceeding.', 'error');
+                showMessage('⚠️ Please complete the current step correctly before proceeding.', 'error');
             }
         }
       });
 
       prevBtn.addEventListener('click', () => { 
-        updateDonationSummary(); // Update summary when going back too
+        updateDonationSummary();
         currentStep--; 
         showStep(currentStep); 
-        messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
+        messageDiv.className = 'text-center'; 
+        messageDiv.innerHTML = ''; 
+        messageDiv.style.display = 'none';
       });
       
       form.addEventListener('submit', handleFormSubmit);
@@ -731,7 +761,7 @@
           const element = document.getElementById(id);
           if(element) {
               element.addEventListener('blur', () => {
-                  if(element.checkValidity() || element.value === '') { // Also update if field is cleared
+                  if(element.checkValidity() || element.value === '') {
                       updateDonationSummary();
                   }
               });
@@ -741,20 +771,16 @@
           }
       });
 
-      showStep(currentStep); 
-      updateDonationSummary(); // Initial call to set up summary with placeholders
-      messageDiv.style.display = 'none';
-
-
+      // Load countries list
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2') 
         .then(response => {
             if (!response.ok) {
-                throw new Error(Network response was not ok: ${response.statusText});
+                throw new Error(`Network response was not ok: ${response.statusText}`);
             }
             return response.json();
         })
         .then(data => {
-          data.sort((a,b)=> a.name.common.localeCompare(b.name.common));
+          data.sort((a,b) => a.name.common.localeCompare(b.name.common));
           const select = document.getElementById('countryCode');
           data.forEach(country => { 
             const opt = document.createElement('option');
@@ -769,8 +795,13 @@
                 select.innerHTML = '<option value="">Error loading countries</option>';
                 select.disabled = true;
             }
-            showMessageFunc('Could not load country list. Please try again later.', 'error', 5000);
+            showMessage('Could not load country list. Please try again later.', 'error', 5000);
         });
+
+      // Initialize form
+      showStep(currentStep); 
+      updateDonationSummary();
+      messageDiv.style.display = 'none';
     });
   </script>
 </body>
