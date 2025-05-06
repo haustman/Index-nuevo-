@@ -20,6 +20,8 @@
       --button-text-color: #212529;
       --button-text-color-light: #FFFFFF;
       --disabled-bg-color: #6C757D;
+      --error-bg: #FFF3CD; /* Fondo amarillo claro para errores */
+      --success-bg: #D1E7FF; /* Fondo azul claro para éxito */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -162,6 +164,8 @@
       justify-content: space-between;
       gap: 8px;
       margin-top: 16px;
+      align-items: center;
+      flex-wrap: wrap; /* Permitir que los elementos se envuelvan en móviles */
     }
 
     button {
@@ -194,25 +198,26 @@
 
     #message {
       flex: 2;
-      font-size: 12px;
+      font-size: 14px;
       padding: 8px;
       border-radius: 4px;
-      min-height: 32px;
+      min-height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
+      text-align: center;
+      color: var(--text-color);
+      transition: background-color 0.3s ease;
     }
 
     #message.error {
-      background: #F8D7DA;
-      color: #721C24;
-      border: 1px solid #F5C6CB;
+      background: var(--error-bg);
+      border: 1px solid var(--primary-color);
     }
 
     #message.success {
-      background: #D4EDDA;
-      color: #155724;
-      border: 1px solid #C3E6CB;
+      background: var(--success-bg);
+      border: 1px solid var(--secondary-color);
     }
 
     .order-summary-wrapper {
@@ -343,9 +348,10 @@
       }
 
       #message {
-        font-size: 11px;
+        font-size: 12px;
         padding: 6px;
-        min-height: 28px;
+        min-height: 30px;
+        border-width: 0.5px; /* Reducir el borde en móviles */
       }
 
       .order-summary-wrapper h3 {
@@ -392,6 +398,12 @@
         padding: 6px 10px;
         max-width: 90px;
         font-size: 12px;
+      }
+
+      #message {
+        font-size: 11px;
+        padding: 4px;
+        min-height: 26px;
       }
     }
   </style>
