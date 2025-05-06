@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://js.stripe.com/v3/"></script>
   <style>
     :root {
       /* Luminaroots Inspired Palette */
@@ -47,7 +46,7 @@
       padding: 20px;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      flex-direction: column; /* Align form and summary vertically */
       justify-content: center;
       align-items: center;
     }
@@ -59,7 +58,7 @@
       border-radius: 8px;
       border: 1px solid #DEE2E6;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
+      margin-bottom: 20px; /* Space for the summary below */
     }
     .progress-bar {
       display: flex;
@@ -76,7 +75,7 @@
       transition: color 0.3s;
       padding-bottom: 10px;
       border-bottom: 2px solid transparent;
-      position: relative;
+      position: relative; 
     }
     .progress-step:hover { color: var(--primary-hover); }
     .progress-step.active {
@@ -150,9 +149,10 @@
       background: #FEEFEB;
     }
     .form-group.error input:focus, .form-group.error select:focus {
-      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+       box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
     }
 
+    /* Donation Step Specific Styles */
     .preset-amounts {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
@@ -184,9 +184,10 @@
       transform: scale(0.98);
     }
     #customDonationAmount {
-      text-align: center;
-      font-size: 1.1em;
+        text-align: center;
+        font-size: 1.1em;
     }
+
 
     .buttons {
       display: flex;
@@ -221,7 +222,7 @@
       color: var(--button-text-color-light); 
     }
     #prevBtn:hover:not(:disabled) {
-      background: #5A6268; 
+        background: #5A6268; 
     }
 
     .text-center { text-align: center; }
@@ -232,18 +233,6 @@
       font-size: 13px;
       color: var(--text-color); 
     }
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid var(--primary-color);
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     #message {
       flex: 2;
       font-size: 13px;
@@ -262,15 +251,16 @@
     #message.error   { background: #F8D7DA; color: #721C24; border: 1px solid #F5C6CB;}
     #message.info    { background: #D1ECF1; color: #0C5460; border: 1px solid #BEE5EB;}
     
+    /* Order Summary Styles */
     .order-summary-wrapper {
       max-width: 600px;
       width: 100%;
-      background: #fdfdfd;
+      background: #fdfdfd; /* Slightly off-white for differentiation */
       padding: 25px;
       border-radius: 8px;
       border: 1px solid #E9ECEF;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      margin-top: 0;
+      margin-top: 0; /* Adjusted by body flex-direction */
     }
     .order-summary-wrapper h3 {
       text-align: center;
@@ -280,20 +270,20 @@
       font-size: 1.3em;
     }
     #donationSummaryDetails .summary-section {
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed #EEE;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed #EEE;
     }
     #donationSummaryDetails .summary-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
-    #donationSummaryDetails .summary-section h4 {
-      font-size: 1em;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-      font-weight: 500;
+     #donationSummaryDetails .summary-section h4 {
+        font-size: 1em;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-weight: 500;
     }
     #donationSummaryDetails p {
       margin-bottom: 8px;
@@ -301,30 +291,20 @@
       color: var(--label-color);
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
     #donationSummaryDetails p strong {
       color: var(--text-color);
+      /* min-width: 130px; / / Removed for flex alignment */
       display: inline-block;
       margin-right: 10px;
       font-weight: 500;
     }
     #donationSummaryDetails span.summary-value {
-      color: var(--text-color);
-      text-align: right;
-      word-break: break-word;
+        color: var(--text-color);
+        text-align: right;
+        word-break: break-word;
     }
-    .edit-btn {
-      background: none;
-      border: none;
-      color: var(--secondary-color);
-      font-size: 0.9em;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    .edit-btn:hover {
-      color: var(--secondary-hover);
-    }
+
 
     @media (max-width: 600px) {
       body { padding: 10px; }
@@ -346,7 +326,7 @@
 </head>
 <body>
   <div class="form-wrapper">
-    <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Form progress">
+    <div class="progress-bar">
       <div class="progress-step active">Step 1: Donation</div>
       <div class="progress-step">Step 2: Personal Details</div>
       <div class="progress-step">Step 3: Payment</div>
@@ -369,8 +349,8 @@
           </div>
           <div class="form-group">
             <label for="customDonationAmount">Or enter a custom amount ($):</label>
-            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount" min="1" step="any" class="form-control" aria-describedby="customDonationAmount-error" />
-            <span class="error-message" id="customDonationAmount-error">Please enter a valid positive amount.</span>
+            <input type="number" id="customDonationAmount" name="customDonationAmount" placeholder="Enter amount" min="1" step="any" class="form-control" />
+            <span class="error-message">Please enter a valid positive amount.</span>
           </div>
           <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
         </div>
@@ -381,23 +361,23 @@
           <h3 class="step-title">Your Personal Details</h3>
           <div class="form-group">
             <label for="firstName">First Name:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" aria-describedby="firstName-error" />
-            <span class="error-message" id="firstName-error">Only letters, spaces, hyphens, and apostrophes.</span>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required aria-required="true" />
+            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
           </div>
           <div class="form-group">
             <label for="lastName">Last Name:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" aria-describedby="lastName-error" />
-            <span class="error-message" id="lastName-error">Only letters, spaces, hyphens, and apostrophes.</span>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required aria-required="true" />
+            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
           </div>
           <div class="form-group">
             <label for="emailAddress">Email Address:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required aria-required="true" aria-describedby="emailAddress-error" />
-            <span class="error-message" id="emailAddress-error">Please enter a valid email (e.g., example@domain.com).</span>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" required aria-required="true" />
+            <span class="error-message">Please enter a valid email address.</span>
           </div>
           <div class="form-group">
             <label for="phoneNumber">Phone Number:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" required aria-required="true" aria-describedby="phoneNumber-error" />
-            <span class="error-message" id="phoneNumber-error">Numbers only (10–15 digits).</span>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" required aria-required="true" />
+            <span class="error-message">Numbers only (10–15 digits).</span>
           </div>
         </div>
       </div>
@@ -405,11 +385,31 @@
       <div class="step">
         <div class="inputs-container">
           <h3 class="step-title">Payment Information</h3>
-          <p style="text-align:center; font-size:0.9em; color:var(--label-color); margin-bottom:15px;">Your payment details are processed securely via Stripe.</p>
+          <p style="text-align:center; font-size:0.9em; color:var(--label-color); margin-bottom:15px;">Your payment details are processed securely and will not be displayed in the summary.</p>
           <div class="form-group">
-            <label for="card-element">Credit or Debit Card:</label>
-            <div id="card-element" style="padding: 10px; border: 1px solid var(--input-border-color); border-radius: 4px; background: var(--input-bg);"></div>
-            <span class="error-message" id="card-error">Please enter valid card details.</span>
+            <label for="cardName">Name on Card:</label>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" required aria-required="true" />
+            <span class="error-message">Only letters, spaces, hyphens, and apostrophes.</span>
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number:</label>
+            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required aria-required="true" />
+            <span class="error-message">Enter a valid 16-digit card number.</span>
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required aria-required="true" />
+            <span class="error-message">3 or 4 digits.</span>
+          </div>
+          <div class="form-group">
+            <label for="expMonth">Expiration Month:</label>
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" required aria-required="true" />
+            <span class="error-message">Enter a month (1–12).</span>
+          </div>
+          <div class="form-group">
+            <label for="expYear">Expiration Year:</label>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required aria-required="true" />
+            <span class="error-message">Enter a year (e.g., 2025–2035).</span>
           </div>
         </div>
       </div>
@@ -419,85 +419,70 @@
           <h3 class="step-title">Your Address</h3>
           <div class="form-group">
             <label for="address">Street Address:</label>
-            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" required aria-required="true" aria-describedby="address-error" />
-            <span class="error-message" id="address-error">Please enter a valid address.</span>
+            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" required aria-required="true" />
+            <span class="error-message">Please enter a valid address.</span>
           </div>
           <div class="form-group">
             <label for="countryCode">Country:</label>
-            <select id="countryCode" name="countryCode" required aria-required="true" aria-describedby="countryCode-error">
+            <select id="countryCode" name="countryCode" required aria-required="true">
               <option value="">Select a country</option>
             </select>
-            <span class="error-message" id="countryCode-error">Please select your country.</span>
+            <span class="error-message">Please select your country.</span>
           </div>
           <div class="form-group">
             <label for="stateProvince">State / Province:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California or Ontario" required aria-required="true" aria-describedby="stateProvince-error" />
-            <span class="error-message" id="stateProvince-error">Letters, numbers, spaces, hyphens allowed.</span>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California or Ontario" required aria-required="true" />
+            <span class="error-message">Letters, numbers, spaces, hyphens allowed.</span>
           </div>
           <div class="form-group">
             <label for="city">City:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" required aria-required="true" aria-describedby="city-error" />
-            <span class="error-message" id="city-error">Letters, spaces, hyphens allowed.</span>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" required aria-required="true" />
+            <span class="error-message">Letters, spaces, hyphens allowed.</span>
           </div>
           <div class="form-group">
             <label for="postalCode">Postal / Zip Code:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="\d{5}" maxlength="5" placeholder="e.g., 90210" required aria-required="true" aria-describedby="postalCode-error" />
-            <span class="error-message" id="postalCode-error">5 digits required (e.g., 90210).</span>
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210 or SW1A 1AA" required aria-required="true" />
+            <span class="error-message">1–10 characters (letters, numbers, spaces, hyphens).</span>
           </div>
           <input type="hidden" id="ipAddress" name="ipAddress" value="127.0.0.1" /> 
         </div>
-        <div id="loading" class="text-center"><span class="spinner"></span> Submitting...</div>
+        <div id="loading" class="text-center">Submitting...</div>
       </div>
 
       <div class="buttons">
-        <button type="button" id="prevBtn" style="display:none;" aria-label="Go to previous step" role="button" aria-disabled="true">Back</button>
+        <button type="button" id="prevBtn" style="display:none;" aria-label="Go to previous step">Back</button>
         <div id="message" class="text-center"></div>
-        <button type="button" id="nextBtn" aria-label="Go to next step" role="button">Next</button>
-        <button type="submit" id="submitBtn" style="display:none;" aria-label="Submit form" role="button" aria-disabled="true">Submit Donation</button>
+        <button type="button" id="nextBtn" aria-label="Go to next step">Next</button>
+        <button type="submit" id="submitBtn" style="display:none;" aria-label="Submit form">Submit Donation</button>
       </div>
     </form>
-  </div>
-  <div class="order-summary-wrapper">
+  </div> <div class="order-summary-wrapper">
     <h3>Your Donation Summary</h3>
     <div id="donationSummaryDetails">
-      <div class="summary-section">
-        <h4>Donation Details</h4>
-        <p><strong>Amount:</strong> <span class="summary-value" id="summaryDonationAmount">-</span> <button type="button" class="edit-btn" data-step="0">Edit</button></p>
-      </div>
-      <div class="summary-section">
-        <h4>Personal Information</h4>
-        <p><strong>First Name:</strong> <span class="summary-value" id="summaryFirstName">-</span> <button type="button" class="edit-btn" data-step="1">Edit</button></p>
-        <p><strong>Last Name:</strong> <span class="summary-value" id="summaryLastName">-</span></p>
-        <p><strong>Email:</strong> <span class="summary-value" id="summaryEmail">-</span></p>
-        <p><strong>Phone:</strong> <span class="summary-value" id="summaryPhone">-</span></p>
-      </div>
-      <div class="summary-section">
-        <h4>Billing Address</h4>
-        <p><strong>Address:</strong> <span class="summary-value" id="summaryAddress">-</span> <button type="button" class="edit-btn" data-step="3">Edit</button></p>
-        <p><strong>City:</strong> <span class="summary-value" id="summaryCity">-</span></p>
-        <p><strong>State/Province:</strong> <span class="summary-value" id="summaryState">-</span></p>
-        <p><strong>Postal Code:</strong> <span class="summary-value" id="summaryPostalCode">-</span></p>
-        <p><strong>Country:</strong> <span class="summary-value" id="summaryCountry">-</span></p>
-      </div>
+        <div class="summary-section">
+            <h4>Donation Details</h4>
+            <p><strong>Amount:</strong> <span class="summary-value" id="summaryDonationAmount">-</span></p>
+        </div>
+        <div class="summary-section">
+            <h4>Personal Information</h4>
+            <p><strong>First Name:</strong> <span class="summary-value" id="summaryFirstName">-</span></p>
+            <p><strong>Last Name:</strong> <span class="summary-value" id="summaryLastName">-</span></p>
+            <p><strong>Email:</strong> <span class="summary-value" id="summaryEmail">-</span></p>
+            <p><strong>Phone:</strong> <span class="summary-value" id="summaryPhone">-</span></p>
+        </div>
+        <div class="summary-section">
+            <h4>Billing Address</h4>
+            <p><strong>Address:</strong> <span class="summary-value" id="summaryAddress">-</span></p>
+            <p><strong>City:</strong> <span class="summary-value" id="summaryCity">-</span></p>
+            <p><strong>State/Province:</strong> <span class="summary-value" id="summaryState">-</span></p>
+            <p><strong>Postal Code:</strong> <span class="summary-value" id="summaryPostalCode">-</span></p>
+            <p><strong>Country:</strong> <span class="summary-value" id="summaryCountry">-</span></p>
+        </div>
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const stripe = Stripe('pk_test_tu_clave_publica_de_stripe');
-      const elements = stripe.elements();
-      const cardElement = elements.create('card', {
-        style: {
-          base: {
-            fontSize: '14px',
-            color: '#212529',
-            '::placeholder': { color: '#6C757D' },
-          },
-          invalid: { color: '#DC3545' },
-        },
-      });
-      cardElement.mount('#card-element');
-
       const steps = document.querySelectorAll('.form-wrapper .step');
       const progressSteps = document.querySelectorAll('.progress-step');
       const nextBtn = document.getElementById('nextBtn');
@@ -515,51 +500,66 @@
       let messageTimeout = null;
 
       const summaryElements = {
-        donationAmount: document.getElementById('summaryDonationAmount'),
-        firstName: document.getElementById('summaryFirstName'),
-        lastName: document.getElementById('summaryLastName'),
-        email: document.getElementById('summaryEmail'),
-        phone: document.getElementById('summaryPhone'),
-        address: document.getElementById('summaryAddress'),
-        city: document.getElementById('summaryCity'),
-        state: document.getElementById('summaryState'),
-        postalCode: document.getElementById('summaryPostalCode'),
-        country: document.getElementById('summaryCountry'),
+          donationAmount: document.getElementById('summaryDonationAmount'),
+          firstName: document.getElementById('summaryFirstName'),
+          lastName: document.getElementById('summaryLastName'),
+          email: document.getElementById('summaryEmail'),
+          phone: document.getElementById('summaryPhone'),
+          address: document.getElementById('summaryAddress'),
+          city: document.getElementById('summaryCity'),
+          state: document.getElementById('summaryState'),
+          postalCode: document.getElementById('summaryPostalCode'),
+          country: document.getElementById('summaryCountry'),
       };
       
       function updateDonationSummary() {
-        const donationVal = parseFloat(finalDonationInput.value);
-        summaryElements.donationAmount.textContent = (!isNaN(donationVal) && donationVal > 0) ? '$' + donationVal.toFixed(2) : '-';
-        
-        summaryElements.firstName.textContent = document.getElementById('firstName').value || '-';
-        summaryElements.lastName.textContent = document.getElementById('lastName').value || '-';
-        summaryElements.email.textContent = document.getElementById('emailAddress').value || '-';
-        summaryElements.phone.textContent = document.getElementById('phoneNumber').value || '-';
-        
-        summaryElements.address.textContent = document.getElementById('address').value || '-';
-        summaryElements.city.textContent = document.getElementById('city').value || '-';
-        summaryElements.state.textContent = document.getElementById('stateProvince').value || '-';
-        summaryElements.postalCode.textContent = document.getElementById('postalCode').value || '-';
-        
-        const countrySelect = document.getElementById('countryCode');
-        summaryElements.country.textContent = (countrySelect.value && countrySelect.selectedIndex > 0) ? countrySelect.options[countrySelect.selectedIndex].text : '-';
+          const donationVal = parseFloat(finalDonationInput.value);
+          summaryElements.donationAmount.textContent = (!isNaN(donationVal) && donationVal > 0) ? '$' + donationVal.toFixed(2) : '-';
+          
+          summaryElements.firstName.textContent = document.getElementById('firstName').value || '-';
+          summaryElements.lastName.textContent = document.getElementById('lastName').value || '-';
+          summaryElements.email.textContent = document.getElementById('emailAddress').value || '-';
+          summaryElements.phone.textContent = document.getElementById('phoneNumber').value || '-';
+          
+          summaryElements.address.textContent = document.getElementById('address').value || '-';
+          summaryElements.city.textContent = document.getElementById('city').value || '-';
+          summaryElements.state.textContent = document.getElementById('stateProvince').value || '-';
+          summaryElements.postalCode.textContent = document.getElementById('postalCode').value || '-';
+          
+          const countrySelect = document.getElementById('countryCode');
+          summaryElements.country.textContent = (countrySelect.value && countrySelect.selectedIndex > 0) ? countrySelect.options[countrySelect.selectedIndex].text : '-';
+          
+          // Show summary if it was hidden, or just ensure it's visible
+          // document.querySelector('.order-summary-wrapper').style.display = 'block';
       }
+
+      const currentYear = new Date().getFullYear();
+      const expYearInput = document.getElementById('expYear');
+      if (expYearInput) {
+        expYearInput.min = currentYear;
+        expYearInput.placeholder = "YYYY";
+        // expYearInput.pattern = ^(${currentYear}|${Array.from({length: 11}, (_, i) => currentYear + i).join('|')})$;
+        const expYearError = expYearInput.closest('.form-group').querySelector('.error-message');
+        if (expYearError) {
+            expYearError.textContent = Enter a year (e.g., ${currentYear}–${currentYear + 10}).;
+        }
+      }
+
 
       const showStep = (index) => {
         steps.forEach((step, i) => step.classList.toggle('active', i === index));
         progressSteps.forEach((stepBar, i) => {
-          stepBar.classList.remove('active');
-          if (i <= index) stepBar.classList.add('active');
+            stepBar.classList.remove('active');
+            if (i <= index) { // Mark current and all previous steps as active
+                stepBar.classList.add('active'); 
+            }
         });
-
-        const progressBar = document.querySelector('.progress-bar');
-        progressBar.setAttribute('aria-valuenow', index + 1);
 
         prevBtn.style.display = index > 0 ? 'inline-block' : 'none';
         nextBtn.style.display = index < steps.length - 1 ? 'inline-block' : 'none';
         submitBtn.style.display = index === steps.length - 1 ? 'inline-block' : 'none';
-        if (submitBtn.style.display === 'inline-block') {
-          submitBtn.textContent = 'Submit Donation';
+        if(submitBtn.style.display === 'inline-block'){ // If submit is visible, change next button text
+            submitBtn.textContent = 'Submit Donation';
         }
       };
 
@@ -569,35 +569,36 @@
         const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
         let valid = true;
 
-        if (currentStep === 0) {
-          const donationValue = parseFloat(finalDonationInput.value);
-          const customDonationFormGroup = customDonationInput.closest('.form-group');
-          const errorMsgSpan = customDonationFormGroup.querySelector('.error-message');
+        if (currentStep === 0) { // Donation Step
+            const donationValue = parseFloat(finalDonationInput.value);
+            const customDonationFormGroup = customDonationInput.closest('.form-group');
+            const errorMsgSpan = customDonationFormGroup.querySelector('.error-message');
 
-          if (isNaN(donationValue) || donationValue <= 0) {
-            valid = false;
-            if (customDonationFormGroup) customDonationFormGroup.classList.add('error');
-            if (errorMsgSpan) errorMsgSpan.textContent = 'Please select or enter a valid donation amount.';
-          } else {
-            if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
-          }
+            if (isNaN(donationValue) || donationValue <= 0) {
+                valid = false;
+                if(customDonationFormGroup) customDonationFormGroup.classList.add('error');
+                if(errorMsgSpan) errorMsgSpan.textContent = 'Please select or enter a valid donation amount.';
+            } else {
+                if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+            }
         }
 
         inputs.forEach(input => {
           const formGroup = input.closest('.form-group');
-          input.dataset.touched = true;
+          input.dataset.touched = true; 
           if (!input.checkValidity()) {
-            if (formGroup) formGroup.classList.add('error');
+            if(formGroup) formGroup.classList.add('error');
             valid = false;
+            // Add live input validation feedback if already marked as error
             input.addEventListener('input', function liveValidateOnError() {
-              if (input.checkValidity()) {
-                if (formGroup) formGroup.classList.remove('error');
-              } else {
-                if (formGroup) formGroup.classList.add('error');
-              }
+                if(input.checkValidity()){
+                    if(formGroup) formGroup.classList.remove('error');
+                } else {
+                    if(formGroup) formGroup.classList.add('error'); // Keep error if still invalid
+                }
             });
           } else {
-            if (formGroup) formGroup.classList.remove('error');
+            if(formGroup) formGroup.classList.remove('error');
           }
         });
         return valid;
@@ -605,15 +606,15 @@
 
       const showMessageFunc = (msg, type, duration = 3000) => {
         clearTimeout(messageTimeout);
-        messageDiv.className = 'text-center';
-        messageDiv.classList.add(type);
-        messageDiv.innerHTML = `<p>${msg}</p>`;
-        messageDiv.style.display = 'flex';
+        messageDiv.className = 'text-center'; 
+        messageDiv.classList.add(type); 
+        messageDiv.innerHTML = <p>${msg}</p>;
+        messageDiv.style.display = 'flex'; 
 
         messageTimeout = setTimeout(() => { 
-          messageDiv.className = 'text-center';
-          messageDiv.innerHTML = '';
-          messageDiv.style.display = 'none';
+            messageDiv.className = 'text-center'; 
+            messageDiv.innerHTML = ''; 
+            messageDiv.style.display = 'none'; 
         }, duration);
       };
       
@@ -622,10 +623,10 @@
           presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
-          customDonationInput.value = '';
+          customDonationInput.value = ''; 
           finalDonationInput.value = amount;
           const customDonationFormGroup = customDonationInput.closest('.form-group');
-          if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+          if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
           updateDonationSummary();
         });
       });
@@ -637,144 +638,123 @@
 
         if (!isNaN(customAmount) && customAmount > 0) {
           finalDonationInput.value = customAmount;
-          if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
+          if(customDonationFormGroup) customDonationFormGroup.classList.remove('error');
         } else {
-          finalDonationInput.value = '';
+          finalDonationInput.value = ''; 
+          // Optionally show error if user types invalid then blurs, handled by validateStep on Next
         }
         updateDonationSummary();
       });
 
+
       const handleFormSubmit = async (e) => {
         e.preventDefault();
         if (!validateStep()) {
-          showMessageFunc('⚠️ Please ensure all required fields are correctly filled in the current step.', 'error');
-          return;
+            showMessageFunc('⚠️ Please ensure all required fields are correctly filled in the current step.', 'error');
+            return;
         }
-
-        submitBtn.disabled = true;
-        submitBtn.setAttribute('aria-disabled', 'true');
+        
+        submitBtn.disabled = true; 
         prevBtn.disabled = true;
-        prevBtn.setAttribute('aria-disabled', 'true');
         loading.style.display = 'block';
-
-        const { token, error } = await stripe.createToken(cardElement);
-        if (error) {
-          showMessageFunc(`⚠️ Payment Error: ${error.message}`, 'error', 5000);
-          submitBtn.disabled = false;
-          submitBtn.setAttribute('aria-disabled', 'false');
-          prevBtn.disabled = false;
-          prevBtn.setAttribute('aria-disabled', 'false');
-          loading.style.display = 'none';
-          return;
-        }
-
         const fd = new FormData(form);
-        const json = { planReferenceId: 'Donation', cardToken: token.id };
-
+        const json = { planReferenceId: 'Donation' }; 
+        
         fd.forEach((value, key) => {
-          if (key === 'donationAmount') {
+          if (key === 'cardNumber') json[key] = value.replace(/\s/g, '');
+          else if (key === 'donationAmount' || key === 'expMonth' || key === 'expYear') {
             json[key] = (value.trim() === '' || isNaN(value)) ? null : Number(value);
-          } else {
-            json[key] = value;
           }
+          else json[key] = value;
         });
-
+        
         if (json.donationAmount !== null && typeof json.donationAmount !== 'number') {
-          json.donationAmount = Number(json.donationAmount);
+            json.donationAmount = Number(json.donationAmount);
         }
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
         try {
-          const res = await fetch('https://duelazo-2a8ce83c375f7.herokuapp.com/packages', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(json),
-            signal: controller.signal
+          const res = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', { 
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(json)
           });
-          clearTimeout(timeoutId);
           const data = await res.json();
-
+          
           if (!res.ok) {
-            throw new Error(data.statusReason || `Server error: ${res.status}`);
+            throw new Error(data.statusReason || Server error: ${res.status});
           }
           showMessageFunc(data.statusReason || 'Thank you! Your donation has been processed successfully!', data.status === 'Approved' ? 'success' : 'info', 5000);
-        } catch (err) {
-          showMessageFunc(`⚠️ Transaction Error: ${err.message}`, 'error', 5000);
+          if (data.status === 'Approved') {
+            // form.reset(); // Optionally reset form
+            // currentStep = 0; 
+            // showStep(currentStep);
+            // presetAmountButtons.forEach(btn => btn.classList.remove('selected'));
+            // finalDonationInput.value = '';
+            // updateDonationSummary(); // Clear summary
+          }
+        } catch(err) {
+          showMessageFunc(⚠️ Transaction Error: ${err.message}, 'error', 5000);
         } finally {
           submitBtn.disabled = false;
-          submitBtn.setAttribute('aria-disabled', 'false');
           prevBtn.disabled = false;
-          prevBtn.setAttribute('aria-disabled', 'false');
+          // Keep user on the current (last) step after submission attempt
+          // showStep(currentStep); // Not needed unless resetting
           loading.style.display = 'none';
         }
       };
 
       nextBtn.addEventListener('click', () => {
-        if (validateStep()) {
-          updateDonationSummary();
-          currentStep++;
-          showStep(currentStep);
-          messageDiv.className = 'text-center';
-          messageDiv.innerHTML = '';
-          messageDiv.style.display = 'none';
+        if (validateStep()) { 
+            updateDonationSummary(); // Update summary before moving
+            currentStep++; 
+            showStep(currentStep); 
+            messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
         } else {
-          if (currentStep === 0 && (isNaN(parseFloat(finalDonationInput.value)) || parseFloat(finalDonationInput.value) <= 0)) {
-            showMessageFunc('⚠️ Please select or enter a valid donation amount to proceed.', 'error');
-          } else {
-            showMessageFunc('⚠️ Please complete the current step correctly before proceeding.', 'error');
-          }
+             if (currentStep === 0 && (isNaN(parseFloat(finalDonationInput.value)) || parseFloat(finalDonationInput.value) <= 0)) {
+                 showMessageFunc('⚠️ Please select or enter a valid donation amount to proceed.', 'error');
+            } else {
+                showMessageFunc('⚠️ Please complete the current step correctly before proceeding.', 'error');
+            }
         }
       });
 
-      prevBtn.addEventListener('click', () => {
-        updateDonationSummary();
-        currentStep--;
-        showStep(currentStep);
-        messageDiv.className = 'text-center';
-        messageDiv.innerHTML = '';
-        messageDiv.style.display = 'none';
+      prevBtn.addEventListener('click', () => { 
+        updateDonationSummary(); // Update summary when going back too
+        currentStep--; 
+        showStep(currentStep); 
+        messageDiv.className = 'text-center'; messageDiv.innerHTML = ''; messageDiv.style.display = 'none';
       });
       
       form.addEventListener('submit', handleFormSubmit);
       
+      // Add blur listeners to update summary live
       const fieldsToSummarizeIds = ['firstName', 'lastName', 'emailAddress', 'phoneNumber', 'address', 'city', 'stateProvince', 'postalCode', 'countryCode'];
       fieldsToSummarizeIds.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.addEventListener('blur', () => {
-            if (element.checkValidity() || element.value === '') {
-              updateDonationSummary();
-            }
-          });
-          if (element.tagName === 'SELECT') {
-            element.addEventListener('change', updateDonationSummary);
+          const element = document.getElementById(id);
+          if(element) {
+              element.addEventListener('blur', () => {
+                  if(element.checkValidity() || element.value === '') { // Also update if field is cleared
+                      updateDonationSummary();
+                  }
+              });
+              if (element.tagName === 'SELECT') {
+                  element.addEventListener('change', updateDonationSummary);
+              }
           }
-        }
       });
 
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentStep = parseInt(btn.dataset.step);
-          showStep(currentStep);
-        });
-      });
-
-      showStep(currentStep);
-      updateDonationSummary();
+      showStep(currentStep); 
+      updateDonationSummary(); // Initial call to set up summary with placeholders
       messageDiv.style.display = 'none';
 
-      const fetchCountries = async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-        try {
-          const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2', { signal: controller.signal });
-          clearTimeout(timeoutId);
-          if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
-          }
-          const data = await response.json();
-          data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+      fetch('https://restcountries.com/v3.1/all?fields=name,cca2') 
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(Network response was not ok: ${response.statusText});
+            }
+            return response.json();
+        })
+        .then(data => {
+          data.sort((a,b)=> a.name.common.localeCompare(b.name.common));
           const select = document.getElementById('countryCode');
           data.forEach(country => { 
             const opt = document.createElement('option');
@@ -782,22 +762,15 @@
             opt.textContent = country.name.common;
             select.appendChild(opt);
           });
-        } catch (error) {
-          console.error('Error fetching country data:', error);
-          const select = document.getElementById('countryCode');
-          if (select) {
-            select.innerHTML = '<option value="">Error loading countries</option>';
-            select.disabled = true;
-            const manualCountryInput = document.createElement('input');
-            manualCountryInput.type = 'text';
-            manualCountryInput.name = 'countryCodeManual';
-            manualCountryInput.placeholder = 'Enter country manually';
-            select.parentElement.appendChild(manualCountryInput);
-          }
-          showMessageFunc('Could not load country list. Please enter your country manually or try again later.', 'error', 5000);
-        }
-      };
-      fetchCountries();
+        }).catch(error => {
+            console.error('Error fetching country data:', error);
+            const select = document.getElementById('countryCode');
+            if(select) {
+                select.innerHTML = '<option value="">Error loading countries</option>';
+                select.disabled = true;
+            }
+            showMessageFunc('Could not load country list. Please try again later.', 'error', 5000);
+        });
     });
   </script>
 </body>
