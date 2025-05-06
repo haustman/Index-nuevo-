@@ -259,6 +259,21 @@
       color: var(--text-color);
       text-align: right;
     }
+
+    .loading {
+      font-style: italic;
+      color: var(--text-color);
+      font-size: 13px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .notice {
+      font-size: 12px;
+      color: var(--label-color);
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -371,6 +386,8 @@
           <span class="error-message" id="postalCodeError">1–10 characters (letters, numbers, spaces, hyphens).</span>
         </div>
         <input type="hidden" id="ipAddress" name="ipAddress" value="127.0.0.1" />
+        <div class="loading" id="loading" style="display: none;">Enviando...</div>
+        <div class="notice">Estamos trabajando en mejorar nuestro sistema. Si experimentas problemas al enviar, por favor intenta de nuevo o contacta al soporte.</div>
       </div>
 
       <div class="buttons">
@@ -418,6 +435,7 @@
       const prevBtn = document.getElementById('prevBtn');
       const submitBtn = document.getElementById('submitBtn');
       const messageDiv = document.getElementById('message');
+      const loadingDiv = document.getElementById('loading');
       const presetButtons = document.querySelectorAll('.preset-button');
       const selectedAmountInput = document.getElementById('selectedAmount');
       const selectedPackageInput = document.getElementById('selectedPackage');
@@ -492,6 +510,43 @@
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
       };
 
+      // Guardar datos del formulario en localStorage
+      const saveFormData = () => {
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        localStorage.setItem('donationFormData', JSON.stringify(data));
+      };
+
+      // Cargar datos desde localStorage
+      const loadFormData = () => {
+        const savedData = localStorage.getItem('donationFormData');
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          Object.keys(data).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+              input.value = data[key];
+              if (key === 'selectedAmount') {
+                const amount = data[key];
+                selectedAmountInput.value = amount;
+                selectedPackageInput.value = packageMapping[amount];
+                presetButtons.forEach(btn => {
+                  if (btn.getAttribute('data-amount') === amount) {
+                    btn.classList.add('selected');
+                  } else {
+                    btn.classList.remove('selected');
+                  }
+                });
+              }
+            }
+          });
+          updateSummary();
+        }
+      };
+
       // Validar cada paso
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
@@ -523,7 +578,7 @@
               if (errorElement) errorElement.style.display = 'none';
               input.classList.remove('error');
             }
-            // Añadir validación en tiempo real
+            // Validación en tiempo real
             input.addEventListener('input', () => {
               const errorEl = document.getElementById(`${input.id}Error`);
               if (input.checkValidity()) {
@@ -533,11 +588,36 @@
                 if (errorEl) errorEl.style.display = 'block';
                 input.classList.add('error');
               }
+              saveFormData();
             }, { once: true });
           });
         }
 
         return valid;
+      };
+
+      // Validación adicional antes de enviar
+      const validateBeforeSubmit = () => {
+        if (!selectedPackageInput.value) {
+          showMessage('No donation amount selected. Please go back to Step 1.', 'error');
+          return false;
+        }
+        const email = document.getElementById('emailAddress')?.value;
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showMessage('Please enter a valid email address.', 'error');
+          return false;
+        }
+        const cardNumber = document.getElementById('cardNumber')?.value.replace(/\s/g, '');
+        if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
+          showMessage('Please enter a valid 16-digit card number.', 'error');
+          return false;
+        }
+        const cvv = document.getElementById('cvv')?.value;
+        if (!cvv || !/^\d{3,4}$/.test(cvv)) {
+          showMessage('Please enter a valid CVV (3 or 4 digits).', 'error');
+          return false;
+        }
+        return true;
       };
 
       // Manejar clics en los botones de donación
@@ -550,6 +630,7 @@
           selectedAmountInput.value = amount;
           selectedPackageInput.value = packageMapping[amount];
           if (donationError) donationError.style.display = 'none';
+          saveFormData();
           updateSummary();
         });
       });
@@ -572,6 +653,31 @@
         updateSummary();
       });
 
+      // Función para enviar la solicitud con reintentos
+      const sendRequestWithRetry = async (json, retries = 3, delay = 2000) => {
+        for (let attempt = 1; attempt <= retries; attempt++) {
+          try {
+            console.log(`Attempt ${attempt} of ${retries}`);
+            const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(json),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              throw new Error(data.statusReason || `Server error: ${response.status}`);
+            }
+            return { success: true, data };
+          } catch (err) {
+            console.error(`Attempt ${attempt} failed:`, err);
+            if (attempt === retries) {
+              return { success: false, error: err };
+            }
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+      };
+
       // Enviar el formulario
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -580,8 +686,13 @@
           return;
         }
 
+        if (!validateBeforeSubmit()) {
+          return;
+        }
+
         if (submitBtn) submitBtn.disabled = true;
         if (prevBtn) prevBtn.disabled = true;
+        if (loadingDiv) loadingDiv.style.display = 'block';
 
         const formData = new FormData(form);
         const json = { planReferenceId: selectedPackageInput.value };
@@ -599,29 +710,27 @@
         try {
           console.log('Sending request with planReferenceId:', selectedPackageInput.value);
           console.log('Full request body:', JSON.stringify(json, null, 2));
-          const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(json),
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.statusReason || `Server error: ${response.status}`);
+          const result = await sendRequestWithRetry(json, 3, 2000);
+          if (result.success) {
+            showMessage('Thank you! Your donation has been processed successfully.', 'success', 5000);
+            localStorage.removeItem('donationFormData'); // Limpiar datos guardados
+            form.reset();
+            currentStep = 0;
+            showStep(currentStep);
+            presetButtons.forEach(btn => btn.classList.remove('selected'));
+            selectedAmountInput.value = '';
+            selectedPackageInput.value = '';
+            updateSummary();
+          } else {
+            throw result.error;
           }
-          showMessage('Thank you! Your donation has been processed.', 'success', 5000);
-          form.reset();
-          currentStep = 0;
-          showStep(currentStep);
-          presetButtons.forEach(btn => btn.classList.remove('selected'));
-          selectedAmountInput.value = '';
-          selectedPackageInput.value = '';
-          updateSummary();
         } catch (err) {
           console.error('Submission error:', err);
-          showMessage(`Error: ${err.message}`, 'error', 5000);
+          showMessage('We couldn’t process your donation right now. Please check your internet connection and try again, or contact support if the issue persists.', 'error', 5000);
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (prevBtn) prevBtn.disabled = false;
+          if (loadingDiv) loadingDiv.style.display = 'none';
         }
       });
 
@@ -646,15 +755,23 @@
             opt.textContent = country.name.common;
             select.appendChild(opt);
           });
+          // Restaurar datos después de cargar países
+          loadFormData();
         })
         .catch(error => {
           console.error('Error loading countries:', error);
           showMessage('Could not load countries. Please try again later.', 'error');
+          // Intentar cargar datos incluso si falla la carga de países
+          loadFormData();
         });
 
       // Inicialización
       showStep(currentStep);
       updateSummary();
+
+      // Nota: Para probar localmente y evitar problemas de CORS inicialmente,
+      // ejecuta este formulario en un servidor local (e.g., usando Live Server en VSCode)
+      // y configura tu backend para aceptar solicitudes desde 'localhost'.
     });
   </script>
 </body>
