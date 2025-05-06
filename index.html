@@ -348,7 +348,7 @@
       <div class="step active">
         <div class="inputs-container">
           <h3 class="step-title">Choose Your Donation Amount</h3>
-          <div class="form-group">
+          <div class="form-group" id="donationGroup">
             <label>Select an amount:</label>
             <div class="preset-amounts">
               <button type="button" class="preset-button" data-amount="10">$10</button>
@@ -360,8 +360,11 @@
             </div>
             <span class="error-message" id="donationError">Please select a donation amount.</span>
           </div>
-          <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
-          <input type="hidden" id="selectedPackage" name="selectedPackage" required aria-required="true">
+          <!-- Envolver los inputs ocultos en un form-group -->
+          <div class="form-group" style="display: none;">
+            <input type="hidden" id="finalDonationAmount" name="donationAmount" required aria-required="true">
+            <input type="hidden" id="selectedPackage" name="selectedPackage" required aria-required="true">
+          </div>
         </div>
       </div>
 
@@ -507,6 +510,7 @@
       const finalDonationInput = document.getElementById('finalDonationAmount');
       const selectedPackageInput = document.getElementById('selectedPackage');
       const donationError = document.getElementById('donationError');
+      const donationGroup = document.getElementById('donationGroup');
 
       let currentStep = 0;
       let messageTimeout = null;
@@ -573,13 +577,12 @@
         let valid = true;
 
         if (stepIndex === 0) {
-          const formGroup = finalDonationInput.closest('.form-group');
           if (!selectedPackageInput.value) {
             valid = false;
-            formGroup.classList.add('error');
+            donationGroup.classList.add('error');
             donationError.style.display = 'block';
           } else {
-            formGroup.classList.remove('error');
+            donationGroup.classList.remove('error');
             donationError.style.display = 'none';
           }
           console.log(`Validating step 0: package=${selectedPackageInput.value}, valid=${valid}`);
@@ -587,6 +590,7 @@
 
         inputs.forEach(input => {
           const formGroup = input.closest('.form-group');
+          if (!formGroup) return;
           input.dataset.touched = true;
           if (!input.checkValidity()) {
             formGroup.classList.add('error');
@@ -628,7 +632,7 @@
           const amount = button.getAttribute('data-amount');
           finalDonationInput.value = amount;
           selectedPackageInput.value = packageMapping[amount];
-          finalDonationInput.closest('.form-group').classList.remove('error');
+          donationGroup.classList.remove('error');
           donationError.style.display = 'none';
           updateDonationSummary();
         });
@@ -638,6 +642,7 @@
       const cardNumberInput = document.getElementById('cardNumber');
       cardNumberInput.addEventListener('input', () => {
         const formGroup = cardNumberInput.closest('.form-group');
+        if (!formGroup) return;
         const value = cardNumberInput.value.replace(/\s/g, '');
         if (/^\d{16}$/.test(value)) {
           formGroup.classList.remove('error');
