@@ -639,12 +639,12 @@
             };
             input.removeEventListener('input', liveValidateOnError);
             input.addEventListener('input', liveValidateOnError);
-          } else {
+        } else {
             if (formGroup) formGroup.classList.remove('error');
-          }
-        });
-        return valid;
-      };
+        }
+    });
+    return valid;
+};
 
       const showMessageFunc = (msg, type, duration = 3000) => {
         clearTimeout(messageTimeout);
@@ -684,12 +684,15 @@
         });
         const customAmount = parseFloat(customDonationInput.value);
         const customDonationFormGroup = customDonationInput.closest('.form-group');
+        const errorMsgSpan = customDonationFormGroup.querySelector('.error-message');
 
-        if (!isNaN(customAmount) && customAmount > 0) {
+        if (isNaN(customAmount) || customAmount <= 0) {
+          finalDonationInput.value = '';
+          if (customDonationFormGroup) customDonationFormGroup.classList.add('error');
+          if (errorMsgSpan) errorMsgSpan.textContent = 'Please enter a valid positive amount.';
+        } else {
           finalDonationInput.value = customAmount;
           if (customDonationFormGroup) customDonationFormGroup.classList.remove('error');
-        } else {
-          finalDonationInput.value = '';
         }
         updateDonationSummary();
       });
@@ -728,11 +731,11 @@
             },
             body: JSON.stringify(json)
           });
-          const data = await res.json();
-
           if (!res.ok) {
+            const data = await res.json();
             throw new Error(data.statusReason || "Server error: " + res.status);
           }
+          const data = await res.json();
           showMessageFunc(data.statusReason || 'Thank you! Your donation has been processed successfully!', data.status === 'Approved' ? 'success' : 'info', 5000);
           if (data.status === 'Approved') {
             form.reset();
@@ -746,7 +749,11 @@
             updateDonationSummary();
           }
         } catch(err) {
-          showMessageFunc("Transaction Error: " + err.message, 'error', 5000);
+          if (err.message.includes('Failed to fetch')) {
+            showMessageFunc("Network Error: Unable to connect to the server. Please check your internet connection.", 'error', 5000);
+          } else {
+            showMessageFunc("Transaction Error: " + err.message, 'error', 5000);
+          }
         } finally {
           submitBtn.disabled = false;
           prevBtn.disabled = false;
@@ -787,7 +794,7 @@
                       updateDonationSummary();
                   }
               };
-              element.addEventListener('blur', updateOnChange);
+              element.addEventListener('input', updateOnChange);
               if (element.tagName === 'SELECT') {
                   element.addEventListener('change', updateOnChange);
               }
@@ -798,6 +805,10 @@
       updateDonationSummary();
       messageDiv.style.display = 'none';
 
+      const countrySelect = document.getElementById('countryCode');
+      countrySelect.disabled = true;
+      countrySelect.innerHTML = '<option value="">Loading countries...</option>';
+
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
         .then(response => {
             if (!response.ok) {
@@ -807,19 +818,18 @@
         })
         .then(data => {
           data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-          const select = document.getElementById('countryCode');
+          countrySelect.innerHTML = '<option value="">Select a country</option>';
           data.forEach(country => {
             const opt = document.createElement('option');
             opt.value = country.cca2;
             opt.textContent = country.name.common;
-            select.appendChild(opt);
+            countrySelect.appendChild(opt);
           });
+          countrySelect.disabled = false;
         }).catch(error => {
             console.error('Error fetching country data:', error);
-            const select = document.getElementById('countryCode');
-            if (select) {
-                select.innerHTML = '<option value="US">United States</option>';
-            }
+            countrySelect.innerHTML = '<option value="US">United States</option>';
+            countrySelect.disabled = false;
             showMessageFunc('Could not load country list. Defaulting to United States.', 'info', 5000);
         });
     });
