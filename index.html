@@ -450,8 +450,9 @@
         country: document.getElementById('summaryCountry'),
       };
 
-      // Mostrar mensaje
+      // Mostrar mensaje al usuario
       const showMessage = (msg, type, duration = 3000) => {
+        if (!messageDiv) return;
         messageDiv.textContent = msg;
         messageDiv.className = `text-center ${type}`;
         setTimeout(() => {
@@ -460,24 +461,25 @@
         }, duration);
       };
 
-      // Actualizar resumen
+      // Actualizar el resumen
       const updateSummary = () => {
+        if (!summaryElements.package || !summaryElements.donationAmount) return;
         const amount = parseFloat(selectedAmountInput.value);
         summaryElements.donationAmount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
         summaryElements.package.textContent = selectedPackageInput.value || '-';
-        summaryElements.firstName.textContent = document.getElementById('firstName').value || '-';
-        summaryElements.lastName.textContent = document.getElementById('lastName').value || '-';
-        summaryElements.email.textContent = document.getElementById('emailAddress').value || '-';
-        summaryElements.phone.textContent = document.getElementById('phoneNumber').value || '-';
-        summaryElements.address.textContent = document.getElementById('address').value || '-';
-        summaryElements.city.textContent = document.getElementById('city').value || '-';
-        summaryElements.state.textContent = document.getElementById('stateProvince').value || '-';
-        summaryElements.postalCode.textContent = document.getElementById('postalCode').value || '-';
+        summaryElements.firstName.textContent = document.getElementById('firstName')?.value || '-';
+        summaryElements.lastName.textContent = document.getElementById('lastName')?.value || '-';
+        summaryElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
+        summaryElements.phone.textContent = document.getElementById('phoneNumber')?.value || '-';
+        summaryElements.address.textContent = document.getElementById('address')?.value || '-';
+        summaryElements.city.textContent = document.getElementById('city')?.value || '-';
+        summaryElements.state.textContent = document.getElementById('stateProvince')?.value || '-';
+        summaryElements.postalCode.textContent = document.getElementById('postalCode')?.value || '-';
         const countrySelect = document.getElementById('countryCode');
-        summaryElements.country.textContent = countrySelect.value ? countrySelect.options[countrySelect.selectedIndex].text : '-';
+        summaryElements.country.textContent = countrySelect?.value ? countrySelect.options[countrySelect.selectedIndex].text : '-';
       };
 
-      // Mostrar paso
+      // Mostrar el paso actual
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
@@ -485,15 +487,18 @@
         progressSteps.forEach((step, index) => {
           step.classList.toggle('active', index <= stepIndex);
         });
-        prevBtn.style.display = stepIndex > 0 ? 'inline-block' : 'none';
-        nextBtn.style.display = stepIndex < steps.length - 1 ? 'inline-block' : 'none';
-        submitBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
+        if (prevBtn) prevBtn.style.display = stepIndex > 0 ? 'inline-block' : 'none';
+        if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 1 ? 'inline-block' : 'none';
+        if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
       };
 
-      // Validar paso
+      // Validar cada paso
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
-        if (!step) return false;
+        if (!step) {
+          console.error(`Step ${stepIndex} not found`);
+          return false;
+        }
 
         let valid = true;
 
@@ -518,13 +523,24 @@
               if (errorElement) errorElement.style.display = 'none';
               input.classList.remove('error');
             }
+            // Añadir validación en tiempo real
+            input.addEventListener('input', () => {
+              const errorEl = document.getElementById(`${input.id}Error`);
+              if (input.checkValidity()) {
+                if (errorEl) errorEl.style.display = 'none';
+                input.classList.remove('error');
+              } else {
+                if (errorEl) errorEl.style.display = 'block';
+                input.classList.add('error');
+              }
+            }, { once: true });
           });
         }
 
         return valid;
       };
 
-      // Manejar botones de donación
+      // Manejar clics en los botones de donación
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
           console.log(`Button clicked: ${button.getAttribute('data-amount')}`);
@@ -538,7 +554,7 @@
         });
       });
 
-      // Navegación
+      // Navegación: Botón "Next"
       nextBtn.addEventListener('click', () => {
         if (validateStep(currentStep)) {
           currentStep++;
@@ -549,13 +565,14 @@
         }
       });
 
+      // Navegación: Botón "Previous"
       prevBtn.addEventListener('click', () => {
         currentStep--;
         showStep(currentStep);
         updateSummary();
       });
 
-      // Enviar formulario
+      // Enviar el formulario
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
@@ -563,8 +580,8 @@
           return;
         }
 
-        submitBtn.disabled = true;
-        prevBtn.disabled = true;
+        if (submitBtn) submitBtn.disabled = true;
+        if (prevBtn) prevBtn.disabled = true;
 
         const formData = new FormData(form);
         const json = { planReferenceId: selectedPackageInput.value };
@@ -572,7 +589,7 @@
         formData.forEach((value, key) => {
           if (key === 'cardNumber') {
             json[key] = value.replace(/\s/g, '');
-          } else if (['donationAmount', 'expMonth', 'expYear'].includes(key)) {
+          } else if (['selectedAmount', 'expMonth', 'expYear'].includes(key)) {
             json[key] = Number(value) || null;
           } else if (key !== 'selectedPackage') {
             json[key] = value;
@@ -580,6 +597,8 @@
         });
 
         try {
+          console.log('Sending request with planReferenceId:', selectedPackageInput.value);
+          console.log('Full request body:', JSON.stringify(json, null, 2));
           const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -587,7 +606,7 @@
           });
           const data = await response.json();
           if (!response.ok) {
-            throw new Error(data.statusReason || 'Server error');
+            throw new Error(data.statusReason || `Server error: ${response.status}`);
           }
           showMessage('Thank you! Your donation has been processed.', 'success', 5000);
           form.reset();
@@ -598,19 +617,29 @@
           selectedPackageInput.value = '';
           updateSummary();
         } catch (err) {
+          console.error('Submission error:', err);
           showMessage(`Error: ${err.message}`, 'error', 5000);
         } finally {
-          submitBtn.disabled = false;
-          prevBtn.disabled = false;
+          if (submitBtn) submitBtn.disabled = false;
+          if (prevBtn) prevBtn.disabled = false;
         }
       });
 
       // Cargar países
       fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch countries');
+          }
+          return response.json();
+        })
         .then(data => {
           data.sort((a, b) => a.name.common.localeCompare(b.name.common));
           const select = document.getElementById('countryCode');
+          if (!select) {
+            console.error('Country select element not found');
+            return;
+          }
           data.forEach(country => {
             const opt = document.createElement('option');
             opt.value = country.cca2;
@@ -620,7 +649,7 @@
         })
         .catch(error => {
           console.error('Error loading countries:', error);
-          showMessage('Could not load countries.', 'error');
+          showMessage('Could not load countries. Please try again later.', 'error');
         });
 
       // Inicialización
