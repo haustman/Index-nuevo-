@@ -20,8 +20,8 @@
       --button-text-color: #212529;
       --button-text-color-light: #FFFFFF;
       --disabled-bg-color: #6C757D;
-      --error-bg: #FFF3CD; /* Fondo amarillo claro para errores */
-      --success-bg: #D1E7FF; /* Fondo azul claro para éxito */
+      --error-bg: #FFF3CD;
+      --success-bg: #D1E7FF;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -165,7 +165,7 @@
       gap: 8px;
       margin-top: 16px;
       align-items: center;
-      flex-wrap: wrap; /* Permitir que los elementos se envuelvan en móviles */
+      flex-wrap: wrap;
     }
 
     button {
@@ -282,129 +282,34 @@
       text-align: center;
     }
 
-    /* Responsive Adjustments */
     @media (max-width: 768px) {
-      body {
-        padding: 12px;
-      }
-
-      .form-wrapper, .order-summary-wrapper {
-        padding: 12px;
-        margin-bottom: 12px;
-      }
-
-      .progress-bar {
-        margin-bottom: 12px;
-      }
-
-      .progress-step {
-        font-size: 10px;
-        padding-bottom: 6px;
-      }
-
-      .progress-step::before {
-        width: 6px;
-        height: 6px;
-        margin-bottom: 4px;
-      }
-
-      .step-title {
-        font-size: 1em;
-        margin-bottom: 12px;
-      }
-
-      label {
-        font-size: 13px;
-      }
-
-      input, select {
-        padding: 8px 10px;
-        font-size: 13px;
-      }
-
-      .error-message {
-        font-size: 11px;
-      }
-
-      .preset-amounts {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: 6px;
-      }
-
-      .preset-button {
-        padding: 8px 6px;
-        font-size: 13px;
-      }
-
-      .buttons {
-        gap: 6px;
-        margin-top: 12px;
-      }
-
-      button {
-        padding: 6px 12px;
-        max-width: 100px;
-        font-size: 13px;
-      }
-
-      #message {
-        font-size: 12px;
-        padding: 6px;
-        min-height: 30px;
-        border-width: 0.5px; /* Reducir el borde en móviles */
-      }
-
-      .order-summary-wrapper h3 {
-        font-size: 1em;
-        margin-bottom: 12px;
-      }
-
-      .summary-section {
-        margin-bottom: 10px;
-        padding-bottom: 6px;
-      }
-
-      .summary-section h4 {
-        font-size: 0.9em;
-        margin-bottom: 6px;
-      }
-
-      .summary-section p {
-        font-size: 0.85em;
-      }
-
-      .loading {
-        font-size: 11px;
-        margin-top: 6px;
-      }
-
-      .notice {
-        font-size: 10px;
-        margin-top: 6px;
-      }
+      body { padding: 12px; }
+      .form-wrapper, .order-summary-wrapper { padding: 12px; margin-bottom: 12px; }
+      .progress-bar { margin-bottom: 12px; }
+      .progress-step { font-size: 10px; padding-bottom: 6px; }
+      .progress-step::before { width: 6px; height: 6px; margin-bottom: 4px; }
+      .step-title { font-size: 1em; margin-bottom: 12px; }
+      label { font-size: 13px; }
+      input, select { padding: 8px 10px; font-size: 13px; }
+      .error-message { font-size: 11px; }
+      .preset-amounts { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 6px; }
+      .preset-button { padding: 8px 6px; font-size: 13px; }
+      .buttons { gap: 6px; margin-top: 12px; }
+      button { padding: 6px 12px; max-width: 100px; font-size: 13px; }
+      #message { font-size: 12px; padding: 6px; min-height: 30px; border-width: 0.5px; }
+      .order-summary-wrapper h3 { font-size: 1em; margin-bottom: 12px; }
+      .summary-section { margin-bottom: 10px; padding-bottom: 6px; }
+      .summary-section h4 { font-size: 0.9em; margin-bottom: 6px; }
+      .summary-section p { font-size: 0.85em; }
+      .loading { font-size: 11px; margin-top: 6px; }
+      .notice { font-size: 10px; margin-top: 6px; }
     }
 
     @media (max-width: 480px) {
-      .preset-amounts {
-        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      }
-
-      .preset-button {
-        padding: 6px 4px;
-        font-size: 12px;
-      }
-
-      button {
-        padding: 6px 10px;
-        max-width: 90px;
-        font-size: 12px;
-      }
-
-      #message {
-        font-size: 11px;
-        padding: 4px;
-        min-height: 26px;
-      }
+      .preset-amounts { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+      .preset-button { padding: 6px 4px; font-size: 12px; }
+      button { padding: 6px 10px; max-width: 90px; font-size: 12px; }
+      #message { font-size: 11px; padding: 4px; min-height: 26px; }
     }
   </style>
 </head>
@@ -574,6 +479,7 @@
       const donationError = document.getElementById('donationError');
 
       let currentStep = 0;
+      let hasManualSelection = false; // Bandera para rastrear si hubo una selección manual
 
       // Mapeo de montos a nombres de paquetes
       const packageMapping = {
@@ -662,7 +568,7 @@
         console.log('Form data saved to localStorage:', data);
       };
 
-      // Cargar datos desde localStorage
+      // Cargar datos desde localStorage sin simular selección
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
         if (savedData) {
@@ -671,22 +577,17 @@
             const input = form.querySelector(`[name="${key}"]`);
             if (input) {
               input.value = data[key];
+              // Solo establecer los valores, sin marcar botones ni actualizar el resumen
               if (key === 'selectedAmount') {
                 const amount = data[key];
                 selectedAmountInput.value = amount;
                 selectedPackageInput.value = packageMapping[amount];
-                presetButtons.forEach(btn => {
-                  if (btn.getAttribute('data-amount') === amount) {
-                    btn.classList.add('selected');
-                  } else {
-                    btn.classList.remove('selected');
-                  }
-                });
+                // No marcamos ningún botón como .selected ni actualizamos el resumen
               }
             }
           });
           console.log('Form data loaded from localStorage:', data);
-          updateSummary();
+          // No llamamos a updateSummary() aquí para evitar simular una selección
         }
       };
 
@@ -701,14 +602,14 @@
         let valid = true;
 
         if (stepIndex === 0) {
-          if (!selectedPackageInput.value) {
+          if (!hasManualSelection || !selectedPackageInput.value) {
             valid = false;
             if (donationError) donationError.style.display = 'block';
             showMessage('Please select a donation amount.', 'error');
           } else {
             if (donationError) donationError.style.display = 'none';
           }
-          console.log(`Validating step 0: package=${selectedPackageInput.value}, valid=${valid}`);
+          console.log(`Validating step 0: package=${selectedPackageInput.value}, valid=${valid}, hasManualSelection=${hasManualSelection}`);
         } else {
           const inputs = step.querySelectorAll('input[required], select[required]');
           inputs.forEach(input => {
@@ -743,7 +644,7 @@
 
       // Validación adicional antes de enviar
       const validateBeforeSubmit = () => {
-        if (!selectedPackageInput.value) {
+        if (!hasManualSelection || !selectedPackageInput.value) {
           showMessage('No donation amount selected. Please go back to Step 1.', 'error');
           return false;
         }
@@ -809,6 +710,7 @@
           const amount = button.getAttribute('data-amount');
           selectedAmountInput.value = amount;
           selectedPackageInput.value = packageMapping[amount];
+          hasManualSelection = true; // Marcar que hubo una selección manual
           if (donationError) donationError.style.display = 'none';
           saveFormData();
           updateSummary();
@@ -900,6 +802,7 @@
             presetButtons.forEach(btn => btn.classList.remove('selected'));
             selectedAmountInput.value = '';
             selectedPackageInput.value = '';
+            hasManualSelection = false; // Resetear la bandera
             updateSummary();
           } else {
             throw result.error;
@@ -946,10 +849,6 @@
       // Inicialización
       showStep(currentStep);
       updateSummary();
-
-      // Nota: Para probar localmente y evitar problemas de CORS inicialmente,
-      // ejecuta este formulario en un servidor local (e.g., usando Live Server en VSCode)
-      // y configura tu backend para aceptar solicitudes desde 'localhost'.
     });
   </script>
 </body>
