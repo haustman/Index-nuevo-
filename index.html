@@ -504,6 +504,74 @@
         country: document.getElementById('summaryCountry'),
       };
 
+      // Mapa de códigos de estado a mensajes específicos
+      const statusCodeMessages = {
+        // Pending (100-103)
+        100: 'Your donation is pending processing. Please wait a moment and try again.',
+        101: 'Your donation has been submitted and is awaiting processing. Please check back later.',
+        102: 'Verification is pending for your donation. Please wait a moment and try again.',
+        103: 'Your donation requires additional verification (3D Secure). Please follow the instructions to authenticate the transaction.',
+
+        // Declined (300-319, 375, 399)
+        300: 'Your donation was declined. Please try again or use a different payment method.',
+        301: 'Your donation was declined due to insufficient funds. Please use a different payment method.',
+        302: 'Your donation was declined due to an invalid card number. Please check your card details and try again.',
+        303: 'Your donation was declined due to an invalid security code (CVV). Please check your card details and try again.',
+        304: 'Your donation was declined due to an incorrect card address. Please check your billing address and try again.',
+        305: 'Your donation was declined due to an incorrect postal code. Please check your billing address and try again.',
+        306: 'Your donation was declined because the card is reported as stolen or lost. Please contact your bank.',
+        307: 'Your donation was declined due to an authorization failure. Please contact your bank.',
+        308: 'Your donation requires additional authorization. Please contact your bank.',
+        309: 'Your donation was declined. Please call your bank or issuer for more information.',
+        310: 'Your donation was declined because the card type is not supported. Please use a different card.',
+        311: 'Your donation was declined due to a high risk assessment. Please contact support.',
+        312: 'Your donation was declined because the card is not activated. Please activate your card and try again.',
+        313: 'Your donation was declined due to an invalid card number. Please check your card details and try again.',
+        314: 'Your donation was declined (Do Not Honor). Please contact your bank for more information.',
+        315: 'Your donation was declined because the card is inactive or not set up. Please contact your bank.',
+        316: 'Your donation was declined due to suspected fraud. Please contact your bank.',
+        317: 'Your donation was declined because the card has expired. Please use a different card.',
+        318: 'Your donation was declined because the card is restricted. Please contact your bank.',
+        319: 'Your donation was declined because the card is blocked by the merchant. Please contact support.',
+        375: 'Your donation was declined because the 3D Secure verification was cancelled. Please try again.',
+        399: 'Decline test succeeded (for testing purposes).',
+
+        // Rejected (400-417, 450-457, 475, 499)
+        400: 'Your donation was rejected by the payment gateway. Please try again or contact support.',
+        401: 'Your donation was rejected due to an error in the data provided. Please check your details and try again.',
+        402: 'Your donation was rejected due to a high risk assessment. Please contact support.',
+        403: 'Your donation was rejected because the currency is not supported. Please use a different currency.',
+        404: 'Your donation was rejected because the country is restricted. Please contact support.',
+        405: 'Your donation was rejected because the customer is blacklisted. Please contact support.',
+        406: 'Your donation was rejected because the card is blacklisted. Please use a different card.',
+        407: 'Your donation was rejected due to an invalid currency code. Please use a different currency.',
+        408: 'Your donation was rejected due to a high risk phone number. Please contact support.',
+        409: 'Your donation was rejected due to a high risk email address. Please contact support.',
+        410: 'Your donation was rejected due to a history of chargebacks. Please contact support.',
+        411: 'Your donation was rejected due to a high risk IP address. Please contact support.',
+        412: 'Your donation was rejected due to a restricted BIN. Please use a different card.',
+        413: 'Your donation was rejected due to an invalid card number. Please check your card details and try again.',
+        414: 'Your donation was rejected due to an invalid security code (CVV). Please check your card details and try again.',
+        415: 'Your donation was rejected because the card has expired. Please use a different card.',
+        416: 'Your donation was rejected because the card type is not supported by the merchant. Please use a different card.',
+        417: 'Your donation was rejected due to an invalid country code. Please check your country selection and try again.',
+        450: 'Your donation was rejected due to a velocity limit (too many attempts). Please try again later.',
+        451: 'Your donation was rejected. Please retry with a different card.',
+        452: 'Your donation was rejected because the amount is above the merchant’s limit. Please select a lower amount.',
+        453: 'Your donation was rejected because the amount is below the merchant’s limit. Please select a higher amount.',
+        454: 'Your donation was rejected because the merchant has reached their capacity limit. Please try again later.',
+        455: 'Your donation was rejected because the merchant is currently unavailable. Please try again later.',
+        456: 'Your donation was rejected because the card is blocked by the merchant. Please contact support.',
+        457: 'Your donation was rejected because it requires whitelisting. Please contact support.',
+        475: 'Your donation was rejected because the verification was cancelled. Please try again.',
+        499: 'Reject test succeeded (for testing purposes).',
+
+        // Error (500-599)
+        500: 'An unexpected error occurred while processing your donation. Please try again or contact support.',
+        501: 'The payment gateway timed out while processing your donation. Please check your internet connection and try again.',
+        599: 'Error test succeeded (for testing purposes).',
+      };
+
       const showMessage = (msg, type, duration = 3000) => {
         if (!messageDiv) return;
         messageDiv.textContent = msg;
@@ -721,7 +789,6 @@
         updateSummary();
       });
 
-      // Nueva función para enviar la solicitud sin reintentos
       const sendRequest = async (json) => {
         try {
           console.log('Sending request to backend...');
@@ -732,15 +799,24 @@
           });
           const data = await response.json();
           if (!response.ok) {
-            throw new Error(data.statusReason || `Server error: ${response.status}`);
+            // Asumimos que el backend devuelve un código de estado en data.statusCode
+            const statusCode = data.statusCode || response.status;
+            throw new Error(JSON.stringify({ statusCode, message: data.statusReason || `Server error: ${response.status}` }));
           }
-          return { success: true, data };
+          // Asumimos que el backend devuelve un código de estado en data.statusCode incluso para respuestas exitosas
+          const statusCode = data.statusCode || 200;
+          return { success: true, statusCode, data };
         } catch (err) {
           console.error('Request failed:', err);
           if (err.message.includes('Failed to fetch')) {
             return { success: false, error: new Error('CORS error: The server is not configured to accept requests from this origin (https://unique-fudge-77f3e1.netlify.app). Please contact support to resolve this issue.') };
           }
-          return { success: false, error: err };
+          try {
+            const errorData = JSON.parse(err.message);
+            return { success: false, statusCode: errorData.statusCode, error: new Error(errorData.message) };
+          } catch (parseErr) {
+            return { success: false, error: err };
+          }
         }
       };
 
@@ -760,7 +836,6 @@
           return;
         }
 
-        // Deshabilitar botones para evitar múltiples envíos
         if (submitBtn) submitBtn.disabled = true;
         if (prevBtn) prevBtn.disabled = true;
         if (loadingDiv) loadingDiv.style.display = 'block';
@@ -783,27 +858,35 @@
           console.log('Full request body:', JSON.stringify(json, null, 2));
           const result = await sendRequest(json);
           if (result.success) {
-            showMessage('Thank you! Your donation has been processed successfully.', 'success', 5000);
-            localStorage.removeItem('donationFormData');
-            form.reset();
-            currentStep = 0;
-            showStep(currentStep);
-            presetButtons.forEach(btn => btn.classList.remove('selected'));
-            if (selectedAmountInput) selectedAmountInput.value = '';
-            if (selectedPackageInput) selectedPackageInput.value = '';
-            hasManualSelection = false;
-            updateSummary();
+            // Verificar si es un estado Pending (100-103)
+            if (result.statusCode >= 100 && result.statusCode <= 103) {
+              const message = statusCodeMessages[result.statusCode] || 'Your donation is pending. Please wait a moment or follow any additional instructions.';
+              showMessage(message, 'error', 5000);
+            } else {
+              // Aprobado (200, 299)
+              showMessage('Thank you! Your donation has been processed successfully.', 'success', 5000);
+              localStorage.removeItem('donationFormData');
+              form.reset();
+              currentStep = 0;
+              showStep(currentStep);
+              presetButtons.forEach(btn => btn.classList.remove('selected'));
+              if (selectedAmountInput) selectedAmountInput.value = '';
+              if (selectedPackageInput) selectedPackageInput.value = '';
+              hasManualSelection = false;
+              updateSummary();
+            }
           } else {
-            throw result.error;
+            throw result;
           }
-        } catch (err) {
-          console.error('Submission error:', err);
+        } catch (errResult) {
+          console.error('Submission error:', errResult.error || errResult);
+          const err = errResult.error || errResult;
           if (err.message.includes('CORS')) {
             showMessage('Unable to process your donation due to a server configuration issue (CORS). The server does not allow requests from this site. Please contact support.', 'error', 5000);
-          } else if (err.message.includes('Server error')) {
-            showMessage(`The server rejected the request: ${err.message}. Please try again or contact support.`, 'error', 5000);
           } else {
-            showMessage('We couldn’t process your donation right now. Please check your internet connection and try again, or contact support if the issue persists.', 'error', 5000);
+            const statusCode = errResult.statusCode || 0;
+            const message = statusCodeMessages[statusCode] || `The server rejected the request: ${err.message}. Please try again or contact support.`;
+            showMessage(message, 'error', 5000);
           }
         } finally {
           if (submitBtn) submitBtn.disabled = false;
