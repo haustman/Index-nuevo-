@@ -316,23 +316,24 @@
 <body>
   <div class="form-wrapper">
     <nav class="progress-bar">
-      <div class="progress-step active" data-step="0">Step 1: Donation</div>
+      <div class="progress-step active" data-step="0" aria-current="step">Step 1: Donation</div>
       <div class="progress-step" data-step="1">Step 2: Personal Details</div>
       <div class="progress-step" data-step="2">Step 3: Payment</div>
       <div class="progress-step" data-step="3">Step 4: Address</div>
+      <div class="progress-step" data-step="4">Step 5: Confirmation</div>
     </nav>
-    <form id="donationForm" novalidate>
+    <form id="donationForm" role="form" aria-label="Donation Form" novalidate>
       <div class="step active" id="step-0">
         <h3 class="step-title">Choose Your Donation Amount</h3>
         <div class="form-group">
-          <label>Select an amount:</label>
+          <label for="donationAmount">Select an amount:</label>
           <div class="preset-amounts">
-            <button type="button" class="preset-button" data-amount="10">$10</button>
-            <button type="button" class="preset-button" data-amount="30">$30</button>
-            <button type="button" class="preset-button" data-amount="50">$50</button>
-            <button type="button" class="preset-button" data-amount="100">$100</button>
-            <button type="button" class="preset-button" data-amount="200">$200</button>
-            <button type="button" class="preset-button" data-amount="500">$500</button>
+            <button type="button" class="preset-button" data-amount="10" aria-label="Select $10 donation">$10</button>
+            <button type="button" class="preset-button" data-amount="30" aria-label="Select $30 donation">$30</button>
+            <button type="button" class="preset-button" data-amount="50" aria-label="Select $50 donation">$50</button>
+            <button type="button" class="preset-button" data-amount="100" aria-label="Select $100 donation">$100</button>
+            <button type="button" class="preset-button" data-amount="200" aria-label="Select $200 donation">$200</button>
+            <button type="button" class="preset-button" data-amount="500" aria-label="Select $500 donation">$500</button>
           </div>
           <span class="error-message" id="donationError">Please select a donation amount.</span>
         </div>
@@ -344,23 +345,23 @@
         <h3 class="step-title">Your Personal Details</h3>
         <div class="form-group">
           <label for="firstName">First Name:</label>
-          <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" required />
-          <span class="error-message" id="firstNameError">Only letters, spaces, hyphens, and apostrophes.</span>
+          <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" aria-describedby="firstNameError" required />
+          <span class="error-message" id="firstNameError">Please enter a valid first name (letters, spaces, hyphens, apostrophes only).</span>
         </div>
         <div class="form-group">
           <label for="lastName">Last Name:</label>
-          <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" required />
-          <span class="error-message" id="lastNameError">Only letters, spaces, hyphens, and apostrophes.</span>
+          <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" aria-describedby="lastNameError" required />
+          <span class="error-message" id="lastNameError">Please enter a valid last name (letters, spaces, hyphens, apostrophes only).</span>
         </div>
         <div class="form-group">
           <label for="emailAddress">Email Address:</label>
-          <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" required />
-          <span class="error-message" id="emailError">Please enter a valid email address.</span>
+          <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" aria-describedby="emailError" required />
+          <span class="error-message" id="emailError">Please enter a valid email address (e.g., example@domain.com).</span>
         </div>
         <div class="form-group">
           <label for="phoneNumber">Phone Number:</label>
-          <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" required />
-          <span class="error-message" id="phoneError">Numbers only (10–15 digits).</span>
+          <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" aria-describedby="phoneError" required />
+          <span class="error-message" id="phoneError">Please enter a valid phone number (10–15 digits).</span>
         </div>
       </div>
 
@@ -368,28 +369,28 @@
         <h3 class="step-title">Payment Information</h3>
         <div class="form-group">
           <label for="cardName">Name on Card:</label>
-          <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" required />
-          <span class="error-message" id="cardNameError">Only letters, spaces, hyphens, and apostrophes.</span>
+          <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" aria-describedby="cardNameError" required />
+          <span class="error-message" id="cardNameError">Please enter a valid name (letters, spaces, hyphens, apostrophes only).</span>
         </div>
         <div class="form-group">
           <label for="cardNumber">Card Number:</label>
-          <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" required />
-          <span class="error-message" id="cardNumberError">Enter a valid 16-digit card number.</span>
+          <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
+          <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
         </div>
         <div class="form-group">
           <label for="cvv">CVV:</label>
-          <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" required />
-          <span class="error-message" id="cvvError">3 or 4 digits.</span>
+          <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" aria-describedby="cvvError" required />
+          <span class="error-message" id="cvvError">Please enter a valid CVV (3 or 4 digits).</span>
         </div>
         <div class="form-group">
           <label for="expMonth">Expiration Month:</label>
-          <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" required />
-          <span class="error-message" id="expMonthError">Enter a month (1–12).</span>
+          <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" required />
+          <span class="error-message" id="expMonthError">Please enter a valid month (1–12).</span>
         </div>
         <div class="form-group">
           <label for="expYear">Expiration Year:</label>
-          <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" required />
-          <span class="error-message" id="expYearError">Enter a year (e.g., 2025–2035).</span>
+          <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" aria-describedby="expYearError" required />
+          <span class="error-message" id="expYearError">Please enter a valid year (2025–2035).</span>
         </div>
       </div>
 
@@ -397,39 +398,55 @@
         <h3 class="step-title">Your Address</h3>
         <div class="form-group">
           <label for="address">Street Address:</label>
-          <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" required />
-          <span class="error-message" id="addressError">Please enter a valid address.</span>
+          <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" aria-describedby="addressError" required />
+          <span class="error-message" id="addressError">Please enter a valid street address.</span>
         </div>
         <div class="form-group">
           <label for="countryCode">Country:</label>
-          <select id="countryCode" name="countryCode" required>
+          <select id="countryCode" name="countryCode" aria-describedby="countryError" required>
             <option value="">Select a country</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="GB">United Kingdom</option>
+            <option value="AU">Australia</option>
+            <option value="FR">France</option>
           </select>
-          <span class="error-message" id="countryError">Please select your country.</span>
+          <span class="error-message" id="countryError">Please select a country from the list.</span>
         </div>
         <div class="form-group">
           <label for="stateProvince">State / Province:</label>
-          <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California" required />
-          <span class="error-message" id="stateError">Letters, numbers, spaces, hyphens allowed.</span>
+          <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California" aria-describedby="stateError" required />
+          <span class="error-message" id="stateError">Please enter a valid state/province (letters, numbers, spaces, hyphens).</span>
         </div>
         <div class="form-group">
           <label for="city">City:</label>
-          <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" required />
-          <span class="error-message" id="cityError">Letters, spaces, hyphens allowed.</span>
+          <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" aria-describedby="cityError" required />
+          <span class="error-message" id="cityError">Please enter a valid city (letters, spaces, hyphens).</span>
         </div>
         <div class="form-group">
           <label for="postalCode">Postal / Zip Code:</label>
-          <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210" required />
-          <span class="error-message" id="postalCodeError">1–10 characters (letters, numbers, spaces, hyphens).</span>
+          <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210" aria-describedby="postalCodeError" required />
+          <span class="error-message" id="postalCodeError">Please enter a valid postal/zip code (1–10 characters).</span>
         </div>
         <input type="hidden" id="ipAddress" name="ipAddress" value="127.0.0.1" />
-        <div class="loading" id="loading" style="display: none;">Enviando...</div>
-        <div class="notice">Estamos trabajando en mejorar nuestro sistema. Si experimentas problemas al enviar, por favor intenta de nuevo o contacta al soporte.</div>
+        <div class="loading" id="loading" style="display: none;">Sending...</div>
+        <div class="notice">We are working to improve our system. If you experience issues submitting, please try again or contact support.</div>
+      </div>
+
+      <div class="step" id="step-4">
+        <h3 class="step-title">Thank You for Your Donation!</h3>
+        <div class="summary-section">
+          <p><strong>Amount:</strong> <span id="confirmAmount">-</span></p>
+          <p><strong>Name:</strong> <span id="confirmName">-</span></p>
+          <p><strong>Email:</strong> <span id="confirmEmail">-</span></p>
+          <p><strong>Transaction ID:</strong> <span id="confirmTransactionId">-</span></p>
+        </div>
+        <button type="button" id="resetBtn">Make Another Donation</button>
       </div>
 
       <div class="buttons">
         <button type="button" id="prevBtn" style="display:none;">Previous Step</button>
-        <div id="message" class="text-center"></div>
+        <div id="message" class="text-center" aria-live="polite"></div>
         <button type="button" id="nextBtn">Next Step</button>
         <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
       </div>
@@ -471,6 +488,7 @@
       const nextBtn = document.getElementById('nextBtn');
       const prevBtn = document.getElementById('prevBtn');
       const submitBtn = document.getElementById('submitBtn');
+      const resetBtn = document.getElementById('resetBtn');
       const messageDiv = document.getElementById('message');
       const loadingDiv = document.getElementById('loading');
       const presetButtons = document.querySelectorAll('.preset-button');
@@ -480,6 +498,7 @@
 
       let currentStep = 0;
       let hasManualSelection = false;
+      let transactionId = '';
 
       const packageMapping = {
         '10': 'Donation1',
@@ -504,72 +523,11 @@
         country: document.getElementById('summaryCountry'),
       };
 
-      // Mapa de códigos de estado a mensajes específicos
-      const statusCodeMessages = {
-        // Pending (100-103)
-        100: 'Your donation is pending processing. Please wait a moment and try again.',
-        101: 'Your donation has been submitted and is awaiting processing. Please check back later.',
-        102: 'Verification is pending for your donation. Please wait a moment and try again.',
-        103: 'Your donation requires additional verification (3D Secure). Please follow the instructions to authenticate the transaction.',
-
-        // Declined (300-319, 375, 399)
-        300: 'Your donation was declined. Please try again or use a different payment method.',
-        301: 'Your donation was declined due to insufficient funds. Please use a different payment method.',
-        302: 'Your donation was declined due to an invalid card number. Please check your card details and try again.',
-        303: 'Your donation was declined due to an invalid security code (CVV). Please check your card details and try again.',
-        304: 'Your donation was declined due to an incorrect card address. Please check your billing address and try again.',
-        305: 'Your donation was declined due to an incorrect postal code. Please check your billing address and try again.',
-        306: 'Your donation was declined because the card is reported as stolen or lost. Please contact your bank.',
-        307: 'Your donation was declined due to an authorization failure. Please contact your bank.',
-        308: 'Your donation requires additional authorization. Please contact your bank.',
-        309: 'Your donation was declined. Please call your bank or issuer for more information.',
-        310: 'Your donation was declined because the card type is not supported. Please use a different card.',
-        311: 'Your donation was declined due to a high risk assessment. Please contact support.',
-        312: 'Your donation was declined because the card is not activated. Please activate your card and try again.',
-        313: 'Your donation was declined due to an invalid card number. Please check your card details and try again.',
-        314: 'Your donation was declined (Do Not Honor). Please contact your bank for more information.',
-        315: 'Your donation was declined because the card is inactive or not set up. Please contact your bank.',
-        316: 'Your donation was declined due to suspected fraud. Please contact your bank.',
-        317: 'Your donation was declined because the card has expired. Please use a different card.',
-        318: 'Your donation was declined because the card is restricted. Please contact your bank.',
-        319: 'Your donation was declined because the card is blocked by the merchant. Please contact support.',
-        375: 'Your donation was declined because the 3D Secure verification was cancelled. Please try again.',
-        399: 'Decline test succeeded (for testing purposes).',
-
-        // Rejected (400-417, 450-457, 475, 499)
-        400: 'Your donation was rejected by the payment gateway. Please try again or contact support.',
-        401: 'Your donation was rejected due to an error in the data provided. Please check your details and try again.',
-        402: 'Your donation was rejected due to a high risk assessment. Please contact support.',
-        403: 'Your donation was rejected because the currency is not supported. Please use a different currency.',
-        404: 'Your donation was rejected because the country is restricted. Please contact support.',
-        405: 'Your donation was rejected because the customer is blacklisted. Please contact support.',
-        406: 'Your donation was rejected because the card is blacklisted. Please use a different card.',
-        407: 'Your donation was rejected due to an invalid currency code. Please use a different currency.',
-        408: 'Your donation was rejected due to a high risk phone number. Please contact support.',
-        409: 'Your donation was rejected due to a high risk email address. Please contact support.',
-        410: 'Your donation was rejected due to a history of chargebacks. Please contact support.',
-        411: 'Your donation was rejected due to a high risk IP address. Please contact support.',
-        412: 'Your donation was rejected due to a restricted BIN. Please use a different card.',
-        413: 'Your donation was rejected due to an invalid card number. Please check your card details and try again.',
-        414: 'Your donation was rejected due to an invalid security code (CVV). Please check your card details and try again.',
-        415: 'Your donation was rejected because the card has expired. Please use a different card.',
-        416: 'Your donation was rejected because the card type is not supported by the merchant. Please use a different card.',
-        417: 'Your donation was rejected due to an invalid country code. Please check your country selection and try again.',
-        450: 'Your donation was rejected due to a velocity limit (too many attempts). Please try again later.',
-        451: 'Your donation was rejected. Please retry with a different card.',
-        452: 'Your donation was rejected because the amount is above the merchant’s limit. Please select a lower amount.',
-        453: 'Your donation was rejected because the amount is below the merchant’s limit. Please select a higher amount.',
-        454: 'Your donation was rejected because the merchant has reached their capacity limit. Please try again later.',
-        455: 'Your donation was rejected because the merchant is currently unavailable. Please try again later.',
-        456: 'Your donation was rejected because the card is blocked by the merchant. Please contact support.',
-        457: 'Your donation was rejected because it requires whitelisting. Please contact support.',
-        475: 'Your donation was rejected because the verification was cancelled. Please try again.',
-        499: 'Reject test succeeded (for testing purposes).',
-
-        // Error (500-599)
-        500: 'An unexpected error occurred while processing your donation. Please try again or contact support.',
-        501: 'The payment gateway timed out while processing your donation. Please check your internet connection and try again.',
-        599: 'Error test succeeded (for testing purposes).',
+      const confirmElements = {
+        amount: document.getElementById('confirmAmount'),
+        name: document.getElementById('confirmName'),
+        email: document.getElementById('confirmEmail'),
+        transactionId: document.getElementById('confirmTransactionId'),
       };
 
       const showMessage = (msg, type, duration = 3000) => {
@@ -607,16 +565,25 @@
         });
       };
 
+      const updateConfirmation = () => {
+        const amount = parseFloat(selectedAmountInput?.value || 0);
+        confirmElements.amount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
+        confirmElements.name.textContent = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || '-';
+        confirmElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
+        confirmElements.transactionId.textContent = transactionId || '-';
+      };
+
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
         });
         progressSteps.forEach((step, index) => {
           step.classList.toggle('active', index <= stepIndex);
+          step.setAttribute('aria-current', index === stepIndex ? 'step' : 'false');
         });
-        if (prevBtn) prevBtn.style.display = stepIndex > 0 ? 'inline-block' : 'none';
-        if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 1 ? 'inline-block' : 'none';
-        if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
+        if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
+        if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
+        if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
         console.log(`Showing step ${stepIndex}`);
       };
 
@@ -658,12 +625,13 @@
         }
 
         let valid = true;
+        let errors = [];
 
         if (stepIndex === 0) {
           if (!hasManualSelection || !selectedPackageInput?.value) {
             valid = false;
             if (donationError) donationError.style.display = 'block';
-            showMessage('Please select a donation amount.', 'error');
+            errors.push('Please select a donation amount.');
           } else {
             if (donationError) donationError.style.display = 'none';
           }
@@ -674,7 +642,10 @@
             const errorElement = document.getElementById(`${input.id}Error`);
             if (!input.checkValidity()) {
               valid = false;
-              if (errorElement) errorElement.style.display = 'block';
+              if (errorElement) {
+                errorElement.style.display = 'block';
+                errors.push(errorElement.textContent);
+              }
               input.classList.add('error');
             } else {
               if (errorElement) errorElement.style.display = 'none';
@@ -697,6 +668,10 @@
           });
         }
 
+        if (!valid && errors.length > 0) {
+          showMessage(`Please fix the following errors:\n- ${errors.join('\n- ')}`, 'error', 5000);
+        }
+
         return valid;
       };
 
@@ -707,7 +682,7 @@
         }
         const email = document.getElementById('emailAddress')?.value;
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          showMessage('Please enter a valid email address.', 'error');
+          showMessage('Please enter a valid email address (e.g., example@domain.com).', 'error');
           return false;
         }
         const cardNumber = document.getElementById('cardNumber')?.value?.replace(/\s/g, '');
@@ -737,7 +712,7 @@
         }
         const countryCode = document.getElementById('countryCode')?.value;
         if (!countryCode) {
-          showMessage('Please select a country.', 'error');
+          showMessage('Please select a country from the list.', 'error');
           return false;
         }
         const stateProvince = document.getElementById('stateProvince')?.value;
@@ -778,8 +753,6 @@
           currentStep++;
           showStep(currentStep);
           updateSummary();
-        } else {
-          showMessage('Please complete the current step.', 'error');
         }
       });
 
@@ -787,6 +760,20 @@
         currentStep--;
         showStep(currentStep);
         updateSummary();
+      });
+
+      resetBtn?.addEventListener('click', () => {
+        form.reset();
+        currentStep = 0;
+        showStep(currentStep);
+        presetButtons.forEach(btn => btn.classList.remove('selected'));
+        if (selectedAmountInput) selectedAmountInput.value = '';
+        if (selectedPackageInput) selectedPackageInput.value = '';
+        hasManualSelection = false;
+        transactionId = '';
+        localStorage.removeItem('donationFormData');
+        updateSummary();
+        updateConfirmation();
       });
 
       const sendRequest = async (json) => {
@@ -799,31 +786,22 @@
           });
           const data = await response.json();
           if (!response.ok) {
-            // Asumimos que el backend devuelve un código de estado en data.statusCode
-            const statusCode = data.statusCode || response.status;
-            throw new Error(JSON.stringify({ statusCode, message: data.statusReason || `Server error: ${response.status}` }));
+            throw new Error(data.statusReason || `Server error: ${response.status}`);
           }
-          // Asumimos que el backend devuelve un código de estado en data.statusCode incluso para respuestas exitosas
-          const statusCode = data.statusCode || 200;
-          return { success: true, statusCode, data };
+          transactionId = data.transactionId || 'N/A';
+          return { success: true, data };
         } catch (err) {
           console.error('Request failed:', err);
           if (err.message.includes('Failed to fetch')) {
-            return { success: false, error: new Error('CORS error: The server is not configured to accept requests from this origin (https://unique-fudge-77f3e1.netlify.app). Please contact support to resolve this issue.') };
+            return { success: false, error: new Error('CORS error: The server is not configured to accept requests from this origin. Please contact support.') };
           }
-          try {
-            const errorData = JSON.parse(err.message);
-            return { success: false, statusCode: errorData.statusCode, error: new Error(errorData.message) };
-          } catch (parseErr) {
-            return { success: false, error: err };
-          }
+          return { success: false, error: err };
         }
       };
 
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
-          showMessage('Please complete all required fields.', 'error');
           return;
         }
 
@@ -858,36 +836,28 @@
           console.log('Full request body:', JSON.stringify(json, null, 2));
           const result = await sendRequest(json);
           if (result.success) {
-            // Verificar si es un estado Pending (100-103)
-            if (result.statusCode >= 100 && result.statusCode <= 103) {
-              const message = statusCodeMessages[result.statusCode] || 'Your donation is pending. Please wait a moment or follow any additional instructions.';
-              showMessage(message, 'error', 5000);
-            } else {
-              // Aprobado (200, 299)
-              showMessage('Thank you! Your donation has been processed successfully.', 'success', 5000);
-              localStorage.removeItem('donationFormData');
-              form.reset();
-              currentStep = 0;
-              showStep(currentStep);
-              presetButtons.forEach(btn => btn.classList.remove('selected'));
-              if (selectedAmountInput) selectedAmountInput.value = '';
-              if (selectedPackageInput) selectedPackageInput.value = '';
-              hasManualSelection = false;
-              updateSummary();
-            }
+            showMessage('Thank you! Your donation has been processed successfully.', 'success', 10000);
+            updateConfirmation();
+            currentStep = steps.length - 1;
+            showStep(currentStep);
+            localStorage.removeItem('donationFormData');
+            presetButtons.forEach(btn => btn.classList.remove('selected'));
+            if (selectedAmountInput) selectedAmountInput.value = '';
+            if (selectedPackageInput) selectedPackageInput.value = '';
+            hasManualSelection = false;
+            updateSummary();
           } else {
-            throw result;
+            throw result.error;
           }
-        } catch (errResult) {
-          console.error('Submission error:', errResult.error || errResult);
-          const err = errResult.error || errResult;
+        } catch (err) {
+          console.error('Submission error:', err);
+          let errorMessage = 'We couldn’t process your donation. Please try again or contact support.';
           if (err.message.includes('CORS')) {
-            showMessage('Unable to process your donation due to a server configuration issue (CORS). The server does not allow requests from this site. Please contact support.', 'error', 5000);
-          } else {
-            const statusCode = errResult.statusCode || 0;
-            const message = statusCodeMessages[statusCode] || `The server rejected the request: ${err.message}. Please try again or contact support.`;
-            showMessage(message, 'error', 5000);
+            errorMessage = 'Unable to process your donation due to a server configuration issue (CORS). Please contact support.';
+          } else if (err.message.includes('Server error')) {
+            errorMessage = `The server rejected the request: ${err.message}. Please try again or contact support.`;
           }
+          showMessage(errorMessage, 'error', 5000);
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (prevBtn) prevBtn.disabled = false;
@@ -895,34 +865,51 @@
         }
       });
 
-      fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch countries');
-          }
-          return response.json();
-        })
-        .then(data => {
-          data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-          const select = document.getElementById('countryCode');
-          if (!select) {
-            console.error('Country select element not found');
-            return;
-          }
-          data.forEach(country => {
+      const loadCountries = () => {
+        const select = document.getElementById('countryCode');
+        if (!select) {
+          console.error('Country select element not found');
+          return;
+        }
+
+        const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
+        if (cachedCountries.length > 0) {
+          cachedCountries.forEach(country => {
             const opt = document.createElement('option');
             opt.value = country.cca2;
             opt.textContent = country.name.common;
             select.appendChild(opt);
           });
           loadFormData();
-        })
-        .catch(error => {
-          console.error('Error loading countries:', error);
-          showMessage('Could not load countries. Please try again later.', 'error');
-          loadFormData();
-        });
+          return;
+        }
 
+        fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch countries');
+            }
+            return response.json();
+          })
+          .then(data => {
+            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+            data.forEach(country => {
+              const opt = document.createElement('option');
+              opt.value = country.cca2;
+              opt.textContent = country.name.common;
+              select.appendChild(opt);
+            });
+            localStorage.setItem('countries', JSON.stringify(data));
+            loadFormData();
+          })
+          .catch(error => {
+            console.error('Error loading countries:', error);
+            showMessage('Could not load countries. Please select from the available options or try again later.', 'error');
+            loadFormData();
+          });
+      };
+
+      loadCountries();
       showStep(currentStep);
       updateSummary();
     });
