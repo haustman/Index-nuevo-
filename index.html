@@ -26,6 +26,10 @@
       --disabled-bg-color: #6C757D;
       --error-bg: #FFF3CD;
       --success-bg: #D1E7FF;
+      --visa-color: #1A1F71;
+      --mastercard-color: #EB001B;
+      --amex-color: #2E77BC;
+      --discover-color: #F28A2E;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -308,7 +312,7 @@
       color: var(--label-color);
       text-align: center;
       margin-top: 8px;
-      display: none; /* Oculto por defecto */
+      display: none;
     }
 
     .terms-notice a {
@@ -337,6 +341,29 @@
 
     .card-icon:hover {
       transform: scale(1.1);
+    }
+
+    /* Estilos para ícono dinámico de tarjeta */
+    .card-number-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    #cardNumberIcon {
+      position: absolute;
+      right: 10px;
+      font-size: 20px;
+      transition: color 0.3s ease;
+    }
+
+    #cardNumberIcon.visa { color: var(--visa-color); }
+    #cardNumberIcon.mastercard { color: var(--mastercard-color); }
+    #cardNumberIcon.amex { color: var(--amex-color); }
+    #cardNumberIcon.discover { color: var(--discover-color); }
+
+    #cardNumber {
+      padding-right: 40px; /* Espacio para el ícono */
     }
 
     /* Responsive Design */
@@ -384,6 +411,7 @@
       .notice { font-size: 9px; margin-top: 5px; }
       .terms-notice { font-size: 11px; margin-top: 6px; }
       .card-icon { font-size: 20px; }
+      #cardNumberIcon { font-size: 18px; }
     }
 
     @media (max-width: 480px) {
@@ -396,6 +424,7 @@
       #message { font-size: 10px; padding: 4px; min-height: 24px; }
       .terms-notice { font-size: 10px; margin-top: 5px; }
       .card-icon { font-size: 18px; }
+      #cardNumberIcon { font-size: 16px; }
     }
   </style>
 </head>
@@ -454,7 +483,6 @@
 
         <div class="step" id="step-2">
           <h3 class="step-title">Payment Information</h3>
-          <!-- Íconos de tarjetas -->
           <div class="card-icons">
             <i class="fa-brands fa-cc-visa card-icon" title="Visa"></i>
             <i class="fa-brands fa-cc-mastercard card-icon" title="MasterCard"></i>
@@ -468,7 +496,10 @@
           </div>
           <div class="form-group">
             <label for="cardNumber">Card Number:</label>
-            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
+            <div class="card-number-wrapper">
+              <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
+              <i id="cardNumberIcon" class="fa-solid fa-credit-card"></i>
+            </div>
             <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
           </div>
           <div class="form-group">
@@ -499,11 +530,6 @@
             <label for="countryCode">Country:</label>
             <select id="countryCode" name="countryCode" aria-describedby="countryError" required>
               <option value="">Select a country</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="GB">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="FR">France</option>
             </select>
             <span class="error-message" id="countryError">Please select a country from the list.</span>
           </div>
@@ -543,7 +569,6 @@
           <button type="button" id="nextBtn">Next Step</button>
           <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
         </div>
-        <!-- Términos y condiciones -->
         <div class="terms-notice" id="termsNotice">
           By continuing, you agree to our <a href="/terms-and-conditions.pdf" target="_blank">Terms and Conditions</a>.
         </div>
@@ -593,6 +618,8 @@
       const selectedPackageInput = document.getElementById('selectedPackage');
       const donationError = document.getElementById('donationError');
       const termsNotice = document.getElementById('termsNotice');
+      const cardNumberInput = document.getElementById('cardNumber');
+      const cardNumberIcon = document.getElementById('cardNumberIcon');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -682,7 +709,6 @@
         if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
-        // Mostrar términos solo en el primer paso
         if (termsNotice) termsNotice.style.display = stepIndex === 0 ? 'block' : 'none';
         console.log(`Showing step ${stepIndex}`);
       };
@@ -874,6 +900,9 @@
         localStorage.removeItem('donationFormData');
         updateSummary();
         updateConfirmation();
+        if (cardNumberIcon) {
+          cardNumberIcon.className = 'fa-solid fa-credit-card';
+        }
       });
 
       const sendRequest = async (json) => {
@@ -965,6 +994,41 @@
         }
       });
 
+      // Detectar tipo de tarjeta
+      const detectCardType = (number) => {
+        const cleanNumber = number.replace(/\D/g, '');
+        if (/^4/.test(cleanNumber)) return 'visa';
+        if (/^5[1-5]/.test(cleanNumber)) return 'mastercard';
+        if (/^3[47]/.test(cleanNumber)) return 'amex';
+        if (/^6(?:011|5)/.test(cleanNumber)) return 'discover';
+        return null;
+      };
+
+      cardNumberInput?.addEventListener('input', () => {
+        const cardType = detectCardType(cardNumberInput.value);
+        if (cardNumberIcon) {
+          cardNumberIcon.className = 'fa-brands';
+          switch (cardType) {
+            case 'visa':
+              cardNumberIcon.classList.add('fa-cc-visa', 'visa');
+              break;
+            case 'mastercard':
+              cardNumberIcon.classList.add('fa-cc-mastercard', 'mastercard');
+              break;
+            case 'amex':
+              cardNumberIcon.classList.add('fa-cc-amex', 'amex');
+              break;
+            case 'discover':
+              cardNumberIcon.classList.add('fa-cc-discover', 'discover');
+              break;
+            default:
+              cardNumberIcon.classList.remove('fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex', 'fa-cc-discover', 'visa', 'mastercard', 'amex', 'discover');
+              cardNumberIcon.classList.add('fa-credit-card');
+              break;
+          }
+        }
+      });
+
       const loadCountries = () => {
         const select = document.getElementById('countryCode');
         if (!select) {
@@ -984,7 +1048,7 @@
           return;
         }
 
-        fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
+        fetch('https://restcountries.com/v3.1/all')
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch countries');
@@ -999,7 +1063,10 @@
               opt.textContent = country.name.common;
               select.appendChild(opt);
             });
-            localStorage.setItem('countries', JSON.stringify(data));
+            localStorage.setItem('countries', JSON.stringify(data.map(country => ({
+              cca2: country.cca2,
+              name: { common: country.name.common }
+            }))));
             loadFormData();
           })
           .catch(error => {
