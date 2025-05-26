@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Donation Form</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Íconos de Font Awesome para tarjetas -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png">
   <style>
     :root {
       --primary-color: #FFC107;
@@ -298,6 +302,44 @@
       margin-bottom: 8px;
     }
 
+    /* Estilos para términos y condiciones */
+    .terms-notice {
+      font-size: 12px;
+      color: var(--label-color);
+      text-align: center;
+      margin-top: 8px;
+      display: none; /* Oculto por defecto */
+    }
+
+    .terms-notice a {
+      color: var(--secondary-color);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    .terms-notice a:hover {
+      color: var(--secondary-hover);
+    }
+
+    /* Estilos para íconos de tarjetas */
+    .card-icons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .card-icon {
+      font-size: 24px;
+      color: var(--text-color);
+      transition: transform 0.3s ease;
+    }
+
+    .card-icon:hover {
+      transform: scale(1.1);
+    }
+
+    /* Responsive Design */
     @media (min-width: 768px) {
       .container {
         flex-direction: row;
@@ -340,6 +382,8 @@
       .summary-section p { font-size: 0.8em; }
       .loading { font-size: 10px; margin-top: 5px; }
       .notice { font-size: 9px; margin-top: 5px; }
+      .terms-notice { font-size: 11px; margin-top: 6px; }
+      .card-icon { font-size: 20px; }
     }
 
     @media (max-width: 480px) {
@@ -350,6 +394,8 @@
       .preset-button { padding: 5px 4px; font-size: 11px; }
       button { padding: 4px 8px; max-width: 80px; font-size: 11px; }
       #message { font-size: 10px; padding: 4px; min-height: 24px; }
+      .terms-notice { font-size: 10px; margin-top: 5px; }
+      .card-icon { font-size: 18px; }
     }
   </style>
 </head>
@@ -408,6 +454,13 @@
 
         <div class="step" id="step-2">
           <h3 class="step-title">Payment Information</h3>
+          <!-- Íconos de tarjetas -->
+          <div class="card-icons">
+            <i class="fa-brands fa-cc-visa card-icon" title="Visa"></i>
+            <i class="fa-brands fa-cc-mastercard card-icon" title="MasterCard"></i>
+            <i class="fa-brands fa-cc-amex card-icon" title="American Express"></i>
+            <i class="fa-brands fa-cc-discover card-icon" title="Discover"></i>
+          </div>
           <div class="form-group">
             <label for="cardName">Name on Card:</label>
             <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" aria-describedby="cardNameError" required />
@@ -490,6 +543,10 @@
           <button type="button" id="nextBtn">Next Step</button>
           <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
         </div>
+        <!-- Términos y condiciones -->
+        <div class="terms-notice" id="termsNotice">
+          By continuing, you agree to our <a href="/terms-and-conditions.pdf" target="_blank">Terms and Conditions</a>.
+        </div>
       </form>
     </div>
 
@@ -535,6 +592,7 @@
       const selectedAmountInput = document.getElementById('selectedAmount');
       const selectedPackageInput = document.getElementById('selectedPackage');
       const donationError = document.getElementById('donationError');
+      const termsNotice = document.getElementById('termsNotice');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -624,6 +682,8 @@
         if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
+        // Mostrar términos solo en el primer paso
+        if (termsNotice) termsNotice.style.display = stepIndex === 0 ? 'block' : 'none';
         console.log(`Showing step ${stepIndex}`);
       };
 
