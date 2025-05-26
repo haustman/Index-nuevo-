@@ -366,6 +366,28 @@
       padding-right: 40px; /* Espacio para el ícono */
     }
 
+    /* Estilos para el checkbox de guardar datos */
+    .remember-checkbox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .remember-checkbox label {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--label-color);
+      cursor: pointer;
+    }
+
+    .remember-checkbox input[type="checkbox"] {
+      width: auto;
+      margin-right: 6px;
+      cursor: pointer;
+    }
+
     /* Responsive Design */
     @media (min-width: 768px) {
       .container {
@@ -412,6 +434,8 @@
       .terms-notice { font-size: 11px; margin-top: 6px; }
       .card-icon { font-size: 20px; }
       #cardNumberIcon { font-size: 18px; }
+      .remember-checkbox label { font-size: 11px; }
+      .remember-checkbox input[type="checkbox"] { margin-right: 5px; }
     }
 
     @media (max-width: 480px) {
@@ -425,6 +449,7 @@
       .terms-notice { font-size: 10px; margin-top: 5px; }
       .card-icon { font-size: 18px; }
       #cardNumberIcon { font-size: 16px; }
+      .remember-checkbox label { font-size: 10px; }
     }
   </style>
 </head>
@@ -455,6 +480,7 @@
           </div>
           <input type="hidden" id="selectedAmount" name="selectedAmount">
           <input type="hidden" id="selectedPackage" name="selectedPackage">
+          <input type="hidden" id="termsAccepted" name="termsAccepted" value="false">
         </div>
 
         <div class="step" id="step-1">
@@ -478,6 +504,12 @@
             <label for="phoneNumber">Phone Number:</label>
             <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" aria-describedby="phoneError" required />
             <span class="error-message" id="phoneError">Please enter a valid phone number (10–15 digits).</span>
+          </div>
+          <div class="form-group remember-checkbox">
+            <label>
+              <input type="checkbox" id="rememberInfo" name="rememberInfo">
+              Remember my information for next time.
+            </label>
           </div>
         </div>
 
@@ -620,6 +652,8 @@
       const termsNotice = document.getElementById('termsNotice');
       const cardNumberInput = document.getElementById('cardNumber');
       const cardNumberIcon = document.getElementById('cardNumberIcon');
+      const termsAcceptedInput = document.getElementById('termsAccepted');
+      const rememberInfoCheckbox = document.getElementById('rememberInfo');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -714,11 +748,14 @@
       };
 
       const saveFormData = () => {
-        if (!form) return;
+        if (!form || !rememberInfoCheckbox?.checked) return; // Solo guardar si el checkbox está marcado
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
-          data[key] = value;
+          // Excluir datos sensibles
+          if (key !== 'cardNumber' && key !== 'cvv') {
+            data[key] = value;
+          }
         });
         localStorage.setItem('donationFormData', JSON.stringify(data));
         console.log('Form data saved to localStorage:', data);
@@ -736,6 +773,15 @@
                 const amount = data[key];
                 if (selectedAmountInput) selectedAmountInput.value = amount;
                 if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
+                presetButtons.forEach(btn => {
+                  if (btn.getAttribute('data-amount') === amount) {
+                    btn.classList.add('selected');
+                    hasManualSelection = true;
+                  }
+                });
+              }
+              if (key === 'rememberInfo' && data[key] === 'on') {
+                if (rememberInfoCheckbox) rememberInfoCheckbox.checked = true;
               }
             }
           });
@@ -876,6 +922,10 @@
 
       nextBtn?.addEventListener('click', () => {
         if (validateStep(currentStep)) {
+          if (currentStep === 0) {
+            console.log('User implicitly accepted Terms and Conditions by proceeding.');
+            if (termsAcceptedInput) termsAcceptedInput.value = 'true';
+          }
           currentStep++;
           showStep(currentStep);
           updateSummary();
@@ -895,6 +945,8 @@
         presetButtons.forEach(btn => btn.classList.remove('selected'));
         if (selectedAmountInput) selectedAmountInput.value = '';
         if (selectedPackageInput) selectedPackageInput.value = '';
+        if (termsAcceptedInput) termsAcceptedInput.value = 'false';
+        if (rememberInfoCheckbox) rememberInfoCheckbox.checked = false;
         hasManualSelection = false;
         transactionId = '';
         localStorage.removeItem('donationFormData');
@@ -973,6 +1025,8 @@
             presetButtons.forEach(btn => btn.classList.remove('selected'));
             if (selectedAmountInput) selectedAmountInput.value = '';
             if (selectedPackageInput) selectedPackageInput.value = '';
+            if (termsAcceptedInput) termsAcceptedInput.value = 'false';
+            if (rememberInfoCheckbox) rememberInfoCheckbox.checked = false;
             hasManualSelection = false;
             updateSummary();
           } else {
