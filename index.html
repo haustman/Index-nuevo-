@@ -941,7 +941,6 @@
           showMessage('Por favor, ingresa un código postal válido (1–10 caracteres).', 'error');
           return false;
         }
-        // Ya no validamos ipAddress, ya que es opcional
         return true;
       };
 
@@ -1107,7 +1106,10 @@
 
       const loadCountries = () => {
         const select = document.getElementById('countryCode');
-        if (!select) return;
+        if (!select) {
+          console.error('No se encontró el elemento #countryCode');
+          return;
+        }
 
         const fallbackCountries = [
           { cca2: 'US', name: { common: 'Estados Unidos' }, flags: { svg: 'https://flagcdn.com/us.svg' } },
@@ -1117,62 +1119,90 @@
           { cca2: 'FR', name: { common: 'Francia' }, flags: { svg: 'https://flagcdn.com/fr.svg' } }
         ];
 
-        const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
-        if (cachedCountries.length > 0) {
-          cachedCountries.forEach(country => {
-            const opt = document.createElement('option');
-            opt.value = country.cca2;
-            opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
-            select.appendChild(opt);
+        // Función para validar si un país tiene las propiedades esperadas
+        const isValidCountry = (country) => {
+          return country &&
+                 country.name?.common &&
+                 country.cca2 &&
+                 country.flags?.svg;
+        };
+
+        // Función para llenar el select con países
+        const populateSelect = (countries) => {
+          countries.forEach(country => {
+            if (isValidCountry(country)) {
+              const opt = document.createElement('option');
+              opt.value = country.cca2;
+              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
+              select.appendChild(opt);
+            } else {
+              console.warn('País inválido encontrado:', country);
+            }
           });
-          loadFormData();
-          return;
+        };
+
+        // Intentar cargar desde localStorage
+        let cachedCountries = [];
+        try {
+          const storedData = localStorage.getItem('countries');
+          if (storedData) {
+            cachedCountries = JSON.parse(storedData);
+            // Validar que cachedCountries sea un arreglo y que todos los elementos sean válidos
+            if (Array.isArray(cachedCountries) && cachedCountries.length > 0 && cachedCountries.every(isValidCountry)) {
+              console.log('Cargando países desde localStorage:', cachedCountries);
+              populateSelect(cachedCountries);
+              loadFormData();
+              return;
+            } else {
+              console.warn('Datos en localStorage no válidos o vacíos:', cachedCountries);
+              localStorage.removeItem('countries'); // Limpiar datos inválidos
+            }
+          }
+        } catch (error) {
+          console.error('Error al leer o parsear localStorage:', error);
+          localStorage.removeItem('countries'); // Limpiar datos corruptos
         }
 
+        // Si no hay datos válidos en localStorage, cargar desde la API
+        console.log('Haciendo solicitud a la API para cargar países...');
         fetch('https://restcountries.com/v3.1/all')
           .then(response => {
             if (!response.ok) {
-              throw new Error('No se pudieron cargar los países');
+              throw new Error(`Error al cargar países: ${response.status} ${response.statusText}`);
             }
             return response.json();
           })
           .then(data => {
+            if (!Array.isArray(data) || data.length === 0) {
+              throw new Error('La API no devolvió datos válidos');
+            }
             // Ordenar los países alfabéticamente
             data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-
-            // Filtrar solo los campos necesarios para el almacenamiento
+            // Filtrar solo los campos necesarios
             const filteredData = data.map(country => ({
-              name: { common: country.name.common },
-              cca2: country.cca2,
-              flags: { svg: country.flags.svg }
-            }));
+              name: { common: country.name?.common || 'Desconocido' },
+              cca2: country.cca2 || 'XX',
+              flags: { svg: country.flags?.svg || 'https://flagcdn.com/xx.svg' }
+            })).filter(isValidCountry);
 
-            // Llenar el select con las opciones
-            filteredData.forEach(country => {
-              const opt = document.createElement('option');
-              opt.value = country.cca2;
-              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
-              select.appendChild(opt);
-            });
+            if (filteredData.length === 0) {
+              throw new Error('No se encontraron países válidos en los datos de la API');
+            }
 
-            // Guardar solo los datos filtrados en localStorage
+            console.log('Países cargados desde la API:', filteredData);
+            populateSelect(filteredData);
             localStorage.setItem('countries', JSON.stringify(filteredData));
             loadFormData();
           })
           .catch(error => {
-            console.error('Error al cargar países:', error);
-            fallbackCountries.forEach(country => {
-              const opt = document.createElement('option');
-              opt.value = country.cca2;
-              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
-              select.appendChild(opt);
-            });
+            console.error('Error al cargar países desde la API:', error);
+            console.log('Cargando países de respaldo...');
+            populateSelect(fallbackCountries);
             showMessage('No se pudieron cargar los países. Selecciona de las opciones disponibles o intenta de nuevo.', 'error');
             loadFormData();
           });
       };
 
-      // Eliminamos la función fetchIpAddress y su llamada
       loadCountries();
       showStep(currentStep);
       updateSummary();
