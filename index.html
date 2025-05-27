@@ -1,18 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donation Form</title>
-  <!-- Favicon base64 to avoid 404 error -->
-  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlMAAHaTzTgAAAAZSURBVDjLY2AYBaNgFIyCUQABAwMCGAAAYQAB3QvyxgAAAABJRU5ErkJggg==">
+  <title>Formulario de Donación</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- jQuery for Select2 -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Select2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <!-- Select2 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <style>
     :root {
       --primary-color: #FFC107;
@@ -174,6 +166,35 @@
       color: var(--button-text-color);
     }
 
+    .terms-notice {
+      font-size: 10px;
+      color: var(--label-color);
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .terms-notice a {
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
+
+    .terms-notice a:hover { color: var(--secondary-hover); }
+
+    .card-logos {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      justify-content: center;
+    }
+
+    .card-logos img {
+      height: 24px;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .card-logos img.active { opacity: 1; }
+
     .buttons {
       display: flex;
       justify-content: space-between;
@@ -282,9 +303,7 @@
       text-align: right;
     }
 
-    .summary-section:empty {
-      display: none;
-    }
+    .summary-section:empty { display: none; }
 
     .loading {
       font-style: italic;
@@ -306,23 +325,6 @@
       margin-bottom: 8px;
     }
 
-    .flag-icon {
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-
-    .select2-container {
-      width: 100% !important;
-    }
-
-    .card-logo {
-      width: 24px;
-      height: 16px;
-      vertical-align: middle;
-      margin-left: 5px;
-    }
-
-    /* Responsive Design */
     @media (min-width: 768px) {
       .container {
         flex-direction: row;
@@ -333,7 +335,7 @@
         flex: 1;
       }
       .form-wrapper {
-        position: static;
+        position: sticky;
         top: 12px;
       }
     }
@@ -365,6 +367,8 @@
       .summary-section p { font-size: 0.8em; }
       .loading { font-size: 10px; margin-top: 5px; }
       .notice { font-size: 9px; margin-top: 5px; }
+      .terms-notice { font-size: 9px; }
+      .card-logos img { height: 20px; }
     }
 
     @media (max-width: 480px) {
@@ -375,187 +379,188 @@
       .preset-button { padding: 5px 4px; font-size: 11px; }
       button { padding: 4px 8px; max-width: 80px; font-size: 11px; }
       #message { font-size: 10px; padding: 4px; min-height: 24px; }
+      .card-logos img { height: 18px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="form-wrapper">
-      <nav class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="4">
-        <div class="progress-step active" data-step="0" aria-current="step">Step 1: Donation</div>
-        <div class="progress-step" data-step="1">Step 2: Personal Details</div>
-        <div class="progress-step" data-step="2">Step 3: Payment</div>
-        <div class="progress-step" data-step="3">Step 4: Address</div>
-        <div class="progress-step" data-step="4">Step 5: Confirmation</div>
+      <nav class="progress-bar">
+        <div class="progress-step active" data-step="0" aria-current="step">Paso 1: Donación</div>
+        <div class="progress-step" data-step="1">Paso 2: Detalles Personales</div>
+        <div class="progress-step" data-step="2">Paso 3: Pago</div>
+        <div class="progress-step" data-step="3">Paso 4: Dirección</div>
+        <div class="progress-step" data-step="4">Paso 5: Confirmación</div>
       </nav>
-      <form id="donationForm" role="form" aria-label="Donation Form" novalidate>
+      <form id="donationForm" role="form" aria-label="Formulario de Donación" novalidate>
         <div class="step active" id="step-0">
-          <h3 class="step-title">Choose Your Donation Amount</h3>
+          <h3 class="step-title">Elige el Monto de tu Donación</h3>
           <div class="form-group">
-            <label for="donationAmount">Select an amount:</label>
+            <label for="donationAmount">Selecciona un monto:</label>
             <div class="preset-amounts">
-              <button type="button" class="preset-button" data-amount="10" aria-label="Select $10 donation">$10</button>
-              <button type="button" class="preset-button" data-amount="30" aria-label="Select $30 donation">$30</button>
-              <button type="button" class="preset-button" data-amount="50" aria-label="Select $50 donation">$50</button>
-              <button type="button" class="preset-button" data-amount="100" aria-label="Select $100 donation">$100</button>
-              <button type="button" class="preset-button" data-amount="200" aria-label="Select $200 donation">$200</button>
-              <button type="button" class="preset-button" data-amount="500" aria-label="Select $500 donation">$500</button>
+              <button type="button" class="preset-button" data-amount="10" aria-label="Seleccionar donación de $10">$10</button>
+              <button type="button" class="preset-button" data-amount="30" aria-label="Seleccionar donación de $30">$30</button>
+              <button type="button" class="preset-button" data-amount="50" aria-label="Seleccionar donación de $50">$50</button>
+              <button type="button" class="preset-button" data-amount="100" aria-label="Seleccionar donación de $100">$100</button>
+              <button type="button" class="preset-button" data-amount="200" aria-label="Seleccionar donación de $200">$200</button>
+              <button type="button" class="preset-button" data-amount="500" aria-label="Seleccionar donación de $500">$500</button>
             </div>
-            <span class="error-message" id="donationError">Please select a donation amount.</span>
+            <span class="error-message" id="donationError">Por favor, selecciona un monto de donación.</span>
+            <div class="terms-notice">
+              Al hacer clic en "Siguiente", aceptas nuestros <a href="/assets/terms-and-conditions.pdf" target="_blank" aria-label="Ver términos y condiciones">términos y condiciones</a>.
+            </div>
           </div>
           <input type="hidden" id="selectedAmount" name="selectedAmount">
           <input type="hidden" id="selectedPackage" name="selectedPackage">
-          <div class="notice">
-            By donating, you agree to our <a href="https://example.com/terms" target="_blank" style="color: var(--secondary-color);">Terms and Conditions</a>.
-          </div>
         </div>
 
         <div class="step" id="step-1">
-          <h3 class="step-title">Your Personal Details</h3>
+          <h3 class="step-title">Tus Detalles Personales</h3>
           <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" aria-describedby="firstNameError" required />
-            <span class="error-message" id="firstNameError">Please enter a valid first name (letters, spaces, hyphens, apostrophes only).</span>
+            <label for="firstName">Nombre:</label>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu nombre" aria-describedby="firstNameError" required />
+            <span class="error-message" id="firstNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" aria-describedby="lastNameError" required />
-            <span class="error-message" id="lastNameError">Please enter a valid last name (letters, spaces, hyphens, apostrophes only).</span>
+            <label for="lastName">Apellido:</label>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu apellido" aria-describedby="lastNameError" required />
+            <span class="error-message" id="lastNameError">Por favor, ingresa un apellido válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
-            <label for="emailAddress">Email Address:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" aria-describedby="emailError" required />
-            <span class="error-message" id="emailError">Please enter a valid email address (e.g., example@domain.com).</span>
+            <label for="emailAddress">Correo Electrónico:</label>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@dominio.com" aria-describedby="emailError" required />
+            <span class="error-message" id="emailError">Por favor, ingresa un correo electrónico válido (ejemplo@dominio.com).</span>
           </div>
           <div class="form-group">
-            <label for="phoneNumber">Phone Number:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" aria-describedby="phoneError" />
-            <span class="error-message" id="phoneError">Please enter a valid phone number (10–15 digits).</span>
+            <label for="phoneNumber">Número de Teléfono:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 dígitos" aria-describedby="phoneError" required />
+            <span class="error-message" id="phoneError">Por favor, ingresa un número de teléfono válido (10–15 dígitos).</span>
           </div>
         </div>
 
         <div class="step" id="step-2">
-          <h3 class="step-title">Payment Information</h3>
-          <div class="form-group">
-            <label for="cardName">Name on Card:</label>
-            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" aria-describedby="cardNameError" required />
-            <span class="error-message" id="cardNameError">Please enter a valid name (letters, spaces, hyphens, apostrophes only).</span>
+          <h3 class="step-title">Información de Pago</h3>
+          <div class="card-logos">
+            <img src="/assets/visa.svg" alt="Visa" data-type="visa">
+            <img src="/assets/mastercard.svg" alt="MasterCard" data-type="mastercard">
+            <img src="/assets/amex.svg" alt="American Express" data-type="amex">
           </div>
           <div class="form-group">
-            <label for="cardNumber">Card Number: <span id="cardType">Unknown</span><img id="cardLogo" class="card-logo" src="" alt="" style="display: none;"></label>
+            <label for="cardName">Nombre en la Tarjeta:</label>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" aria-describedby="cardNameError" required />
+            <span class="error-message" id="cardNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Número de Tarjeta:</label>
             <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
-            <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
+            <span class="error-message" id="cardNumberError">Por favor, ingresa un número de tarjeta válido de 16 dígitos.</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" aria-describedby="cvvError" required />
-            <span class="error-message" id="cvvError">Please enter a valid CVV (3 or 4 digits).</span>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 dígitos" aria-describedby="cvvError" required />
+            <span class="error-message" id="cvvError">Por favor, ingresa un CVV válido (3 o 4 dígitos).</span>
           </div>
           <div class="form-group">
-            <label for="expMonth">Expiration Month:</label>
+            <label for="expMonth">Mes de Expiración:</label>
             <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" required />
-            <span class="error-message" id="expMonthError">Please enter a valid month (1–12).</span>
+            <span class="error-message" id="expMonthError">Por favor, ingresa un mes válido (1–12).</span>
           </div>
           <div class="form-group">
-            <label for="expYear">Expiration Year:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" aria-describedby="expYearError" required />
-            <span class="error-message" id="expYearError">Please enter a valid year (2025–2035).</span>
+            <label for="expYear">Año de Expiración:</label>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="AAAA" aria-describedby="expYearError" required />
+            <span class="error-message" id="expYearError">Por favor, ingresa un año válido (2025–2035).</span>
           </div>
         </div>
 
         <div class="step" id="step-3">
-          <h3 class="step-title">Your Address</h3>
+          <h3 class="step-title">Tu Dirección</h3>
           <div class="form-group">
-            <label for="address">Street Address:</label>
-            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" aria-describedby="addressError" required />
-            <span class="error-message" id="addressError">Please enter a valid street address.</span>
+            <label for="address">Dirección:</label>
+            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Nombre y número de la calle" aria-describedby="addressError" required />
+            <span class="error-message" id="addressError">Por favor, ingresa una dirección válida.</span>
           </div>
           <div class="form-group">
-            <label for="countryCode">Country:</label>
+            <label for="countryCode">País:</label>
             <select id="countryCode" name="countryCode" aria-describedby="countryError" required>
-              <option value="">Select a country</option>
+              <option value="">Selecciona un país</option>
             </select>
-            <span class="error-message" id="countryError">Please select a country from the list.</span>
+            <span class="error-message" id="countryError">Por favor, selecciona un país de la lista.</span>
           </div>
           <div class="form-group">
-            <label for="stateProvince">State / Province:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California" aria-describedby="stateError" required />
-            <span class="error-message" id="stateError">Please enter a valid state/province (letters, numbers, spaces, hyphens).</span>
+            <label for="stateProvince">Estado / Provincia:</label>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="Ejemplo: California" aria-describedby="stateError" required />
+            <span class="error-message" id="stateError">Por favor, ingresa un estado/provincia válido (letras, números, espacios, guiones).</span>
           </div>
           <div class="form-group">
-            <label for="city">City:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" aria-describedby="cityError" required />
-            <span class="error-message" id="cityError">Please enter a valid city (letters, spaces, hyphens).</span>
+            <label for="city">Ciudad:</label>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Ingresa tu ciudad" aria-describedby="cityError" required />
+            <span class="error-message" id="cityError">Por favor, ingresa una ciudad válida (letras, espacios, guiones).</span>
           </div>
           <div class="form-group">
-            <label for="postalCode">Postal / Zip Code:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210" aria-describedby="postalCodeError" required />
-            <span class="error-message" id="postalCodeError">Please enter a valid postal/zip code (1–10 characters).</span>
+            <label for="postalCode">Código Postal:</label>
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="Ejemplo: 90210" aria-describedby="postalCodeError" required />
+            <span class="error-message" id="postalCodeError">Por favor, ingresa un código postal válido (1–10 caracteres).</span>
           </div>
-          <div class="loading" id="loading" style="display: none;">Sending...</div>
-          <div class="notice">We are working to improve our system. If you experience issues submitting, please try again or contact support.</div>
+          <input type="hidden" id="ipAddress" name="ipAddress" />
+          <div class="loading" id="loading" style="display: none;">Enviando...</div>
+          <div class="notice">Estamos trabajando para mejorar nuestro sistema. Si tienes problemas al enviar, intenta de nuevo o contacta al soporte.</div>
         </div>
 
         <div class="step" id="step-4">
-          <h3 class="step-title">Thank You for Your Donation!</h3>
+          <h3 class="step-title">¡Gracias por tu Donación!</h3>
           <div class="summary-section">
-            <h4>Donation Receipt</h4>
-            <p><strong>Amount:</strong> <span id="confirmAmount">-</span></p>
-            <p><strong>Name:</strong> <span id="confirmName">-</span></p>
-            <p><strong>Email:</strong> <span id="confirmEmail">-</span></p>
-            <p><strong>Card Type:</strong> <span id="confirmCardType">-</span><img id="confirmCardLogo" class="card-logo" src="" alt="" style="display: none;"></p>
-            <p><strong>Transaction ID:</strong> <span id="confirmTransactionId">-</span></p>
+            <p><strong>Monto:</strong> <span id="confirmAmount">-</span></p>
+            <p><strong>Nombre:</strong> <span id="confirmName">-</span></p>
+            <p><strong>Correo:</strong> <span id="confirmEmail">-</span></p>
+            <p><strong>Tipo de Tarjeta:</strong> <span id="confirmCardType">-</span></p>
+            <p><strong>Últimos 4 dígitos:</strong> <span id="confirmCardLast4">-</span></p>
+            <p><strong>ID de Transacción:</strong> <span id="confirmTransactionId">-</span></p>
           </div>
-          <button type="button" id="resetBtn">Make Another Donation</button>
+          <button type="button" id="downloadReceiptBtn">Descargar Recibo</button>
+          <button type="button" id="resetBtn">Hacer Otra Donación</button>
         </div>
 
         <div class="buttons">
-          <button type="button" id="prevBtn" style="display:none;">Previous Step</button>
+          <button type="button" id="prevBtn" style="display:none;">Paso Anterior</button>
           <div id="message" class="text-center" aria-live="polite"></div>
-          <button type="button" id="nextBtn">Next Step</button>
-          <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
+          <button type="button" id="nextBtn">Siguiente Paso</button>
+          <button type="submit" id="submitBtn" style="display:none;">Enviar Donación</button>
         </div>
       </form>
     </div>
 
     <div class="order-summary-wrapper">
-      <h3>Your Donation Summary</h3>
+      <h3>Resumen de tu Donación</h3>
       <div id="donationSummaryDetails">
         <div class="summary-section">
-          <h4>Donation Details</h4>
-          <p><strong>Package:</strong> <span class="summary-value" id="summaryPackage">-</span></p>
-          <p><strong>Amount:</strong> <span class="summary-value" id="summaryDonationAmount">-</span></p>
+          <h4>Detalles de la Donación</h4>
+          <p><strong>Paquete:</strong> <span class="summary-value" id="summaryPackage">-</span></p>
+          <p><strong>Monto:</strong> <span class="summary-value" id="summaryDonationAmount">-</span></p>
         </div>
         <div class="summary-section">
-          <h4>Personal Information</h4>
-          <p><strong>First Name:</strong> <span class="summary-value" id="summaryFirstName">-</span></p>
-          <p><strong>Last Name:</strong> <span class="summary-value" id="summaryLastName">-</span></p>
-          <p><strong>Email:</strong> <span class="summary-value" id="summaryEmail">-</span></p>
-          <p><strong>Phone:</strong> <span class="summary-value" id="summaryPhone">-</span></p>
+          <h4>Información Personal</h4>
+          <p><strong>Nombre:</strong> <span class="summary-value" id="summaryFirstName">-</span></p>
+          <p><strong>Apellido:</strong> <span class="summary-value" id="summaryLastName">-</span></p>
+          <p><strong>Correo:</strong> <span class="summary-value" id="summaryEmail">-</span></p>
+          <p><strong>Teléfono:</strong> <span class="summary-value" id="summaryPhone">-</span></p>
         </div>
         <div class="summary-section">
-          <h4>Billing Address</h4>
-          <p><strong>Address:</strong> <span class="summary-value" id="summaryAddress">-</span></p>
-          <p><strong>City:</strong> <span class="summary-value" id="summaryCity">-</span></p>
-          <p><strong>State/Province:</strong> <span class="summary-value" id="summaryState">-</span></p>
-          <p><strong>Postal Code:</strong> <span class="summary-value" id="summaryPostalCode">-</span></p>
-          <p><strong>Country:</strong> <span class="summary-value" id="summaryCountry">-</span></p>
+          <h4>Dirección de Facturación</h4>
+          <p><strong>Dirección:</strong> <span class="summary-value" id="summaryAddress">-</span></p>
+          <p><strong>Ciudad:</strong> <span class="summary-value" id="summaryCity">-</span></p>
+          <p><strong>Estado/Provincia:</strong> <span class="summary-value" id="summaryState">-</span></p>
+          <p><strong>Código Postal:</strong> <span class="summary-value" id="summaryPostalCode">-</span></p>
+          <p><strong>País:</strong> <span class="summary-value" id="summaryCountry">-</span></p>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Debounce function moved to top
-      const debounce = (func, wait) => {
-        let timeout;
-        return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-      };
-
+      const { jsPDF } = window.jspdf;
       const form = document.getElementById('donationForm');
       const steps = document.querySelectorAll('.step');
       const progressSteps = document.querySelectorAll('.progress-step');
@@ -563,6 +568,7 @@
       const prevBtn = document.getElementById('prevBtn');
       const submitBtn = document.getElementById('submitBtn');
       const resetBtn = document.getElementById('resetBtn');
+      const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
       const messageDiv = document.getElementById('message');
       const loadingDiv = document.getElementById('loading');
       const presetButtons = document.querySelectorAll('.preset-button');
@@ -570,34 +576,20 @@
       const selectedPackageInput = document.getElementById('selectedPackage');
       const donationError = document.getElementById('donationError');
       const cardNumberInput = document.getElementById('cardNumber');
-      const cardTypeSpan = document.getElementById('cardType');
-      const cardLogoImg = document.getElementById('cardLogo');
-      const confirmCardTypeSpan = document.getElementById('confirmCardType');
-      const confirmCardLogoImg = document.getElementById('confirmCardLogo');
+      const cvvInput = document.getElementById('cvv');
 
       let currentStep = 0;
       let hasManualSelection = false;
       let transactionId = '';
-      let currentCardType = 'Unknown';
-
-      // Modo prueba para simular respuesta del servidor
-      const TEST_MODE = true; // Cambia a false cuando configures CORS en Heroku
+      let cardType = '';
 
       const packageMapping = {
-        '10': 'Donation1',
-        '30': 'Donation2',
-        '50': 'Donation3',
-        '100': 'Donation4',
-        '200': 'Donation5',
-        '500': 'Donation6'
-      };
-
-      const cardLogos = {
-        'Visa': 'https://logo.clearbit.com/visa.com',
-        'Mastercard': 'https://logo.clearbit.com/mastercard.com',
-        'American Express': 'https://logo.clearbit.com/americanexpress.com',
-        'Discover': 'https://logo.clearbit.com/discover.com',
-        'Unknown': ''
+        '10': 'Donacion1',
+        '30': 'Donacion2',
+        '50': 'Donacion3',
+        '100': 'Donacion4',
+        '200': 'Donacion5',
+        '500': 'Donacion6'
       };
 
       const summaryElements = {
@@ -618,11 +610,11 @@
         amount: document.getElementById('confirmAmount'),
         name: document.getElementById('confirmName'),
         email: document.getElementById('confirmEmail'),
-        cardType: confirmCardTypeSpan,
+        cardType: document.getElementById('confirmCardType'),
+        cardLast4: document.getElementById('confirmCardLast4'),
         transactionId: document.getElementById('confirmTransactionId'),
       };
 
-      // Función para mostrar mensajes
       const showMessage = (msg, type, duration = 3000) => {
         if (!messageDiv) return;
         messageDiv.textContent = msg;
@@ -633,97 +625,33 @@
         }, duration);
       };
 
-      // Detectar tipo de tarjeta
-      const detectCardType = (number) => {
-        number = number.replace(/\s/g, '');
-        if (/^4/.test(number)) return 'Visa';
-        if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/.test(number)) return 'Mastercard';
-        if (/^3[47]/.test(number)) return 'American Express';
-        if (/^(6011|64[4-9]|65)/.test(number)) return 'Discover';
-        return 'Unknown';
-      };
-
-      // Actualizar tipo de tarjeta y logo
-      const updateCardDisplay = () => {
-        if (!cardNumberInput || !cardTypeSpan || !cardLogoImg) {
-          console.error('Card display elements missing');
-          return;
-        }
-        const cardNumber = cardNumberInput.value;
-        currentCardType = detectCardType(cardNumber);
-        cardTypeSpan.textContent = currentCardType;
-        if (cardLogos[currentCardType]) {
-          cardLogoImg.src = cardLogos[currentCardType];
-          cardLogoImg.alt = `${currentCardType} logo`;
-          cardLogoImg.style.display = 'inline';
-        } else {
-          cardLogoImg.style.display = 'none';
-          cardLogoImg.src = '';
-          cardLogoImg.alt = '';
-        }
-        saveFormData();
-      };
-
-      // Bind card number input listener
-      if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', debounce(updateCardDisplay, 300));
-      } else {
-        console.error('cardNumberInput not found');
-      }
-
-      // Actualizar resumen
       const updateSummary = () => {
-        if (!summaryElements.package || !summaryElements.donationAmount) {
-          console.error('Summary elements not found');
-          return;
-        }
-        const updates = {
-          donationAmount: parseFloat(selectedAmountInput?.value || 0) ? `$${parseFloat(selectedAmountInput.value).toFixed(2)}` : '-',
-          package: selectedPackageInput?.value || '-',
-          firstName: document.getElementById('firstName')?.value || '-',
-          lastName: document.getElementById('lastName')?.value || '-',
-          email: document.getElementById('emailAddress')?.value || '-',
-          phone: document.getElementById('phoneNumber')?.value || '-',
-          address: document.getElementById('address')?.value || '-',
-          city: document.getElementById('city')?.value || '-',
-          state: document.getElementById('stateProvince')?.value || '-',
-          postalCode: document.getElementById('postalCode')?.value || '-',
-        };
-        Object.keys(updates).forEach(key => {
-          summaryElements[key].textContent = updates[key];
-        });
+        if (!summaryElements.package || !summaryElements.donationAmount) return;
+        const amount = parseFloat(selectedAmountInput?.value || 0);
+        summaryElements.donationAmount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
+        summaryElements.package.textContent = selectedPackageInput?.value || '-';
+        summaryElements.firstName.textContent = document.getElementById('firstName')?.value || '-';
+        summaryElements.lastName.textContent = document.getElementById('lastName')?.value || '-';
+        summaryElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
+        summaryElements.phone.textContent = document.getElementById('phoneNumber')?.value || '-';
+        summaryElements.address.textContent = document.getElementById('address')?.value || '-';
+        summaryElements.city.textContent = document.getElementById('city')?.value || '-';
+        summaryElements.state.textContent = document.getElementById('stateProvince')?.value || '-';
+        summaryElements.postalCode.textContent = document.getElementById('postalCode')?.value || '-';
         const countrySelect = document.getElementById('countryCode');
-        if (countrySelect?.value) {
-          const countryText = countrySelect.options[countrySelect.selectedIndex]?.text || '-';
-          summaryElements.country.innerHTML = `<img src="https://flagcdn.com/16x12/${countrySelect.value.toLowerCase()}.png" class="flag-icon" alt="${countryText} flag"> ${countryText}`;
-        } else {
-          summaryElements.country.textContent = '-';
-        }
-        console.log('Summary updated:', updates);
+        summaryElements.country.textContent = countrySelect?.value ? countrySelect.options[countrySelect.selectedIndex]?.text || '-' : '-';
       };
 
-      // Actualizar confirmación
       const updateConfirmation = () => {
         const amount = parseFloat(selectedAmountInput?.value || 0);
         confirmElements.amount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
         confirmElements.name.textContent = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || '-';
         confirmElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
-        confirmElements.cardType.textContent = currentCardType || '-';
-        if (confirmCardLogoImg) {
-          if (cardLogos[currentCardType]) {
-            confirmCardLogoImg.src = cardLogos[currentCardType];
-            confirmCardLogoImg.alt = `${currentCardType} logo`;
-            confirmCardLogoImg.style.display = 'inline';
-          } else {
-            confirmCardLogoImg.style.display = 'none';
-            confirmCardLogoImg.src = '';
-            confirmCardLogoImg.alt = '';
-          }
-        }
+        confirmElements.cardType.textContent = cardType || '-';
+        confirmElements.cardLast4.textContent = cardNumberInput?.value.replace(/\s/g, '').slice(-4) || '-';
         confirmElements.transactionId.textContent = transactionId || '-';
       };
 
-      // Mostrar paso
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
@@ -735,29 +663,20 @@
         if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
-        if (resetBtn) resetBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
-        console.log(`Showing step ${stepIndex}`);
       };
 
-      // Guardar datos
       const saveFormData = () => {
         if (!form) return;
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
-          if (!['cardNumber', 'cvv'].includes(key)) {
-            data[key] = value;
-          }
+          data[key] = value;
         });
         localStorage.setItem('donationFormData', JSON.stringify(data));
-        console.log('Datos guardados en localStorage:', data);
-        showMessage('Form data saved locally', 'success', 1000);
       };
 
-      // Cargar datos
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
-        console.log('Datos recuperados de localStorage:', savedData ? JSON.parse(savedData) : 'Ninguno');
         if (savedData) {
           const data = JSON.parse(savedData);
           Object.keys(data).forEach(key => {
@@ -768,30 +687,60 @@
                 const amount = data[key];
                 if (selectedAmountInput) selectedAmountInput.value = amount;
                 if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
-                const presetButton = document.querySelector(`.preset-button[data-amount="${amount}"]`);
-                if (presetButton) {
-                  presetButtons.forEach(btn => btn.classList.remove('selected'));
-                  presetButton.classList.add('selected');
-                  hasManualSelection = true;
-                }
-              }
-              if (key === 'countryCode') {
-                setTimeout(() => $('#countryCode').val(data[key]).trigger('change'), 100);
               }
             }
           });
-          updateSummary();
-          showMessage('Form data loaded from local storage', 'success', 1000);
+          updateCardType();
         }
       };
 
-      // Validar paso
+      const luhnCheck = (cardNumber) => {
+        const digits = cardNumber.replace(/\s/g, '').split('').map(Number);
+        let sum = 0;
+        let isEven = false;
+        for (let i = digits.length - 1; i >= 0; i--) {
+          let digit = digits[i];
+          if (isEven) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+          }
+          sum += digit;
+          isEven = !isEven;
+        }
+        return sum % 10 === 0;
+      };
+
+      const updateCardType = () => {
+        const cardNumber = cardNumberInput?.value.replace(/\s/g, '') || '';
+        const logos = document.querySelectorAll('.card-logos img');
+        logos.forEach(logo => logo.classList.remove('active'));
+
+        if (!cardNumber) {
+          cardType = '';
+          return;
+        }
+
+        if (/^4/.test(cardNumber)) {
+          cardType = 'Visa';
+          document.querySelector('.card-logos img[data-type="visa"]')?.classList.add('active');
+        } else if (/^5[1-5]/.test(cardNumber)) {
+          cardType = 'MasterCard';
+          document.querySelector('.card-logos img[data-type="mastercard"]')?.classList.add('active');
+        } else if (/^3[47]/.test(cardNumber)) {
+          cardType = 'American Express';
+          document.querySelector('.card-logos img[data-type="amex"]')?.classList.add('active');
+          cvvInput.setAttribute('pattern', '\\d{4}');
+          cvvInput.setAttribute('placeholder', '4 dígitos');
+        } else {
+          cardType = '';
+          cvvInput.setAttribute('pattern', '\\d{3,4}');
+          cvvInput.setAttribute('placeholder', '3–4 dígitos');
+        }
+      };
+
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
-        if (!step) {
-          console.error(`Step ${stepIndex} not found`);
-          return false;
-        }
+        if (!step) return false;
 
         let valid = true;
         let errors = [];
@@ -800,7 +749,7 @@
           if (!hasManualSelection || !selectedPackageInput?.value) {
             valid = false;
             if (donationError) donationError.style.display = 'block';
-            errors.push('Please select a donation amount.');
+            errors.push('Por favor, selecciona un monto de donación.');
           } else {
             if (donationError) donationError.style.display = 'none';
           }
@@ -819,8 +768,7 @@
               if (errorElement) errorElement.style.display = 'none';
               input.classList.remove('error');
             }
-            input.removeEventListener('input', input.oninput);
-            input.oninput = debounce(() => {
+            input.oninput = () => {
               const errorEl = document.getElementById(`${input.id}Error`);
               if (input.checkValidity()) {
                 if (errorEl) errorEl.style.display = 'none';
@@ -829,123 +777,138 @@
                 if (errorEl) errorEl.style.display = 'block';
                 input.classList.add('error');
               }
+              if (input.id === 'cardNumber') updateCardType();
               saveFormData();
               updateSummary();
-            }, 300);
+            };
             input.addEventListener('input', input.oninput);
           });
         }
 
         if (!valid && errors.length > 0) {
-          showMessage(`Please fix the following errors:\n- ${errors.join('\n- ')}`, 'error');
+          showMessage(`Por favor, corrige los siguientes errores:\n- ${errors.join('\n- ')}`, 'error', 5000);
         }
 
         return valid;
       };
 
-      // Validar antes de enviar
       const validateBeforeSubmit = () => {
         if (!hasManualSelection || !selectedPackageInput?.value) {
-          showMessage('No donation amount selected. Please go back to Step 1.', 'error');
+          showMessage('No se seleccionó un monto de donación. Vuelve al Paso 1.', 'error');
           return false;
         }
-        const emailAddress = document.getElementById('emailAddress')?.value;
-        if (!emailAddress || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress)) {
-          showMessage('Please enter a valid email address (e.g., example@domain.com).', 'error');
+        const email = document.getElementById('emailAddress')?.value;
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showMessage('Por favor, ingresa un correo electrónico válido (ejemplo@dominio.com).', 'error');
           return false;
         }
-        const cardNumber = document.getElementById('cardNumber')?.value?.replace(/\s/g, '');
-        if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
-          showMessage('Please enter a valid 16-digit card number.', 'error');
+        const cardNumber = cardNumberInput?.value?.replace(/\s/g, '');
+        if (!cardNumber || !/^\d{16}$/.test(cardNumber) || !luhnCheck(cardNumber)) {
+          showMessage('Por favor, ingresa un número de tarjeta válido de 16 dígitos.', 'error');
           return false;
         }
-        const cardType = detectCardType(cardNumber);
-        const cvv = document.getElementById('cvv')?.value;
-        if (cardType === 'American Express' && !/^\d{4}$/.test(cvv)) {
-          showMessage('CVV must be 4 digits for American Express.', 'error');
+        if (!cardType) {
+          showMessage('El tipo de tarjeta no es válido o no es compatible.', 'error');
           return false;
-        } else if (cardType !== 'American Express' && !/^\d{3}$/.test(cvv)) {
-          showMessage('CVV must be 3 digits.', 'error');
+        }
+        const cvv = cvvInput?.value;
+        if (!cvv || (cardType === 'American Express' && !/^\d{4}$/.test(cvv)) || (cardType !== 'American Express' && !/^\d{3}$/.test(cvv))) {
+          showMessage(`Por favor, ingresa un CVV válido (${cardType === 'American Express' ? '4' : '3'} dígitos).`, 'error');
           return false;
         }
         const expMonth = parseInt(document.getElementById('expMonth')?.value);
         if (!expMonth || expMonth < 1 || expMonth > 12) {
-          showMessage('Please enter a valid expiration month (1–12).', 'error');
+          showMessage('Por favor, ingresa un mes de expiración válido (1–12).', 'error');
           return false;
         }
         const expYear = parseInt(document.getElementById('expYear')?.value);
         if (!expYear || expYear < 2025 || expYear > 2035) {
-          showMessage('Please enter a valid expiration year (2025–2035).', 'error');
+          showMessage('Por favor, ingresa un año de expiración válido (2025–2035).', 'error');
           return false;
         }
         const address = document.getElementById('address')?.value;
         if (!address || !/[A-Za-z0-9\s\-,.#\/]+/.test(address)) {
-          showMessage('Please enter a valid street address.', 'error');
+          showMessage('Por favor, ingresa una dirección válida.', 'error');
           return false;
         }
         const countryCode = document.getElementById('countryCode')?.value;
         if (!countryCode) {
-          showMessage('Please select a country from the list.', 'error');
+          showMessage('Por favor, selecciona un país de la lista.', 'error');
           return false;
         }
         const stateProvince = document.getElementById('stateProvince')?.value;
         if (!stateProvince || !/[A-Za-z0-9\s\-]+/.test(stateProvince)) {
-          showMessage('Please enter a valid state/province.', 'error');
+          showMessage('Por favor, ingresa un estado/provincia válido.', 'error');
           return false;
         }
         const city = document.getElementById('city')?.value;
         if (!city || !/[A-Za-z\s\-]+/.test(city)) {
-          showMessage('Please enter a valid city.', 'error');
+          showMessage('Por favor, ingresa una ciudad válida.', 'error');
           return false;
         }
         const postalCode = document.getElementById('postalCode')?.value;
         if (!postalCode || !/[A-Za-z0-9\s\-]{1,10}/.test(postalCode)) {
-          showMessage('Please enter a valid postal/zip code (1–10 characters).', 'error');
+          showMessage('Por favor, ingresa un código postal válido (1–10 caracteres).', 'error');
           return false;
         }
         return true;
       };
 
-      // Manejar botones de monto
+      const generateReceipt = () => {
+        const doc = new jsPDF();
+        const amount = parseFloat(selectedAmountInput?.value || 0);
+        const name = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim();
+        const email = document.getElementById('emailAddress')?.value || '-';
+        const address = `${document.getElementById('address')?.value || ''}, ${document.getElementById('city')?.value || ''}, ${document.getElementById('stateProvince')?.value || ''}, ${document.getElementById('postalCode')?.value || ''}, ${document.getElementById('countryCode')?.options[document.getElementById('countryCode')?.selectedIndex]?.text || '-'}`;
+        const cardLast4 = cardNumberInput?.value.replace(/\s/g, '').slice(-4) || '-';
+        const date = new Date().toLocaleString('es-ES', { timeZone: 'America/Bogota' });
+
+        doc.setFontSize(16);
+        doc.text('Recibo de Donación', 105, 20, { align: 'center' });
+        doc.setFontSize(12);
+        doc.text(`Fecha: ${date}`, 20, 40);
+        doc.text(`ID de Transacción: ${transactionId || 'N/A'}`, 20, 50);
+        doc.text(`Monto: $${amount.toFixed(2)}`, 20, 60);
+        doc.text(`Nombre: ${name}`, 20, 70);
+        doc.text(`Correo: ${email}`, 20, 80);
+        doc.text(`Tipo de Tarjeta: ${cardType || '-'}`, 20, 90);
+        doc.text(`Últimos 4 dígitos: ${cardLast4}`, 20, 100);
+        doc.text(`Dirección: ${address}`, 20, 110, { maxWidth: 170 });
+        doc.text('Gracias por tu donación!', 105, 130, { align: 'center' });
+
+        doc.save(`Recibo_Donacion_${transactionId || 'N/A'}.pdf`);
+      };
+
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
-          try {
-            console.log(`Preset button clicked: ${button.getAttribute('data-amount')}`);
-            presetButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('selected');
-            const amount = button.getAttribute('data-amount');
-            if (selectedAmountInput) selectedAmountInput.value = amount;
-            else console.error('selectedAmountInput not found');
-            if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
-            else console.error('selectedPackageInput not found');
-            hasManualSelection = true;
-            if (donationError) donationError.style.display = 'none';
-            saveFormData();
-            updateSummary();
-          } catch (err) {
-            console.error('Error in preset button click:', err);
-            showMessage('Failed to select donation amount. Please try again.', 'error');
-          }
+          presetButtons.forEach(btn => btn.classList.remove('selected'));
+          button.classList.add('selected');
+          const amount = button.getAttribute('data-amount');
+          if (selectedAmountInput) selectedAmountInput.value = amount;
+          if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
+          hasManualSelection = true;
+          if (donationError) donationError.style.display = 'none';
+          saveFormData();
+          updateSummary();
         });
       });
 
-      // Botón siguiente
+      cardNumberInput?.addEventListener('input', updateCardType);
+
       nextBtn?.addEventListener('click', () => {
         if (validateStep(currentStep)) {
           currentStep++;
           showStep(currentStep);
           updateSummary();
         }
-      }));
+      });
 
-      // Botón anterior
       prevBtn?.addEventListener('click', () => {
         currentStep--;
         showStep(currentStep);
         updateSummary();
       });
 
-      // Botón reinicio
       resetBtn?.addEventListener('click', () => {
         form.reset();
         currentStep = 0;
@@ -955,37 +918,16 @@
         if (selectedPackageInput) selectedPackageInput.value = '';
         hasManualSelection = false;
         transactionId = '';
-        currentCardType = 'Unknown';
-        if (cardTypeSpan) cardTypeSpan.textContent = 'Unknown';
-        if (cardLogoImg) {
-          cardLogoImg.style.display = 'none';
-          cardLogoImg.src = '';
-          cardLogoImg.alt = '';
-        }
-        if (confirmCardLogoImg) {
-          confirmCardLogoImg.style.display = 'none';
-          confirmCardLogoImg.src = '';
-          confirmCardLogoImg.alt = '';
-        }
+        cardType = '';
+        document.querySelectorAll('.card-logos img').forEach(logo => logo.classList.remove('active'));
         localStorage.removeItem('donationFormData');
-        $('#countryCode').val('').trigger('change');
         updateSummary();
         updateConfirmation();
-        console.log('localStorage cleared');
-        showMessage('Form reset and local storage cleared', 'success');
       });
 
-      // Enviar solicitud
+      downloadReceiptBtn?.addEventListener('click', generateReceipt);
+
       const sendRequest = async (json) => {
-        console.log('Sending request to https://duelazo-2a8ce83c75f7.herokuapp.com/packages');
-        console.log('Request body:', JSON.stringify(json, null, 2));
-        if (TEST_MODE) {
-          console.log('TEST_MODE: Simulating successful server response');
-          return {
-            success: true,
-            data: { transactionId: `TEST-${Date.now()}` }
-          };
-        }
         try {
           const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
             method: 'POST',
@@ -994,22 +936,18 @@
           });
           const data = await response.json();
           if (!response.ok) {
-            throw new Error(data.statusReason || `Server error: ${response.status}`);
+            throw new Error(data.statusReason || `Error del servidor: ${response.status}`);
           }
-          transactionId = data.transactionId || '';
+          transactionId = data.transactionId || 'N/A';
           return { success: true, data };
         } catch (err) {
-          console.error('Request failed:', err);
-          let errorMessage = 'Unable to process donation. Please try again or contact support.';
           if (err.message.includes('Failed to fetch')) {
-            errorMessage = 'CORS error: The server is not configured to accept requests from this origin. Please try again or contact support.';
+            return { success: false, error: new Error('Error de CORS: El servidor no está configurado para aceptar solicitudes desde este origen. Contacta al soporte.') };
           }
-          showMessage(errorMessage, 'error');
           return { success: false, error: err };
         }
-      }));
+      };
 
-      // Form submission
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
@@ -1021,7 +959,7 @@
         }
 
         if (!selectedPackageInput?.value) {
-          showMessage('No donation package selected. Please go back to Step 1.', 'error');
+          showMessage('No se seleccionó un paquete de donación. Vuelve al Paso 1.', 'error');
           return;
         }
 
@@ -1045,8 +983,7 @@
         try {
           const result = await sendRequest(json);
           if (result.success) {
-            showMessage('TEST MODE: Transaction simulated successfully.', 'success', 10000);
-            transactionId = result.data.transactionId;
+            showMessage('¡Gracias! Tu donación ha sido procesada exitosamente.', 'success', 10000);
             updateConfirmation();
             currentStep = steps.length - 1;
             showStep(currentStep);
@@ -1055,14 +992,19 @@
             if (selectedAmountInput) selectedAmountInput.value = '';
             if (selectedPackageInput) selectedPackageInput.value = '';
             hasManualSelection = false;
-            $('#countryCode').val('').trigger('change');
+            generateReceipt();
             updateSummary();
-            console.log('Form data cleared after successful submission');
           } else {
             throw result.error;
           }
         } catch (err) {
-          showMessage(err.message, 'error');
+          let errorMessage = 'No pudimos procesar tu donación. Intenta de nuevo o contacta al soporte.';
+          if (err.message.includes('CORS')) {
+            errorMessage = 'No se puede procesar la donación debido a un problema de configuración del servidor (CORS). Contacta al soporte.';
+          } else if (err.message.includes('Server error')) {
+            errorMessage = `El servidor rechazó la solicitud: ${err.message}. Intenta de nuevo o contacta al soporte.`;
+          }
+          showMessage(errorMessage, 'error', 5000);
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (prevBtn) prevBtn.disabled = false;
@@ -1070,78 +1012,76 @@
         }
       });
 
-      // Cargar países
       const loadCountries = () => {
         const select = document.getElementById('countryCode');
-        if (!select) {
-          console.error('Country select element not found');
-          return;
-        }
+        if (!select) return;
+
+        const fallbackCountries = [
+          { code: 'US', name: 'Estados Unidos' },
+          { code: 'CA', name: 'Canadá' },
+          { code: 'GB', name: 'Reino Unido' },
+          { code: 'AU', name: 'Australia' },
+          { code: 'FR', name: 'Francia' }
+        ];
 
         const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
         if (cachedCountries.length > 0) {
           cachedCountries.forEach(country => {
             const opt = document.createElement('option');
-            opt.value = country.cca2;
-            opt.textContent = country.name.common;
-            opt.setAttribute('aria-label', `${country.name.common} flag`);
+            opt.value = country.code;
+            opt.textContent = country.name;
             select.appendChild(opt);
-          }));
-          console.log('Países cargados desde localStorage:', cachedCountries.length);
-          $('#countryCode').select2({
-            templateResult: formatCountry,
-            templateSelection: formatCountry
           });
           loadFormData();
           return;
         }
 
-        fetch('https://api.worldcountries.io/v2/countries')
+        fetch('https://api.world-countries.io/v1/countries')
           .then(response => {
             if (!response.ok) {
-              throw new Error('Failed to fetch countries');
+              throw new Error('No se pudieron cargar los países');
             }
             return response.json();
           })
           .then(data => {
-            data.sort((a, b) => a.name.common.localeCompare(b?.name.common || '')));
+            data.sort((a, b) => a.name.localeCompare(b.name));
             data.forEach(country => {
               const opt = document.createElement('option');
-              opt.value = country.cca2;
-              opt.textContent = country.name.common;
-              opt.setAttribute('aria-label', `${country.name.common} flag`);
+              opt.value = country.code;
+              opt.textContent = country.name;
               select.appendChild(opt);
             });
             localStorage.setItem('countries', JSON.stringify(data));
-            console.log('Países guardados en localStorage:', data);
-            $('#countryCode').select2({
-              templateResult: formatCountry,
-              templateSelection: formatCountry
-            });
             loadFormData();
           })
           .catch(error => {
-            console.error('Error loading countries:', error);
-            showMessage('Could not load countries. Please select from the available options or try again later.', 'error');
+            console.error('Error al cargar países:', error);
+            fallbackCountries.forEach(country => {
+              const opt = document.createElement('option');
+              opt.value = country.code;
+              opt.textContent = country.name;
+              select.appendChild(opt);
+            });
+            showMessage('No se pudieron cargar los países. Selecciona de las opciones disponibles o intenta de nuevo.', 'error');
             loadFormData();
           });
-        });
+      };
 
-      // Formatear países
-      function formatCountry(country) {
-        if (!country.id) {
-          return country.textContent;
+      const fetchIpAddress = async () => {
+        try {
+          const response = await fetch('https://api.ipify.org?format=json');
+          const data = await response.json();
+          document.getElementById('ipAddress').value = data.ip || '127.0.0.1';
+        } catch (error) {
+          console.error('Error al obtener IP:', error);
+          document.getElementById('ipAddress').value = '127.0.0.1';
         }
-        return $(
-          `<span><img src="https://flagcdn.com/16x12/${country.id.toLowerCase()}.png" class="flag-icon" alt="${country.text} flag"/> ${country.text}</span>`
-        );
-      }
+      };
 
-      // Initialize
       loadCountries();
+      fetchIpAddress();
       showStep(currentStep);
       updateSummary();
-      updateCardDisplay();
     });
   </script>
 </body>
