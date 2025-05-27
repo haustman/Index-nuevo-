@@ -941,11 +941,7 @@
           showMessage('Por favor, ingresa un código postal válido (1–10 caracteres).', 'error');
           return false;
         }
-        const ipAddress = document.getElementById('ipAddress')?.value;
-        if (!ipAddress) {
-          showMessage('No se pudo obtener tu dirección IP. Por favor, intenta de nuevo o contacta al soporte.', 'error');
-          return false;
-        }
+        // Ya no validamos ipAddress, ya que es opcional
         return true;
       };
 
@@ -1176,20 +1172,8 @@
           });
       };
 
-      const fetchIpAddress = async () => {
-        try {
-          const response = await fetch('https://api.ipify.org?format=json');
-          const data = await response.json();
-          document.getElementById('ipAddress').value = data.ip || '';
-        } catch (error) {
-          console.error('Error al obtener IP:', error);
-          document.getElementById('ipAddress').value = '';
-          showMessage('No se pudo obtener tu dirección IP. Por favor, intenta de nuevo o contacta al soporte.', 'error');
-        }
-      };
-
+      // Eliminamos la función fetchIpAddress y su llamada
       loadCountries();
-      fetchIpAddress();
       showStep(currentStep);
       updateSummary();
     });
