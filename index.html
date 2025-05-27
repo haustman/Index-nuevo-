@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Donation Form</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- Íconos de Font Awesome para tarjetas -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon.png">
+  <!-- Select2 CSS for country dropdown with flags -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #FFC107;
@@ -26,10 +24,6 @@
       --disabled-bg-color: #6C757D;
       --error-bg: #FFF3CD;
       --success-bg: #D1E7FF;
-      --visa-color: #1A1F71;
-      --mastercard-color: #EB001B;
-      --amex-color: #2E77BC;
-      --discover-color: #F28A2E;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -306,86 +300,55 @@
       margin-bottom: 8px;
     }
 
-    /* Estilos para términos y condiciones */
-    .terms-notice {
+    /* Estilos para el tipo de tarjeta */
+    .card-type {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
       font-size: 12px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .card-type-visa { background-color: #1A1F71; color: #FFFFFF; }
+    .card-type-mastercard { background: linear-gradient(90deg, #EB001B, #F79E1B); color: #FFFFFF; }
+    .card-type-american-express { background-color: #016FD0; color: #FFFFFF; }
+    .card-type-discover { background-color: #FF6000; color: #FFFFFF; }
+    .card-type-unknown { background-color: #6C757D; color: #FFFFFF; }
+
+    /* Estilos para el enlace de términos y condiciones */
+    .terms-link {
+      font-size: 11px;
       color: var(--label-color);
       text-align: center;
-      margin-top: 8px;
-      display: none;
+      margin-top: 6px;
+      width: 100%;
     }
-
-    .terms-notice a {
+    .terms-link a {
       color: var(--secondary-color);
       text-decoration: underline;
-      transition: color 0.3s ease;
     }
-
-    .terms-notice a:hover {
+    .terms-link a:hover {
       color: var(--secondary-hover);
     }
 
-    /* Estilos para íconos de tarjetas */
-    .card-icons {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 8px;
+    /* Estilos para Select2 (países con banderas) */
+    .flag-icon {
+      width: 16px;
+      height: 12px;
+      margin-right: 8px;
+      vertical-align: middle;
     }
-
-    .card-icon {
-      font-size: 24px;
-      color: var(--text-color);
-      transition: transform 0.3s ease;
+    .select2-container .select2-selection--single {
+      height: 34px;
+      padding: 6px;
+      border: 1px solid var(--input-border-color);
+      border-radius: 4px;
     }
-
-    .card-icon:hover {
-      transform: scale(1.1);
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 22px;
     }
-
-    /* Estilos para ícono dinámico de tarjeta */
-    .card-number-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    #cardNumberIcon {
-      position: absolute;
-      right: 10px;
-      font-size: 20px;
-      transition: color 0.3s ease;
-    }
-
-    #cardNumberIcon.visa { color: var(--visa-color); }
-    #cardNumberIcon.mastercard { color: var(--mastercard-color); }
-    #cardNumberIcon.amex { color: var(--amex-color); }
-    #cardNumberIcon.discover { color: var(--discover-color); }
-
-    #cardNumber {
-      padding-right: 40px; /* Espacio para el ícono */
-    }
-
-    /* Estilos para el checkbox de guardar datos */
-    .remember-checkbox {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    .remember-checkbox label {
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-      color: var(--label-color);
-      cursor: pointer;
-    }
-
-    .remember-checkbox input[type="checkbox"] {
-      width: auto;
-      margin-right: 6px;
-      cursor: pointer;
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 34px;
     }
 
     /* Responsive Design */
@@ -431,11 +394,6 @@
       .summary-section p { font-size: 0.8em; }
       .loading { font-size: 10px; margin-top: 5px; }
       .notice { font-size: 9px; margin-top: 5px; }
-      .terms-notice { font-size: 11px; margin-top: 6px; }
-      .card-icon { font-size: 20px; }
-      #cardNumberIcon { font-size: 18px; }
-      .remember-checkbox label { font-size: 11px; }
-      .remember-checkbox input[type="checkbox"] { margin-right: 5px; }
     }
 
     @media (max-width: 480px) {
@@ -446,10 +404,6 @@
       .preset-button { padding: 5px 4px; font-size: 11px; }
       button { padding: 4px 8px; max-width: 80px; font-size: 11px; }
       #message { font-size: 10px; padding: 4px; min-height: 24px; }
-      .terms-notice { font-size: 10px; margin-top: 5px; }
-      .card-icon { font-size: 18px; }
-      #cardNumberIcon { font-size: 16px; }
-      .remember-checkbox label { font-size: 10px; }
     }
   </style>
 </head>
@@ -480,7 +434,6 @@
           </div>
           <input type="hidden" id="selectedAmount" name="selectedAmount">
           <input type="hidden" id="selectedPackage" name="selectedPackage">
-          <input type="hidden" id="termsAccepted" name="termsAccepted" value="false">
         </div>
 
         <div class="step" id="step-1">
@@ -505,22 +458,10 @@
             <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" aria-describedby="phoneError" required />
             <span class="error-message" id="phoneError">Please enter a valid phone number (10–15 digits).</span>
           </div>
-          <div class="form-group remember-checkbox">
-            <label>
-              <input type="checkbox" id="rememberInfo" name="rememberInfo">
-              Remember my information for next time.
-            </label>
-          </div>
         </div>
 
         <div class="step" id="step-2">
           <h3 class="step-title">Payment Information</h3>
-          <div class="card-icons">
-            <i class="fa-brands fa-cc-visa card-icon" title="Visa"></i>
-            <i class="fa-brands fa-cc-mastercard card-icon" title="MasterCard"></i>
-            <i class="fa-brands fa-cc-amex card-icon" title="American Express"></i>
-            <i class="fa-brands fa-cc-discover card-icon" title="Discover"></i>
-          </div>
           <div class="form-group">
             <label for="cardName">Name on Card:</label>
             <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" aria-describedby="cardNameError" required />
@@ -528,11 +469,10 @@
           </div>
           <div class="form-group">
             <label for="cardNumber">Card Number:</label>
-            <div class="card-number-wrapper">
-              <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
-              <i id="cardNumberIcon" class="fa-solid fa-credit-card"></i>
-            </div>
+            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
             <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
+            <!-- Elemento para mostrar el tipo de tarjeta -->
+            <span class="card-type" id="cardType"></span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
@@ -580,6 +520,7 @@
             <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210" aria-describedby="postalCodeError" required />
             <span class="error-message" id="postalCodeError">Please enter a valid postal/zip code (1–10 characters).</span>
           </div>
+          <!-- Campo ipAddress eliminado; la IP se captura en el servidor -->
           <div class="loading" id="loading" style="display: none;">Sending...</div>
           <div class="notice">We are working to improve our system. If you experience issues submitting, please try again or contact support.</div>
         </div>
@@ -600,9 +541,8 @@
           <div id="message" class="text-center" aria-live="polite"></div>
           <button type="button" id="nextBtn">Next Step</button>
           <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
-        </div>
-        <div class="terms-notice" id="termsNotice">
-          By continuing, you agree to our <a href="/terms-and-conditions.pdf" target="_blank">Terms and Conditions</a>.
+          <!-- Enlace de términos y condiciones, solo visible en step-0 -->
+          <p class="terms-link" style="display: block;">By clicking Next Step, you accept our <a href="./terms-and-conditions.pdf" target="_blank" rel="noopener" aria-label="View Terms and Conditions">Terms and Conditions</a></p>
         </div>
       </form>
     </div>
@@ -634,6 +574,9 @@
     </div>
   </div>
 
+  <!-- Select2 JS para el dropdown de países con banderas -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('donationForm');
@@ -649,11 +592,8 @@
       const selectedAmountInput = document.getElementById('selectedAmount');
       const selectedPackageInput = document.getElementById('selectedPackage');
       const donationError = document.getElementById('donationError');
-      const termsNotice = document.getElementById('termsNotice');
       const cardNumberInput = document.getElementById('cardNumber');
-      const cardNumberIcon = document.getElementById('cardNumberIcon');
-      const termsAcceptedInput = document.getElementById('termsAccepted');
-      const rememberInfoCheckbox = document.getElementById('rememberInfo');
+      const cardTypeSpan = document.getElementById('cardType');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -689,6 +629,7 @@
         transactionId: document.getElementById('confirmTransactionId'),
       };
 
+      // Función para mostrar mensajes
       const showMessage = (msg, type, duration = 3000) => {
         if (!messageDiv) return;
         messageDiv.textContent = msg;
@@ -699,6 +640,27 @@
         }, duration);
       };
 
+      // Función para detectar el tipo de tarjeta
+      const detectCardType = (number) => {
+        number = number.replace(/\s/g, '');
+        if (/^4/.test(number)) return 'Visa';
+        if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/.test(number)) return 'Mastercard';
+        if (/^3[47]/.test(number)) return 'American Express';
+        if (/^(6011|64[4-9]|65)/.test(number)) return 'Discover';
+        return 'Unknown';
+      };
+
+      // Actualizar el tipo de tarjeta dinámicamente
+      if (cardNumberInput && cardTypeSpan) {
+        cardNumberInput.addEventListener('input', () => {
+          const cardNumber = cardNumberInput.value;
+          const cardType = detectCardType(cardNumber);
+          cardTypeSpan.textContent = cardType;
+          cardTypeSpan.className = `card-type card-type-${cardType.toLowerCase().replace(' ', '-')}`;
+        });
+      }
+
+      // Actualizar el resumen
       const updateSummary = () => {
         if (!summaryElements.package || !summaryElements.donationAmount) {
           console.error('Summary elements not found');
@@ -716,14 +678,16 @@
         summaryElements.state.textContent = document.getElementById('stateProvince')?.value || '-';
         summaryElements.postalCode.textContent = document.getElementById('postalCode')?.value || '-';
         const countrySelect = document.getElementById('countryCode');
-        summaryElements.country.textContent = countrySelect?.value ? countrySelect.options[countrySelect.selectedIndex]?.text || '-' : '-';
-        console.log('Summary updated:', {
-          package: summaryElements.package.textContent,
-          amount: summaryElements.donationAmount.textContent,
-          address: summaryElements.address.textContent,
-        });
+        // Mostrar bandera en el resumen
+        if (countrySelect?.value) {
+          const countryText = countrySelect.options[countrySelect.selectedIndex]?.text || '-';
+          summaryElements.country.innerHTML = `<img src="https://flagcdn.com/16x12/${countrySelect.value.toLowerCase()}.png" class="flag-icon" alt="${countryText} flag"> ${countryText}`;
+        } else {
+          summaryElements.country.textContent = '-';
+        }
       };
 
+      // Actualizar la confirmación
       const updateConfirmation = () => {
         const amount = parseFloat(selectedAmountInput?.value || 0);
         confirmElements.amount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
@@ -732,6 +696,7 @@
         confirmElements.transactionId.textContent = transactionId || '-';
       };
 
+      // Mostrar paso
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
@@ -743,24 +708,26 @@
         if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
-        if (termsNotice) termsNotice.style.display = stepIndex === 0 ? 'block' : 'none';
-        console.log(`Showing step ${stepIndex}`);
+        // Controlar visibilidad del enlace de términos
+        const termsLink = document.querySelector('.terms-link');
+        if (termsLink) termsLink.style.display = stepIndex === 0 ? 'block' : 'none';
       };
 
+      // Guardar datos del formulario
       const saveFormData = () => {
-        if (!form || !rememberInfoCheckbox?.checked) return; // Solo guardar si el checkbox está marcado
+        if (!form) return;
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
           // Excluir datos sensibles
-          if (key !== 'cardNumber' && key !== 'cvv') {
+          if (!['cardNumber', 'cvv', 'ipAddress'].includes(key)) {
             data[key] = value;
           }
         });
         localStorage.setItem('donationFormData', JSON.stringify(data));
-        console.log('Form data saved to localStorage:', data);
       };
 
+      // Cargar datos del formulario
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
         if (savedData) {
@@ -773,22 +740,16 @@
                 const amount = data[key];
                 if (selectedAmountInput) selectedAmountInput.value = amount;
                 if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
-                presetButtons.forEach(btn => {
-                  if (btn.getAttribute('data-amount') === amount) {
-                    btn.classList.add('selected');
-                    hasManualSelection = true;
-                  }
-                });
-              }
-              if (key === 'rememberInfo' && data[key] === 'on') {
-                if (rememberInfoCheckbox) rememberInfoCheckbox.checked = true;
               }
             }
           });
-          console.log('Form data loaded from localStorage:', data);
+          // Actualizar Select2 después de cargar datos
+          $('#countryCode').trigger('change');
+          updateSummary();
         }
       };
 
+      // Validar paso
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
         if (!step) {
@@ -807,7 +768,6 @@
           } else {
             if (donationError) donationError.style.display = 'none';
           }
-          console.log(`Validating step 0: package=${selectedPackageInput?.value || 'none'}, valid=${valid}, hasManualSelection=${hasManualSelection}`);
         } else {
           const inputs = step.querySelectorAll('input[required], select[required]');
           inputs.forEach(input => {
@@ -847,6 +807,7 @@
         return valid;
       };
 
+      // Validar antes de enviar
       const validateBeforeSubmit = () => {
         if (!hasManualSelection || !selectedPackageInput?.value) {
           showMessage('No donation amount selected. Please go back to Step 1.', 'error');
@@ -862,9 +823,13 @@
           showMessage('Please enter a valid 16-digit card number.', 'error');
           return false;
         }
+        const cardType = detectCardType(cardNumber);
         const cvv = document.getElementById('cvv')?.value;
-        if (!cvv || !/^\d{3,4}$/.test(cvv)) {
-          showMessage('Please enter a valid CVV (3 or 4 digits).', 'error');
+        if (cardType === 'American Express' && !/^\d{4}$/.test(cvv)) {
+          showMessage('CVV must be 4 digits for American Express.', 'error');
+          return false;
+        } else if (cardType !== 'American Express' && !/^\d{3}$/.test(cvv)) {
+          showMessage('CVV must be 3 digits.', 'error');
           return false;
         }
         const expMonth = parseInt(document.getElementById('expMonth')?.value);
@@ -905,9 +870,9 @@
         return true;
       };
 
+      // Manejar botones de cantidad predefinida
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
-          console.log(`Button clicked: ${button.getAttribute('data-amount')}`);
           presetButtons.forEach(btn => btn.classList.remove('selected'));
           button.classList.add('selected');
           const amount = button.getAttribute('data-amount');
@@ -920,24 +885,23 @@
         });
       });
 
+      // Botón siguiente
       nextBtn?.addEventListener('click', () => {
         if (validateStep(currentStep)) {
-          if (currentStep === 0) {
-            console.log('User implicitly accepted Terms and Conditions by proceeding.');
-            if (termsAcceptedInput) termsAcceptedInput.value = 'true';
-          }
           currentStep++;
           showStep(currentStep);
           updateSummary();
         }
       });
 
+      // Botón anterior
       prevBtn?.addEventListener('click', () => {
         currentStep--;
         showStep(currentStep);
         updateSummary();
       });
 
+      // Botón de reinicio
       resetBtn?.addEventListener('click', () => {
         form.reset();
         currentStep = 0;
@@ -945,21 +909,17 @@
         presetButtons.forEach(btn => btn.classList.remove('selected'));
         if (selectedAmountInput) selectedAmountInput.value = '';
         if (selectedPackageInput) selectedPackageInput.value = '';
-        if (termsAcceptedInput) termsAcceptedInput.value = 'false';
-        if (rememberInfoCheckbox) rememberInfoCheckbox.checked = false;
         hasManualSelection = false;
         transactionId = '';
         localStorage.removeItem('donationFormData');
+        $('#countryCode').val('').trigger('change');
         updateSummary();
         updateConfirmation();
-        if (cardNumberIcon) {
-          cardNumberIcon.className = 'fa-solid fa-credit-card';
-        }
       });
 
+      // Enviar solicitud
       const sendRequest = async (json) => {
         try {
-          console.log('Sending request to backend...');
           const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -980,6 +940,7 @@
         }
       };
 
+      // Manejar envío del formulario
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
@@ -1012,9 +973,19 @@
           }
         });
 
+        // Opción cliente para IP (desactivada; usar servidor)
+        /*
         try {
-          console.log('Sending request with planReferenceId:', selectedPackageInput.value);
-          console.log('Full request body:', JSON.stringify(json, null, 2));
+          const ipResponse = await fetch('https://api.ipify.org?format=json');
+          const ipData = await ipResponse.json();
+          json.ipAddress = ipData.ip || 'unknown';
+        } catch (err) {
+          console.error('Error fetching IP:', err);
+          json.ipAddress = 'unknown';
+        }
+        */
+
+        try {
           const result = await sendRequest(json);
           if (result.success) {
             showMessage('Thank you! Your donation has been processed successfully.', 'success', 10000);
@@ -1025,15 +996,13 @@
             presetButtons.forEach(btn => btn.classList.remove('selected'));
             if (selectedAmountInput) selectedAmountInput.value = '';
             if (selectedPackageInput) selectedPackageInput.value = '';
-            if (termsAcceptedInput) termsAcceptedInput.value = 'false';
-            if (rememberInfoCheckbox) rememberInfoCheckbox.checked = false;
             hasManualSelection = false;
+            $('#countryCode').val('').trigger('change');
             updateSummary();
           } else {
             throw result.error;
           }
         } catch (err) {
-          console.error('Submission error:', err);
           let errorMessage = 'We couldn’t process your donation. Please try again or contact support.';
           if (err.message.includes('CORS')) {
             errorMessage = 'Unable to process your donation due to a server configuration issue (CORS). Please contact support.';
@@ -1048,41 +1017,7 @@
         }
       });
 
-      // Detectar tipo de tarjeta
-      const detectCardType = (number) => {
-        const cleanNumber = number.replace(/\D/g, '');
-        if (/^4/.test(cleanNumber)) return 'visa';
-        if (/^5[1-5]/.test(cleanNumber)) return 'mastercard';
-        if (/^3[47]/.test(cleanNumber)) return 'amex';
-        if (/^6(?:011|5)/.test(cleanNumber)) return 'discover';
-        return null;
-      };
-
-      cardNumberInput?.addEventListener('input', () => {
-        const cardType = detectCardType(cardNumberInput.value);
-        if (cardNumberIcon) {
-          cardNumberIcon.className = 'fa-brands';
-          switch (cardType) {
-            case 'visa':
-              cardNumberIcon.classList.add('fa-cc-visa', 'visa');
-              break;
-            case 'mastercard':
-              cardNumberIcon.classList.add('fa-cc-mastercard', 'mastercard');
-              break;
-            case 'amex':
-              cardNumberIcon.classList.add('fa-cc-amex', 'amex');
-              break;
-            case 'discover':
-              cardNumberIcon.classList.add('fa-cc-discover', 'discover');
-              break;
-            default:
-              cardNumberIcon.classList.remove('fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex', 'fa-cc-discover', 'visa', 'mastercard', 'amex', 'discover');
-              cardNumberIcon.classList.add('fa-credit-card');
-              break;
-          }
-        }
-      });
-
+      // Cargar países con World Countries API
       const loadCountries = () => {
         const select = document.getElementById('countryCode');
         if (!select) {
@@ -1096,13 +1031,19 @@
             const opt = document.createElement('option');
             opt.value = country.cca2;
             opt.textContent = country.name.common;
+            opt.setAttribute('aria-label', `${country.name.common} flag`);
             select.appendChild(opt);
           });
           loadFormData();
+          // Inicializar Select2
+          $('#countryCode').select2({
+            templateResult: formatCountry,
+            templateSelection: formatCountry
+          });
           return;
         }
 
-        fetch('https://restcountries.com/v3.1/all')
+        fetch('https://api.worldcountries.io/v2/countries')
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch countries');
@@ -1115,13 +1056,16 @@
               const opt = document.createElement('option');
               opt.value = country.cca2;
               opt.textContent = country.name.common;
+              opt.setAttribute('aria-label', `${country.name.common} flag`);
               select.appendChild(opt);
             });
-            localStorage.setItem('countries', JSON.stringify(data.map(country => ({
-              cca2: country.cca2,
-              name: { common: country.name.common }
-            }))));
+            localStorage.setItem('countries', JSON.stringify(data));
             loadFormData();
+            // Inicializar Select2
+            $('#countryCode').select2({
+              templateResult: formatCountry,
+              templateSelection: formatCountry
+            });
           })
           .catch(error => {
             console.error('Error loading countries:', error);
@@ -1130,6 +1074,15 @@
           });
       };
 
+      // Formatear opciones de país con banderas para Select2
+      function formatCountry(country) {
+        if (!country.id) return country.text;
+        return $(
+          `<span><img src="https://flagcdn.com/16x12/${country.id.toLowerCase()}.png" class="flag-icon" alt="${country.text} flag"/> ${country.text}</span>`
+        );
+      }
+
+      // Inicializar
       loadCountries();
       showStep(currentStep);
       updateSummary();
