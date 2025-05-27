@@ -4,272 +4,537 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Donation Form</title>
-  <!-- Favicon base64 para evitar error 404 -->
+  <!-- Favicon base64 to avoid 404 error -->
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlMAAHaTzTgAAAAZSURBVDjLY2AYBaNgFIyCUQABAwMCGAAAYQAB3QvyxgAAAABJRU5ErkJggg==">
-  <!-- jQuery (requerido por Select2) -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- jQuery for Select2 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- Select2 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <!-- Select2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <style>
+    :root {
+      --primary-color: #FFC107;
+      --primary-hover: #E0A800;
+      --secondary-color: #007BFF;
+      --secondary-hover: #0056B3;
+      --text-color: #212529;
+      --label-color: #495057;
+      --error-color: #DC3545;
+      --bg-body: #F8F9FA;
+      --bg-panel: #FFFFFF;
+      --input-border-color: #CED4DA;
+      --button-text-color: #212529;
+      --button-text-color-light: #FFFFFF;
+      --disabled-bg-color: #6C757D;
+      --error-bg: #FFF3CD;
+      --success-bg: #D1E7FF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f4f4;
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-color);
+      padding: 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
+
     .container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .form-wrapper {
       max-width: 600px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
+      width: 100%;
+      background: var(--bg-panel);
+      padding: 12px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border: 1px solid #DEE2E6;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    h1 {
-      text-align: center;
-    }
+
     .progress-bar {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
+
     .progress-step {
       flex: 1;
       text-align: center;
-      padding: 10px;
-      background: #e0e0e0;
-      margin: 0 5px;
-      border-radius: 5px;
+      font-size: 11px;
+      color: #6C757D;
+      font-weight: 400;
+      cursor: pointer;
+      padding-bottom: 6px;
+      border-bottom: 2px solid transparent;
+      position: relative;
     }
+
     .progress-step.active {
-      background: #4CAF50;
-      color: white;
+      color: var(--primary-color);
+      font-weight: 500;
+      border-bottom: 2px solid var(--primary-color);
     }
-    .step {
-      display: none;
-    }
-    .step.active {
+
+    .progress-step::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #CED4DA;
+      border-radius: 50%;
       display: block;
+      margin: 0 auto 4px;
     }
+
+    .progress-step.active::before { background: var(--primary-color); }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-title {
+      font-size: 1.1em;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+      position: relative;
+    }
+
     label {
       display: block;
-      margin: 10px 0 5px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 13px;
+      color: var(--label-color);
     }
+
     input, select {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border: 1px solid var(--input-border-color);
       border-radius: 4px;
+      font-size: 13px;
+      color: var(--text-color);
     }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
     .error-message {
-      color: red;
-      font-size: 0.8em;
       display: none;
-      margin-bottom: 10px;
+      color: var(--error-color);
+      font-size: 11px;
+      margin-top: 4px;
     }
-    .error {
-      border-color: red;
+
+    .form-group.error .error-message { display: block; }
+
+    .preset-amounts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 6px;
+      margin-bottom: 8px;
     }
+
     .preset-button {
-      padding: 10px;
-      margin: 5px;
-      border: 1px solid #ccc;
+      background-color: var(--secondary-color);
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 6px;
       border-radius: 4px;
       cursor: pointer;
-      background: #f9f9f9;
-    }
-    .preset-button.selected {
-      background: #4CAF50;
-      color: white;
-      border-color: #4CAF50;
-    }
-    .button-group {
+      font-size: 13px;
+      font-weight: 500;
       text-align: center;
-      margin-top: 20px;
+      transition: background-color 0.3s ease;
     }
+
+    .preset-button:hover { background-color: var(--secondary-hover); }
+
+    .preset-button.selected {
+      background-color: var(--primary-color);
+      color: var(--button-text-color);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     button {
-      padding: 10px 20px;
-      margin: 5px;
+      padding: 6px 12px;
       border: none;
       border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      background: #4CAF50;
-      color: white;
+      flex: 1;
+      max-width: 100px;
+      background: var(--primary-color);
+      color: var(--button-text-color);
+      transition: background-color 0.3s ease;
     }
+
+    button:hover:not(:disabled) { background: var(--primary-hover); }
+
     button:disabled {
-      background: #ccc;
+      background: var(--disabled-bg-color);
+      color: var(--button-text-color-light);
       cursor: not-allowed;
+      opacity: 0.65;
     }
+
     #prevBtn {
-      background: #777;
+      background: #6C757D;
+      color: var(--button-text-color-light);
     }
+
     #message {
-      text-align: center;
-      margin: 10px 0;
-    }
-    #message.success {
-      color: green;
-    }
-    #message.error {
-      color: red;
-    }
-    #loading {
-      display: none;
-      text-align: center;
-      margin: 20px 0;
-    }
-    .card-type {
-      margin-left: 10px;
-      font-weight: bold;
-    }
-    .summary, .confirmation {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
+      flex: 2;
+      font-size: 12px;
+      padding: 6px;
       border-radius: 4px;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-color);
+      transition: background-color 0.3s ease;
     }
-    .summary p, .confirmation p {
-      margin: 5px 0;
+
+    #message.error {
+      background: var(--error-bg);
+      border: 1px solid var(--primary-color);
     }
+
+    #message.success {
+      background: var(--success-bg);
+      border: 1px solid var(--secondary-color);
+    }
+
+    .order-summary-wrapper {
+      max-width: 600px;
+      width: 100%;
+      background: #fdfdfd;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #E9ECEF;
+    }
+
+    .order-summary-wrapper h3 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 500;
+      font-size: 1.1em;
+    }
+
+    .summary-section {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #EEE;
+    }
+
+    .summary-section h4 {
+      font-size: 0.9em;
+      color: var(--primary-color);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .summary-section p {
+      margin-bottom: 4px;
+      font-size: 0.85em;
+      color: var(--label-color);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .summary-section p strong {
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .summary-value {
+      color: var(--text-color);
+      text-align: right;
+    }
+
+    .summary-section:empty {
+      display: none;
+    }
+
+    .loading {
+      font-style: italic;
+      color: var(--text-color);
+      font-size: 11px;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .notice {
+      font-size: 10px;
+      color: var(--label-color);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    #step-4 .step-title {
+      font-size: 1em;
+      margin-bottom: 8px;
+    }
+
     .flag-icon {
       vertical-align: middle;
       margin-right: 5px;
     }
-    .terms-link {
-      text-align: center;
-      margin-top: 10px;
-    }
+
     .select2-container {
       width: 100% !important;
+    }
+
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .form-wrapper, .order-summary-wrapper {
+        max-width: 400px;
+        flex: 1;
+      }
+      .form-wrapper {
+        position: sticky;
+        top: 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .form-wrapper, .order-summary-wrapper {
+        padding: 10px;
+      }
+      .progress-bar { margin-bottom: 10px; }
+      .progress-step { font-size: 10px; padding-bottom: 5px; }
+      .progress-step::before { width: 5px; height: 5px; margin-bottom: 3px; }
+      .step-title { font-size: 0.95em; margin-bottom: 8px; }
+      label { font-size: 12px; margin-bottom: 3px; }
+      input, select { padding: 5px 8px; font-size: 12px; }
+      .error-message { font-size: 10px; margin-top: 3px; }
+      .preset-amounts {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+        gap: 5px;
+        margin-bottom: 6px;
+      }
+      .preset-button { padding: 6px 5px; font-size: 12px; }
+      .buttons { gap: 5px; margin-top: 10px; }
+      button { padding: 5px 10px; max-width: 90px; font-size: 12px; }
+      #message { font-size: 11px; padding: 5px; min-height: 28px; }
+      .order-summary-wrapper h3 { font-size: 0.95em; margin-bottom: 8px; }
+      .summary-section { margin-bottom: 6px; padding-bottom: 5px; }
+      .summary-section h4 { font-size: 0.85em; margin-bottom: 5px; }
+      .summary-section p { font-size: 0.8em; }
+      .loading { font-size: 10px; margin-top: 5px; }
+      .notice { font-size: 9px; margin-top: 5px; }
+    }
+
+    @media (max-width: 480px) {
+      .preset-amounts {
+        grid-template-columns: repeat(auto-fit, minmax(55px, 1fr));
+        gap: 4px;
+      }
+      .preset-button { padding: 5px 4px; font-size: 11px; }
+      button { padding: 4px 8px; max-width: 80px; font-size: 11px; }
+      #message { font-size: 10px; padding: 4px; min-height: 24px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Donation Form</h1>
-    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="4">
-      <div class="progress-step active" aria-current="step">Step 1: Donation</div>
-      <div class="progress-step">Step 2: Personal Info</div>
-      <div class="progress-step">Step 3: Payment</div>
-      <div class="progress-step">Step 4: Confirmation</div>
+    <div class="form-wrapper">
+      <nav class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="4">
+        <div class="progress-step active" data-step="0" aria-current="step">Step 1: Donation</div>
+        <div class="progress-step" data-step="1">Step 2: Personal Details</div>
+        <div class="progress-step" data-step="2">Step 3: Payment</div>
+        <div class="progress-step" data-step="3">Step 4: Address</div>
+        <div class="progress-step" data-step="4">Step 5: Confirmation</div>
+      </nav>
+      <form id="donationForm" role="form" aria-label="Donation Form" novalidate>
+        <div class="step active" id="step-0">
+          <h3 class="step-title">Choose Your Donation Amount</h3>
+          <div class="form-group">
+            <label for="donationAmount">Select an amount:</label>
+            <div class="preset-amounts">
+              <button type="button" class="preset-button" data-amount="10" aria-label="Select $10 donation">$10</button>
+              <button type="button" class="preset-button" data-amount="30" aria-label="Select $30 donation">$30</button>
+              <button type="button" class="preset-button" data-amount="50" aria-label="Select $50 donation">$50</button>
+              <button type="button" class="preset-button" data-amount="100" aria-label="Select $100 donation">$100</button>
+              <button type="button" class="preset-button" data-amount="200" aria-label="Select $200 donation">$200</button>
+              <button type="button" class="preset-button" data-amount="500" aria-label="Select $500 donation">$500</button>
+            </div>
+            <span class="error-message" id="donationError">Please select a donation amount.</span>
+          </div>
+          <input type="hidden" id="selectedAmount" name="selectedAmount">
+          <input type="hidden" id="selectedPackage" name="selectedPackage">
+        </div>
+
+        <div class="step" id="step-1">
+          <h3 class="step-title">Your Personal Details</h3>
+          <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Enter your first name" aria-describedby="firstNameError" required />
+            <span class="error-message" id="firstNameError">Please enter a valid first name (letters, spaces, hyphens, apostrophes only).</span>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Enter your last name" aria-describedby="lastNameError" required />
+            <span class="error-message" id="lastNameError">Please enter a valid last name (letters, spaces, hyphens, apostrophes only).</span>
+          </div>
+          <div class="form-group">
+            <label for="emailAddress">Email Address:</label>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="example@domain.com" aria-describedby="emailError" required />
+            <span class="error-message" id="emailError">Please enter a valid email address (e.g., example@domain.com).</span>
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 digits" aria-describedby="phoneError" />
+            <span class="error-message" id="phoneError">Please enter a valid phone number (10–15 digits).</span>
+          </div>
+        </div>
+
+        <div class="step" id="step-2">
+          <h3 class="step-title">Payment Information</h3>
+          <div class="form-group">
+            <label for="cardName">Name on Card:</label>
+            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="As it appears on your card" aria-describedby="cardNameError" required />
+            <span class="error-message" id="cardNameError">Please enter a valid name (letters, spaces, hyphens, apostrophes only).</span>
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number: <span id="cardType" class="card-type">Unknown</span></label>
+            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
+            <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 digits" aria-describedby="cvvError" required />
+            <span class="error-message" id="cvvError">Please enter a valid CVV (3 or 4 digits).</span>
+          </div>
+          <div class="form-group">
+            <label for="expMonth">Expiration Month:</label>
+            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" required />
+            <span class="error-message" id="expMonthError">Please enter a valid month (1–12).</span>
+          </div>
+          <div class="form-group">
+            <label for="expYear">Expiration Year:</label>
+            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="YYYY" aria-describedby="expYearError" required />
+            <span class="error-message" id="expYearError">Please enter a valid year (2025–2035).</span>
+          </div>
+        </div>
+
+        <div class="step" id="step-3">
+          <h3 class="step-title">Your Address</h3>
+          <div class="form-group">
+            <label for="address">Street Address:</label>
+            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Street name and number" aria-describedby="addressError" required />
+            <span class="error-message" id="addressError">Please enter a valid street address.</span>
+          </div>
+          <div class="form-group">
+            <label for="countryCode">Country:</label>
+            <select id="countryCode" name="countryCode" aria-describedby="countryError" required>
+              <option value="">Select a country</option>
+            </select>
+            <span class="error-message" id="countryError">Please select a country from the list.</span>
+          </div>
+          <div class="form-group">
+            <label for="stateProvince">State / Province:</label>
+            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="e.g., California" aria-describedby="stateError" required />
+            <span class="error-message" id="stateError">Please enter a valid state/province (letters, numbers, spaces, hyphens).</span>
+          </div>
+          <div class="form-group">
+            <label for="city">City:</label>
+            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Enter your city" aria-describedby="cityError" required />
+            <span class="error-message" id="cityError">Please enter a valid city (letters, spaces, hyphens).</span>
+          </div>
+          <div class="form-group">
+            <label for="postalCode">Postal / Zip Code:</label>
+            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="e.g., 90210" aria-describedby="postalCodeError" required />
+            <span class="error-message" id="postalCodeError">Please enter a valid postal/zip code (1–10 characters).</span>
+          </div>
+          <div class="loading" id="loading" style="display: none;">Sending...</div>
+          <div class="notice">We are working to improve our system. If you experience issues submitting, please try again or contact support.</div>
+        </div>
+
+        <div class="step" id="step-4">
+          <h3 class="step-title">Thank You for Your Donation!</h3>
+          <div class="summary-section">
+            <h4>Donation Receipt</h4>
+            <p><strong>Amount:</strong> <span id="confirmAmount">-</span></p>
+            <p><strong>Name:</strong> <span id="confirmName">-</span></p>
+            <p><strong>Email:</strong> <span id="confirmEmail">-</span></p>
+            <p><strong>Card Type:</strong> <span id="confirmCardType">-</span></p>
+            <p><strong>Transaction ID:</strong> <span id="confirmTransactionId">-</span></p>
+          </div>
+          <button type="button" id="resetBtn">Make Another Donation</button>
+        </div>
+
+        <div class="buttons">
+          <button type="button" id="prevBtn" style="display:none;">Previous Step</button>
+          <div id="message" class="text-center" aria-live="polite"></div>
+          <button type="button" id="nextBtn">Next Step</button>
+          <button type="submit" id="submitBtn" style="display:none;">Submit Donation</button>
+        </div>
+      </form>
     </div>
-    <div id="message" class="text-center"></div>
-    <div id="loading">Processing...</div>
-    <form id="donationForm">
-      <div class="step active" id="step-1">
-        <h2>Donation Amount</h2>
-        <div id="donationError" class="error-message">Please select a donation amount.</div>
-        <div>
-          <button type="button" class="preset-button" data-amount="10">$10</button>
-          <button type="button" class="preset-button" data-amount="30">$30</button>
-          <button type="button" class="preset-button" data-amount="50">$50</button>
-          <button type="button" class="preset-button" data-amount="100">$100</button>
-          <button type="button" class="preset-button" data-amount="200">$200</button>
-          <button type="button" class="preset-button" data-amount="500">$500</button>
+
+    <div class="order-summary-wrapper">
+      <h3>Your Donation Summary</h3>
+      <div id="donationSummaryDetails">
+        <div class="summary-section">
+          <h4>Donation Details</h4>
+          <p><strong>Package:</strong> <span class="summary-value" id="summaryPackage">-</span></p>
+          <p><strong>Amount:</strong> <span class="summary-value" id="summaryDonationAmount">-</span></p>
         </div>
-        <input type="hidden" id="selectedAmount" name="selectedAmount">
-        <input type="hidden" id="selectedPackage" name="selectedPackage">
-        <p class="terms-link">
-          By proceeding, you agree to our <a href="https://example.com/terms" target="_blank">Terms and Conditions</a>.
-        </p>
-      </div>
-      <div class="step" id="step-2">
-        <h2>Personal Information</h2>
-        <label for="firstName">First Name *</label>
-        <input type="text" id="firstName" name="firstName" required pattern="[A-Za-z\s]{1,50}">
-        <div id="firstNameError" class="error-message">Please enter a valid first name.</div>
-
-        <label for="lastName">Last Name *</label>
-        <input type="text" id="lastName" name="lastName" required pattern="[A-Za-z\s]{1,50}">
-        <div id="lastNameError" class="error-message">Please enter a valid last name.</div>
-
-        <label for="emailAddress">Email Address *</label>
-        <input type="email" id="emailAddress" name="emailAddress" required>
-        <div id="emailAddressError" class="error-message">Please enter a valid email address.</div>
-
-        <label for="phoneNumber">Phone Number</label>
-        <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9+\-\s]{7,20}">
-        <div id="phoneNumberError" class="error-message">Please enter a valid phone number.</div>
-      </div>
-      <div class="step" id="step-3">
-        <h2>Payment and Address</h2>
-        <label for="cardName">Name on Card *</label>
-        <input type="text" id="cardName" name="cardName" required pattern="[A-Za-z\s]{1,100}">
-        <div id="cardNameError" class="error-message">Please enter the name on the card.</div>
-
-        <label for="cardNumber">Card Number * <span id="cardType" class="card-type">Unknown</span></label>
-        <input type="text" id="cardNumber" name="cardNumber" required pattern="\d{16}" maxlength="16">
-        <div id="cardNumberError" class="error-message">Please enter a valid 16-digit card number.</div>
-
-        <label for="cvv">CVV *</label>
-        <input type="text" id="cvv" name="cvv" required pattern="\d{3,4}" maxlength="4">
-        <div id="cvvError" class="error-message">Please enter a valid CVV (3 or 4 digits).</div>
-
-        <label for="expMonth">Expiration Month *</label>
-        <input type="number" id="expMonth" name="expMonth" required min="1" max="12">
-        <div id="expMonthError" class="error-message">Please enter a valid month (1-12).</div>
-
-        <label for="expYear">Expiration Year *</label>
-        <input type="number" id="expYear" name="expYear" required min="2025" max="2035">
-        <div id="expYearError" class="error-message">Please enter a valid year (2025-2035).</div>
-
-        <label for="address">Address *</label>
-        <input type="text" id="address" name="address" required pattern="[A-Za-z0-9\s\-,.#\/]{1,100}">
-        <div id="addressError" class="error-message">Please enter a valid address.</div>
-
-        <label for="countryCode">Country *</label>
-        <select id="countryCode" name="countryCode" required>
-          <option value="">Select a country</option>
-        </select>
-        <div id="countryCodeError" class="error-message">Please select a country.</div>
-
-        <label for="stateProvince">State/Province *</label>
-        <input type="text" id="stateProvince" name="stateProvince" required pattern="[A-Za-z0-9\s\-]{1,50}">
-        <div id="stateProvinceError" class="error-message">Please enter a valid state/province.</div>
-
-        <label for="city">City *</label>
-        <input type="text" id="city" name="city" required pattern="[A-Za-z\s\-]{1,50}">
-        <div id="cityError" class="error-message">Please enter a valid city.</div>
-
-        <label for="postalCode">Postal/Zip Code *</label>
-        <input type="text" id="postalCode" name="postalCode" required pattern="[A-Za-z0-9\s\-]{1,10}">
-        <div id="postalCodeError" class="error-message">Please enter a valid postal/zip code.</div>
-
-        <div class="summary">
-          <h3>Summary</h3>
-          <p><strong>Package:</strong> <span id="summaryPackage">-</span></p>
-          <p><strong>Donation Amount:</strong> <span id="summaryDonationAmount">-</span></p>
-          <p><strong>First Name:</strong> <span id="summaryFirstName">-</span></p>
-          <p><strong>Last Name:</strong> <span id="summaryLastName">-</span></p>
-          <p><strong>Email:</strong> <span id="summaryEmail">-</span></p>
-          <p><strong>Phone:</strong> <span id="summaryPhone">-</span></p>
-          <p><strong>Address:</strong> <span id="summaryAddress">-</span></p>
-          <p><strong>City:</strong> <span id="summaryCity">-</span></p>
-          <p><strong>State/Province:</strong> <span id="summaryState">-</span></p>
-          <p><strong>Postal/Zip Code:</strong> <span id="summaryPostalCode">-</span></p>
-          <p><strong>Country:</strong> <span id="summaryCountry">-</span></p>
+        <div class="summary-section">
+          <h4>Personal Information</h4>
+          <p><strong>First Name:</strong> <span class="summary-value" id="summaryFirstName">-</span></p>
+          <p><strong>Last Name:</strong> <span class="summary-value" id="summaryLastName">-</span></p>
+          <p><strong>Email:</strong> <span class="summary-value" id="summaryEmail">-</span></p>
+          <p><strong>Phone:</strong> <span class="summary-value" id="summaryPhone">-</span></p>
+        </div>
+        <div class="summary-section">
+          <h4>Billing Address</h4>
+          <p><strong>Address:</strong> <span class="summary-value" id="summaryAddress">-</span></p>
+          <p><strong>City:</strong> <span class="summary-value" id="summaryCity">-</span></p>
+          <p><strong>State/Province:</strong> <span class="summary-value" id="summaryState">-</span></p>
+          <p><strong>Postal Code:</strong> <span class="summary-value" id="summaryPostalCode">-</span></p>
+          <p><strong>Country:</strong> <span class="summary-value" id="summaryCountry">-</span></p>
         </div>
       </div>
-      <div class="step" id="step-4">
-        <h2>Confirmation</h2>
-        <div class="confirmation">
-          <p><strong>Donation Amount:</strong> <span id="confirmAmount">-</span></p>
-          <p><strong>Name:</strong> <span id="confirmName">-</span></p>
-          <p><strong>Email:</strong> <span id="confirmEmail">-</span></p>
-          <p><strong>Transaction ID:</strong> <span id="confirmTransactionId">-</span></p>
-        </div>
-      </div>
-      <div class="button-group">
-        <button type="button" id="prevBtn" style="display: none;">Previous</button>
-        <button type="button" id="nextBtn">Next</button>
-        <button type="submit" id="submitBtn" style="display: none;">Submit Donation</button>
-        <button type="button" id="resetBtn" style="display: none;">Make Another Donation</button>
-      </div>
-    </form>
+    </div>
   </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('donationForm');
@@ -291,6 +556,7 @@
       let currentStep = 0;
       let hasManualSelection = false;
       let transactionId = '';
+      let currentCardType = 'Unknown';
 
       // Modo prueba para simular respuesta del servidor
       const TEST_MODE = true; // Cambia a false cuando configures CORS en Heroku
@@ -322,6 +588,7 @@
         amount: document.getElementById('confirmAmount'),
         name: document.getElementById('confirmName'),
         email: document.getElementById('confirmEmail'),
+        cardType: document.getElementById('confirmCardType'),
         transactionId: document.getElementById('confirmTransactionId'),
       };
 
@@ -336,7 +603,7 @@
         }, duration);
       };
 
-      // Función para detectar el tipo de tarjeta
+      // Detectar tipo de tarjeta
       const detectCardType = (number) => {
         number = number.replace(/\s/g, '');
         if (/^4/.test(number)) return 'Visa';
@@ -346,18 +613,17 @@
         return 'Unknown';
       };
 
-      // Actualizar el tipo de tarjeta dinámicamente
+      // Actualizar tipo de tarjeta
       if (cardNumberInput && cardTypeSpan) {
         cardNumberInput.addEventListener('input', () => {
           const cardNumber = cardNumberInput.value;
-          const cardType = detectCardType(cardNumber);
-          cardTypeSpan.textContent = cardType;
-          cardTypeSpan.className = `card-type card-type-${cardType.toLowerCase().replace(' ', '-')}`;
+          currentCardType = detectCardType(cardNumber);
+          cardTypeSpan.textContent = currentCardType;
           saveFormData();
         });
       }
 
-      // Debounce para optimizar eventos de entrada
+      // Debounce para optimizar eventos
       const debounce = (func, wait) => {
         let timeout;
         return (...args) => {
@@ -366,7 +632,7 @@
         };
       };
 
-      // Actualizar el resumen (optimizado)
+      // Actualizar resumen
       const updateSummary = () => {
         if (!summaryElements.package || !summaryElements.donationAmount) {
           console.error('Summary elements not found');
@@ -394,14 +660,16 @@
         } else {
           summaryElements.country.textContent = '-';
         }
+        console.log('Summary updated:', updates);
       };
 
-      // Actualizar la confirmación
+      // Actualizar confirmación
       const updateConfirmation = () => {
         const amount = parseFloat(selectedAmountInput?.value || 0);
         confirmElements.amount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
         confirmElements.name.textContent = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || '-';
         confirmElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
+        confirmElements.cardType.textContent = currentCardType || '-';
         confirmElements.transactionId.textContent = transactionId || '-';
       };
 
@@ -418,17 +686,16 @@
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
         if (resetBtn) resetBtn.style.display = stepIndex === steps.length - 1 ? 'inline-block' : 'none';
-        const termsLink = document.querySelector('.terms-link');
-        if (termsLink) termsLink.style.display = stepIndex === 0 ? 'block' : 'none';
+        console.log(`Showing step ${stepIndex}`);
       };
 
-      // Guardar datos del formulario
+      // Guardar datos
       const saveFormData = () => {
         if (!form) return;
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
-          if (!['cardNumber', 'cvv', 'ipAddress'].includes(key)) {
+          if (!['cardNumber', 'cvv'].includes(key)) {
             data[key] = value;
           }
         });
@@ -437,7 +704,7 @@
         showMessage('Form data saved locally', 'success', 1000);
       };
 
-      // Cargar datos del formulario
+      // Cargar datos
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
         console.log('Datos recuperados de localStorage:', savedData ? JSON.parse(savedData) : 'Ninguno');
@@ -589,7 +856,7 @@
         return true;
       };
 
-      // Manejar botones de cantidad predefinida
+      // Manejar botones de monto
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
           presetButtons.forEach(btn => btn.classList.remove('selected'));
@@ -620,7 +887,7 @@
         updateSummary();
       });
 
-      // Botón de reinicio
+      // Botón reinicio
       resetBtn?.addEventListener('click', () => {
         form.reset();
         currentStep = 0;
@@ -630,6 +897,8 @@
         if (selectedPackageInput) selectedPackageInput.value = '';
         hasManualSelection = false;
         transactionId = '';
+        currentCardType = 'Unknown';
+        if (cardTypeSpan) cardTypeSpan.textContent = 'Unknown';
         localStorage.removeItem('donationFormData');
         $('#countryCode').val('').trigger('change');
         updateSummary();
@@ -661,14 +930,15 @@
           return { success: true, data };
         } catch (err) {
           console.error('Request failed:', err);
-          return {
-            success: false,
-            error: new Error('Unable to process donation due to server configuration (CORS). Please try again later or contact support.')
-          };
+          let errorMessage = 'Unable to process donation. Please try again or contact support.';
+          if (err.message.includes('Failed to fetch')) {
+            errorMessage = 'CORS error: The server is not configured to accept requests from this origin. Please contact support.';
+          }
+          return { success: false, error: new Error(errorMessage) };
         }
       };
 
-      // Manejar envío del formulario
+      // Manejar envío
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
@@ -729,7 +999,7 @@
         }
       });
 
-      // Cargar países con World Countries API
+      // Cargar países
       const loadCountries = () => {
         const select = document.getElementById('countryCode');
         if (!select) {
@@ -786,7 +1056,7 @@
           });
       };
 
-      // Formatear opciones de país con banderas para Select2
+      // Formatear países con banderas
       function formatCountry(country) {
         if (!country.id) return country.text;
         return $(
