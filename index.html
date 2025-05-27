@@ -13,8 +13,8 @@
       --primary-hover: #E0A800;
       --secondary-color: #007BFF;
       --secondary-hover: #0056B3;
-      --text-color: #212529;
-      --label-color: #495057;
+      --text-color: #1A1A1A; /* Mejor contraste */
+      --label-color: #333333; /* Mejor contraste */
       --error-color: #DC3545;
       --bg-body: #F8F9FA;
       --bg-panel: #FFFFFF;
@@ -328,11 +328,11 @@
 
     .summary-section:empty { display: none; }
 
-    .loading {
+    .loading, .loading-countries {
       font-style: italic;
-      color: var(--text-color);
+      color: var(--label-color);
       font-size: 11px;
-      margin-top: 6px;
+      margin-top: 4px;
       text-align: center;
     }
 
@@ -408,7 +408,7 @@
       .summary-section { margin-bottom: 6px; padding-bottom: 5px; }
       .summary-section h4 { font-size: 0.85em; margin-bottom: 5px; }
       .summary-section p { font-size: 0.8em; }
-      .loading { font-size: 10px; margin-top: 5px; }
+      .loading, .loading-countries { font-size: 10px; margin-top: 5px; }
       .notice { font-size: 9px; margin-top: 5px; }
       .terms-notice {
         font-size: 10px;
@@ -474,7 +474,7 @@
               <button type="button" class="preset-button" data-amount="200" aria-label="Seleccionar donación de $200">$200</button>
               <button type="button" class="preset-button" data-amount="500" aria-label="Seleccionar donación de $500">$500</button>
             </div>
-            <span class="error-message" id="donationError">Por favor, selecciona un monto de donación.</span>
+            <span class="error-message" id="donationError" role="alert" aria-atomic="true">Por favor, selecciona un monto de donación.</span>
             <div class="terms-notice">
               Al hacer clic en "Siguiente", aceptas nuestros <a href="/assets/terms-and-conditions.pdf" target="_blank" aria-label="Ver términos y condiciones">términos y condiciones</a>.
             </div>
@@ -487,23 +487,23 @@
           <h3 class="step-title">Tus Detalles Personales</h3>
           <div class="form-group">
             <label for="firstName">Nombre:</label>
-            <input id="firstName" name="given-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu nombre" aria-describedby="firstNameError" autocomplete="given-name" required />
-            <span class="error-message" id="firstNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
+            <input id="firstName" name="given-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu nombre" aria-describedby="firstNameError" autocomplete="given-name" required aria-required="true" />
+            <span class="error-message" id="firstNameError" role="alert" aria-atomic="true">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="lastName">Apellido:</label>
-            <input id="lastName" name="family-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu apellido" aria-describedby="lastNameError" autocomplete="family-name" required />
-            <span class="error-message" id="lastNameError">Por favor, ingresa un apellido válido (solo letras, espacios, guiones, apóstrofes).</span>
+            <input id="lastName" name="family-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu apellido" aria-describedby="lastNameError" autocomplete="family-name" required aria-required="true" />
+            <span class="error-message" id="lastNameError" role="alert" aria-atomic="true">Por favor, ingresa un apellido válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="emailAddress">Correo Electrónico:</label>
-            <input type="email" id="emailAddress" name="email" placeholder="ejemplo@dominio.com" aria-describedby="emailError" autocomplete="email" required />
-            <span class="error-message" id="emailError">Por favor, ingresa un correo electrónico válido (ejemplo@dominio.com).</span>
+            <input type="email" id="emailAddress" name="email" placeholder="ejemplo@dominio.com" aria-describedby="emailError" autocomplete="email" required aria-required="true" />
+            <span class="error-message" id="emailError" role="alert" aria-atomic="true">Por favor, ingresa un correo electrónico válido (ejemplo@dominio.com).</span>
           </div>
           <div class="form-group">
             <label for="phoneNumber">Número de Teléfono:</label>
-            <input type="tel" id="phoneNumber" name="tel" pattern="\d{10,15}" placeholder="10–15 dígitos" aria-describedby="phoneError" autocomplete="tel" required />
-            <span class="error-message" id="phoneError">Por favor, ingresa un número de teléfono válido (10–15 dígitos).</span>
+            <input type="tel" id="phoneNumber" name="tel" pattern="\d{10,15}" placeholder="10–15 dígitos" aria-describedby="phoneError" autocomplete="tel" required aria-required="true" />
+            <span class="error-message" id="phoneError" role="alert" aria-atomic="true">Por favor, ingresa un número de teléfono válido (10–15 dígitos).</span>
           </div>
         </div>
 
@@ -511,31 +511,31 @@
           <h3 class="step-title">Información de Pago</h3>
           <div class="form-group">
             <label for="cardName">Nombre en la Tarjeta:</label>
-            <input id="cardName" name="cc-name" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" aria-describedby="cardNameError" autocomplete="cc-name" required />
-            <span class="error-message" id="cardNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
+            <input id="cardName" name="cc-name" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" aria-describedby="cardNameError" autocomplete="cc-name" required aria-required="true" />
+            <span class="error-message" id="cardNameError" role="alert" aria-atomic="true">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="cardNumber">Número de Tarjeta:</label>
             <div style="position: relative;">
-              <input type="tel" id="cardNumber" name="cc-number" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" autocomplete="off" required />
+              <input type="tel" id="cardNumber" name="cc-number" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" autocomplete="off" required aria-required="true" />
               <i class="card-icon fas fa-credit-card" id="cardIcon" data-type="generic"></i>
             </div>
-            <span class="error-message" id="cardNumberError">Por favor, ingresa un número de tarjeta válido de 16 dígitos.</span>
+            <span class="error-message" id="cardNumberError" role="alert" aria-atomic="true">Por favor, ingresa un número de tarjeta válido de 16 dígitos.</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cc-csc" pattern="\d{3,4}" maxlength="4" placeholder="3–4 dígitos" aria-describedby="cvvError" autocomplete="off" required />
-            <span class="error-message" id="cvvError">Por favor, ingresa un CVV válido (3 o 4 dígitos).</span>
+            <input type="tel" id="cvv" name="cc-csc" pattern="\d{3,4}" maxlength="4" placeholder="3–4 dígitos" aria-describedby="cvvError" autocomplete="off" required aria-required="true" />
+            <span class="error-message" id="cvvError" role="alert" aria-atomic="true">Por favor, ingresa un CVV válido (3 o 4 dígitos).</span>
           </div>
           <div class="form-group">
             <label for="expMonth">Mes de Expiración:</label>
-            <input type="number" id="expMonth" name="cc-exp-month" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" autocomplete="cc-exp-month" required />
-            <span class="error-message" id="expMonthError">Por favor, ingresa un mes válido (1–12).</span>
+            <input type="number" id="expMonth" name="cc-exp-month" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" autocomplete="cc-exp-month" required aria-required="true" />
+            <span class="error-message" id="expMonthError" role="alert" aria-atomic="true">Por favor, ingresa un mes válido (1–12).</span>
           </div>
           <div class="form-group">
             <label for="expYear">Año de Expiración:</label>
-            <input type="number" id="expYear" name="cc-exp-year" min="2025" max="2035" placeholder="AAAA" aria-describedby="expYearError" autocomplete="cc-exp-year" required />
-            <span class="error-message" id="expYearError">Por favor, ingresa un año válido (2025–2035).</span>
+            <input type="number" id="expYear" name="cc-exp-year" min="2025" max="2035" placeholder="AAAA" aria-describedby="expYearError" autocomplete="cc-exp-year" required aria-required="true" />
+            <span class="error-message" id="expYearError" role="alert" aria-atomic="true">Por favor, ingresa un año válido (2025–2035).</span>
           </div>
         </div>
 
@@ -543,30 +543,31 @@
           <h3 class="step-title">Tu Dirección</h3>
           <div class="form-group">
             <label for="address">Dirección:</label>
-            <input id="address" name="street-address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Nombre y número de la calle" aria-describedby="addressError" autocomplete="street-address" required />
-            <span class="error-message" id="addressError">Por favor, ingresa una dirección válida.</span>
+            <input id="address" name="street-address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Nombre y número de la calle" aria-describedby="addressError" autocomplete="street-address" required aria-required="true" />
+            <span class="error-message" id="addressError" role="alert" aria-atomic="true">Por favor, ingresa una dirección válida.</span>
           </div>
           <div class="form-group">
             <label for="countryCode">País:</label>
-            <select id="countryCode" name="country" aria-describedby="countryError" autocomplete="country" required>
+            <select id="countryCode" name="country" aria-describedby="countryError" autocomplete="country" required aria-required="true">
               <option value="">Selecciona un país</option>
             </select>
-            <span class="error-message" id="countryError">Por favor, selecciona un país de la lista.</span>
+            <div class="loading-countries" id="loadingCountries" style="display: none;">Cargando países...</div>
+            <span class="error-message" id="countryError" role="alert" aria-atomic="true">Por favor, selecciona un país de la lista.</span>
           </div>
           <div class="form-group">
             <label for="stateProvince">Estado / Provincia:</label>
-            <input id="stateProvince" name="address-level1" pattern="[A-Za-z0-9\s\-]+" placeholder="Ejemplo: California" aria-describedby="stateError" autocomplete="address-level1" required />
-            <span class="error-message" id="stateError">Por favor, ingresa un estado/provincia válido (letras, números, espacios, guiones).</span>
+            <input id="stateProvince" name="address-level1" pattern="[A-Za-z0-9\s\-]+" placeholder="Ejemplo: California" aria-describedby="stateError" autocomplete="address-level1" required aria-required="true" />
+            <span class="error-message" id="stateError" role="alert" aria-atomic="true">Por favor, ingresa un estado/provincia válido (letras, números, espacios, guiones).</span>
           </div>
           <div class="form-group">
             <label for="city">Ciudad:</label>
-            <input id="city" name="address-level2" pattern="[A-Za-z\s\-]+" placeholder="Ingresa tu ciudad" aria-describedby="cityError" autocomplete="address-level2" required />
-            <span class="error-message" id="cityError">Por favor, ingresa una ciudad válida (letras, espacios, guiones).</span>
+            <input id="city" name="address-level2" pattern="[A-Za-z\s\-]+" placeholder="Ingresa tu ciudad" aria-describedby="cityError" autocomplete="address-level2" required aria-required="true" />
+            <span class="error-message" id="cityError" role="alert" aria-atomic="true">Por favor, ingresa una ciudad válida (letras, espacios, guiones).</span>
           </div>
           <div class="form-group">
             <label for="postalCode">Código Postal:</label>
-            <input type="text" id="postalCode" name="postal-code" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="Ejemplo: 90210" aria-describedby="postalCodeError" autocomplete="postal-code" required />
-            <span class="error-message" id="postalCodeError">Por favor, ingresa un código postal válido (1–10 caracteres).</span>
+            <input type="text" id="postalCode" name="postal-code" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="Ejemplo: 90210" aria-describedby="postalCodeError" autocomplete="postal-code" required aria-required="true" />
+            <span class="error-message" id="postalCodeError" role="alert" aria-atomic="true">Por favor, ingresa un código postal válido (1–10 caracteres).</span>
           </div>
           <input type="hidden" id="ipAddress" name="ipAddress" />
           <div class="loading" id="loading" style="display: none;">Enviando...</div>
@@ -650,6 +651,7 @@
       let hasManualSelection = false;
       let transactionId = '';
       let cardType = '';
+      let countriesLoaded = false;
 
       const packageMapping = {
         '10': 'Donacion1',
@@ -690,6 +692,24 @@
         transactionId: document.getElementById('confirmTransactionId'),
       };
 
+      /**
+       * Sanitiza una entrada de usuario para prevenir inyecciones de HTML/JavaScript.
+       * @param {string} input - La entrada a sanitizar.
+       * @returns {string} La entrada sanitizada.
+       */
+      const sanitizeInput = (input) => {
+        if (typeof input !== 'string') return input;
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
+      };
+
+      /**
+       * Muestra un mensaje al usuario en el elemento #message.
+       * @param {string} msg - El mensaje a mostrar.
+       * @param {string} type - El tipo de mensaje ('success' o 'error').
+       * @param {number} duration - Duración en milisegundos antes de ocultar el mensaje.
+       */
       const showMessage = (msg, type, duration = 3000) => {
         if (!messageDiv) return;
         messageDiv.textContent = msg;
@@ -700,33 +720,43 @@
         }, duration);
       };
 
+      /**
+       * Actualiza el resumen de la donación en el panel lateral.
+       */
       const updateSummary = () => {
         if (!summaryElements.package || !summaryElements.donationAmount) return;
         const amount = parseFloat(selectedAmountInput?.value || 0);
         summaryElements.donationAmount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
         summaryElements.package.textContent = selectedPackageInput?.value || '-';
-        summaryElements.firstName.textContent = document.getElementById('firstName')?.value || '-';
-        summaryElements.lastName.textContent = document.getElementById('lastName')?.value || '-';
-        summaryElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
-        summaryElements.phone.textContent = document.getElementById('phoneNumber')?.value || '-';
-        summaryElements.address.textContent = document.getElementById('address')?.value || '-';
-        summaryElements.city.textContent = document.getElementById('city')?.value || '-';
-        summaryElements.state.textContent = document.getElementById('stateProvince')?.value || '-';
-        summaryElements.postalCode.textContent = document.getElementById('postalCode')?.value || '-';
+        summaryElements.firstName.textContent = sanitizeInput(document.getElementById('firstName')?.value) || '-';
+        summaryElements.lastName.textContent = sanitizeInput(document.getElementById('lastName')?.value) || '-';
+        summaryElements.email.textContent = sanitizeInput(document.getElementById('emailAddress')?.value) || '-';
+        summaryElements.phone.textContent = sanitizeInput(document.getElementById('phoneNumber')?.value) || '-';
+        summaryElements.address.textContent = sanitizeInput(document.getElementById('address')?.value) || '-';
+        summaryElements.city.textContent = sanitizeInput(document.getElementById('city')?.value) || '-';
+        summaryElements.state.textContent = sanitizeInput(document.getElementById('stateProvince')?.value) || '-';
+        summaryElements.postalCode.textContent = sanitizeInput(document.getElementById('postalCode')?.value) || '-';
         const countrySelect = document.getElementById('countryCode');
-        summaryElements.country.textContent = countrySelect?.value ? countrySelect.options[countrySelect.selectedIndex]?.text || '-' : '-';
+        summaryElements.country.textContent = countrySelect?.value ? sanitizeInput(countrySelect.options[countrySelect.selectedIndex]?.text) || '-' : '-';
       };
 
+      /**
+       * Actualiza la pantalla de confirmación con los detalles de la donación.
+       */
       const updateConfirmation = () => {
         const amount = parseFloat(selectedAmountInput?.value || 0);
         confirmElements.amount.textContent = amount ? `$${amount.toFixed(2)}` : '-';
-        confirmElements.name.textContent = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || '-';
-        confirmElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
+        confirmElements.name.textContent = `${sanitizeInput(document.getElementById('firstName')?.value) || ''} ${sanitizeInput(document.getElementById('lastName')?.value) || ''}`.trim() || '-';
+        confirmElements.email.textContent = sanitizeInput(document.getElementById('emailAddress')?.value) || '-';
         confirmElements.cardType.textContent = cardType || '-';
         confirmElements.cardLast4.textContent = cardNumberInput?.value.replace(/\s/g, '').slice(-4) || '-';
         confirmElements.transactionId.textContent = transactionId || '-';
       };
 
+      /**
+       * Muestra el paso actual del formulario y ajusta los botones de navegación.
+       * @param {number} stepIndex - El índice del paso a mostrar.
+       */
       const showStep = (stepIndex) => {
         steps.forEach((step, index) => {
           step.classList.toggle('active', index === stepIndex);
@@ -738,18 +768,37 @@
         if (prevBtn) prevBtn.style.display = stepIndex > 0 && stepIndex < steps.length - 1 ? 'inline-block' : 'none';
         if (nextBtn) nextBtn.style.display = stepIndex < steps.length - 2 ? 'inline-block' : 'none';
         if (submitBtn) submitBtn.style.display = stepIndex === steps.length - 2 ? 'inline-block' : 'none';
+
+        // Autofocus en el primer campo del paso
+        const activeStep = steps[stepIndex];
+        const firstInput = activeStep.querySelector('input, select');
+        if (firstInput) firstInput.focus();
+
+        // Cargar países solo en el Paso 4
+        if (stepIndex === 3) {
+          loadCountries();
+        }
       };
 
+      /**
+       * Guarda los datos del formulario en localStorage, excluyendo datos sensibles.
+       */
       const saveFormData = () => {
         if (!form) return;
         const formData = new FormData(form);
         const data = {};
+        const sensitiveFields = ['cardNumber', 'cvv', 'expMonth', 'expYear', 'cardName'];
         formData.forEach((value, key) => {
-          data[key] = value;
+          if (!sensitiveFields.includes(key)) {
+            data[key] = value;
+          }
         });
         localStorage.setItem('donationFormData', JSON.stringify(data));
       };
 
+      /**
+       * Carga los datos del formulario desde localStorage.
+       */
       const loadFormData = () => {
         const savedData = localStorage.getItem('donationFormData');
         if (savedData) {
@@ -769,6 +818,11 @@
         }
       };
 
+      /**
+       * Valida un número de tarjeta usando el algoritmo de Luhn.
+       * @param {string} cardNumber - El número de tarjeta a validar.
+       * @returns {boolean} True si el número es válido, false si no.
+       */
       const luhnCheck = (cardNumber) => {
         const digits = cardNumber.replace(/\s/g, '').split('').map(Number);
         let sum = 0;
@@ -785,6 +839,9 @@
         return sum % 10 === 0;
       };
 
+      /**
+       * Actualiza el ícono de la tarjeta según el número ingresado.
+       */
       const updateCardType = () => {
         const cardNumber = cardNumberInput?.value.replace(/\s/g, '') || '';
         cardIcon.classList.remove('active', 'fas', 'fab', 'fa-credit-card', 'fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex');
@@ -821,6 +878,11 @@
         }
       };
 
+      /**
+       * Valida los campos del paso actual.
+       * @param {number} stepIndex - El índice del paso a validar.
+       * @returns {boolean} True si el paso es válido, false si no.
+       */
       const validateStep = (stepIndex) => {
         const step = steps[stepIndex];
         if (!step) return false;
@@ -876,6 +938,10 @@
         return valid;
       };
 
+      /**
+       * Valida todos los datos del formulario antes de enviar.
+       * @returns {boolean} True si el formulario es válido, false si no.
+       */
       const validateBeforeSubmit = () => {
         if (!hasManualSelection || !selectedPackageInput?.value) {
           showMessage('No se seleccionó un monto de donación. Vuelve al Paso 1.', 'error');
@@ -926,287 +992,4 @@
           showMessage('Por favor, selecciona un país de la lista.', 'error');
           return false;
         }
-        const stateProvince = document.getElementById('stateProvince')?.value;
-        if (!stateProvince || !/[A-Za-z0-9\s\-]+/.test(stateProvince)) {
-          showMessage('Por favor, ingresa un estado/provincia válido.', 'error');
-          return false;
-        }
-        const city = document.getElementById('city')?.value;
-        if (!city || !/[A-Za-z\s\-]+/.test(city)) {
-          showMessage('Por favor, ingresa una ciudad válida.', 'error');
-          return false;
-        }
-        const postalCode = document.getElementById('postalCode')?.value;
-        if (!postalCode || !/[A-Za-z0-9\s\-]{1,10}/.test(postalCode)) {
-          showMessage('Por favor, ingresa un código postal válido (1–10 caracteres).', 'error');
-          return false;
-        }
-        return true;
-      };
-
-      const generateReceipt = () => {
-        const doc = new jsPDF();
-        const amount = parseFloat(selectedAmountInput?.value || 0);
-        const name = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim();
-        const email = document.getElementById('emailAddress')?.value || '-';
-        const address = `${document.getElementById('address')?.value || ''}, ${document.getElementById('city')?.value || ''}, ${document.getElementById('stateProvince')?.value || ''}, ${document.getElementById('postalCode')?.value || ''}, ${document.getElementById('countryCode')?.options[document.getElementById('countryCode')?.selectedIndex]?.text || '-'}`;
-        const cardLast4 = cardNumberInput?.value.replace(/\s/g, '').slice(-4) || '-';
-        const date = new Date().toLocaleString('es-ES', { timeZone: 'America/Bogota' });
-
-        doc.setFontSize(16);
-        doc.text('Recibo de Donación', 105, 20, { align: 'center' });
-        doc.setFontSize(12);
-        doc.text(`Fecha: ${date}`, 20, 40);
-        doc.text(`ID de Transacción: ${transactionId || 'N/A'}`, 20, 50);
-        doc.text(`Monto: $${amount.toFixed(2)}`, 20, 60);
-        doc.text(`Nombre: ${name}`, 20, 70);
-        doc.text(`Correo: ${email}`, 20, 80);
-        doc.text(`Tipo de Tarjeta: ${cardType || '-'}`, 20, 90);
-        doc.text(`Últimos 4 dígitos: ${cardLast4}`, 20, 100);
-        doc.text(`Dirección: ${address}`, 20, 110, { maxWidth: 170 });
-        doc.text('Gracias por tu donación!', 105, 130, { align: 'center' });
-
-        doc.save(`Recibo_Donacion_${transactionId || 'N/A'}.pdf`);
-      };
-
-      presetButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          presetButtons.forEach(btn => btn.classList.remove('selected'));
-          button.classList.add('selected');
-          const amount = button.getAttribute('data-amount');
-          if (selectedAmountInput) selectedAmountInput.value = amount;
-          if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
-          hasManualSelection = true;
-          if (donationError) donationError.style.display = 'none';
-          saveFormData();
-          updateSummary();
-        });
-      });
-
-      cardNumberInput?.addEventListener('input', updateCardType);
-
-      nextBtn?.addEventListener('click', () => {
-        if (validateStep(currentStep)) {
-          currentStep++;
-          showStep(currentStep);
-          updateSummary();
-        }
-      });
-
-      prevBtn?.addEventListener('click', () => {
-        currentStep--;
-        showStep(currentStep);
-        updateSummary();
-      });
-
-      resetBtn?.addEventListener('click', () => {
-        form.reset();
-        currentStep = 0;
-        showStep(currentStep);
-        presetButtons.forEach(btn => btn.classList.remove('selected'));
-        if (selectedAmountInput) selectedAmountInput.value = '';
-        if (selectedPackageInput) selectedPackageInput.value = '';
-        hasManualSelection = false;
-        transactionId = '';
-        cardType = '';
-        cardIcon.classList.remove('active', 'fas', 'fab', 'fa-credit-card', 'fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex');
-        cardIcon.classList.add(...cardIcons.generic.split(' '));
-        cardIcon.setAttribute('data-type', 'generic');
-        localStorage.removeItem('donationFormData');
-        updateSummary();
-        updateConfirmation();
-      });
-
-      downloadReceiptBtn?.addEventListener('click', generateReceipt);
-
-      const sendRequest = async (json) => {
-        try {
-          const response = await fetch('https://duelazo-2a8ce83c75f7.herokuapp.com/packages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(json),
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.statusReason || `Error del servidor: ${response.status}`);
-          }
-          transactionId = data.transactionId || 'N/A';
-          return { success: true, data };
-        } catch (err) {
-          if (err.message.includes('Failed to fetch')) {
-            return { success: false, error: new Error('Error de CORS: El servidor no está configurado para aceptar solicitudes desde este origen. Contacta al soporte.') };
-          }
-          return { success: false, error: err };
-        }
-      };
-
-      form?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!validateStep(currentStep)) {
-          return;
-        }
-
-        if (!validateBeforeSubmit()) {
-          return;
-        }
-
-        if (!selectedPackageInput?.value) {
-          showMessage('No se seleccionó un paquete de donación. Vuelve al Paso 1.', 'error');
-          return;
-        }
-
-        if (submitBtn) submitBtn.disabled = true;
-        if (prevBtn) prevBtn.disabled = true;
-        if (loadingDiv) loadingDiv.style.display = 'block';
-
-        const formData = new FormData(form);
-        const json = { planReferenceId: selectedPackageInput.value };
-
-        formData.forEach((value, key) => {
-          if (key === 'cardNumber') {
-            json[key] = value.replace(/\s/g, '');
-          } else if (['selectedAmount', 'expMonth', 'expYear'].includes(key)) {
-            json[key] = Number(value) || null;
-          } else if (key !== 'selectedPackage') {
-            json[key] = value;
-          }
-        });
-
-        try {
-          const result = await sendRequest(json);
-          if (result.success) {
-            showMessage('¡Gracias! Tu donación ha sido procesada exitosamente.', 'success', 10000);
-            updateConfirmation();
-            currentStep = steps.length - 1;
-            showStep(currentStep);
-            localStorage.removeItem('donationFormData');
-            presetButtons.forEach(btn => btn.classList.remove('selected'));
-            if (selectedAmountInput) selectedAmountInput.value = '';
-            if (selectedPackageInput) selectedPackageInput.value = '';
-            hasManualSelection = false;
-            generateReceipt();
-            updateSummary();
-          } else {
-            throw result.error;
-          }
-        } catch (err) {
-          let errorMessage = 'No pudimos procesar tu donación. Intenta de nuevo o contacta al soporte.';
-          if (err.message.includes('CORS')) {
-            errorMessage = 'No se puede procesar la donación debido a un problema de configuración del servidor (CORS). Contacta al soporte.';
-          } else if (err.message.includes('Server error')) {
-            errorMessage = `El servidor rechazó la solicitud: ${err.message}. Intenta de nuevo o contacta al soporte.`;
-          }
-          showMessage(errorMessage, 'error', 5000);
-        } finally {
-          if (submitBtn) submitBtn.disabled = false;
-          if (prevBtn) prevBtn.disabled = false;
-          if (loadingDiv) loadingDiv.style.display = 'none';
-        }
-      });
-
-      const loadCountries = () => {
-        const select = document.getElementById('countryCode');
-        if (!select) {
-          console.error('No se encontró el elemento #countryCode');
-          return;
-        }
-
-        const fallbackCountries = [
-          { cca2: 'US', name: { common: 'Estados Unidos' }, flags: { svg: 'https://flagcdn.com/us.svg' } },
-          { cca2: 'CA', name: { common: 'Canadá' }, flags: { svg: 'https://flagcdn.com/ca.svg' } },
-          { cca2: 'GB', name: { common: 'Reino Unido' }, flags: { svg: 'https://flagcdn.com/gb.svg' } },
-          { cca2: 'AU', name: { common: 'Australia' }, flags: { svg: 'https://flagcdn.com/au.svg' } },
-          { cca2: 'FR', name: { common: 'Francia' }, flags: { svg: 'https://flagcdn.com/fr.svg' } }
-        ];
-
-        // Función para validar si un país tiene las propiedades esperadas
-        const isValidCountry = (country) => {
-          return country &&
-                 country.name?.common &&
-                 country.cca2 &&
-                 country.flags?.svg;
-        };
-
-        // Función para llenar el select con países
-        const populateSelect = (countries) => {
-          countries.forEach(country => {
-            if (isValidCountry(country)) {
-              const opt = document.createElement('option');
-              opt.value = country.cca2;
-              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
-              select.appendChild(opt);
-            } else {
-              console.warn('País inválido encontrado:', country);
-            }
-          });
-        };
-
-        // Intentar cargar desde localStorage
-        let cachedCountries = [];
-        try {
-          const storedData = localStorage.getItem('countries');
-          if (storedData) {
-            cachedCountries = JSON.parse(storedData);
-            // Validar que cachedCountries sea un arreglo y que todos los elementos sean válidos
-            if (Array.isArray(cachedCountries) && cachedCountries.length > 0 && cachedCountries.every(isValidCountry)) {
-              console.log('Cargando países desde localStorage:', cachedCountries);
-              populateSelect(cachedCountries);
-              loadFormData();
-              return;
-            } else {
-              console.warn('Datos en localStorage no válidos o vacíos:', cachedCountries);
-              localStorage.removeItem('countries'); // Limpiar datos inválidos
-            }
-          }
-        } catch (error) {
-          console.error('Error al leer o parsear localStorage:', error);
-          localStorage.removeItem('countries'); // Limpiar datos corruptos
-        }
-
-        // Si no hay datos válidos en localStorage, cargar desde la API
-        console.log('Haciendo solicitud a la API para cargar países...');
-        fetch('https://restcountries.com/v3.1/all')
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`Error al cargar países: ${response.status} ${response.statusText}`);
-            }
-            return response.json();
-          })
-          .then(data => {
-            if (!Array.isArray(data) || data.length === 0) {
-              throw new Error('La API no devolvió datos válidos');
-            }
-            // Ordenar los países alfabéticamente
-            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-            // Filtrar solo los campos necesarios
-            const filteredData = data.map(country => ({
-              name: { common: country.name?.common || 'Desconocido' },
-              cca2: country.cca2 || 'XX',
-              flags: { svg: country.flags?.svg || 'https://flagcdn.com/xx.svg' }
-            })).filter(isValidCountry);
-
-            if (filteredData.length === 0) {
-              throw new Error('No se encontraron países válidos en los datos de la API');
-            }
-
-            console.log('Países cargados desde la API:', filteredData);
-            populateSelect(filteredData);
-            localStorage.setItem('countries', JSON.stringify(filteredData));
-            loadFormData();
-          })
-          .catch(error => {
-            console.error('Error al cargar países desde la API:', error);
-            console.log('Cargando países de respaldo...');
-            populateSelect(fallbackCountries);
-            showMessage('No se pudieron cargar los países. Selecciona de las opciones disponibles o intenta de nuevo.', 'error');
-            loadFormData();
-          });
-      };
-
-      loadCountries();
-      showStep(currentStep);
-      updateSummary();
-    });
-  </script>
-</body>
-</html>
+        const stateProvince
