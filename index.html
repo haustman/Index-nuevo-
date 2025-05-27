@@ -315,6 +315,13 @@
       width: 100% !important;
     }
 
+    .card-logo {
+      width: 24px;
+      height: 16px;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+
     /* Responsive Design */
     @media (min-width: 768px) {
       .container {
@@ -398,6 +405,9 @@
           </div>
           <input type="hidden" id="selectedAmount" name="selectedAmount">
           <input type="hidden" id="selectedPackage" name="selectedPackage">
+          <div class="notice">
+            By donating, you agree to our <a href="https://example.com/terms" target="_blank" style="color: var(--secondary-color);">Terms and Conditions</a>.
+          </div>
         </div>
 
         <div class="step" id="step-1">
@@ -432,7 +442,7 @@
             <span class="error-message" id="cardNameError">Please enter a valid name (letters, spaces, hyphens, apostrophes only).</span>
           </div>
           <div class="form-group">
-            <label for="cardNumber">Card Number: <span id="cardType" class="card-type">Unknown</span></label>
+            <label for="cardNumber">Card Number: <span id="cardType">Unknown</span><img id="cardLogo" class="card-logo" src="" alt="" style="display: none;"></label>
             <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
             <span class="error-message" id="cardNumberError">Please enter a valid 16-digit card number.</span>
           </div>
@@ -493,7 +503,7 @@
             <p><strong>Amount:</strong> <span id="confirmAmount">-</span></p>
             <p><strong>Name:</strong> <span id="confirmName">-</span></p>
             <p><strong>Email:</strong> <span id="confirmEmail">-</span></p>
-            <p><strong>Card Type:</strong> <span id="confirmCardType">-</span></p>
+            <p><strong>Card Type:</strong> <span id="confirmCardType">-</span><img id="confirmCardLogo" class="card-logo" src="" alt="" style="display: none;"></p>
             <p><strong>Transaction ID:</strong> <span id="confirmTransactionId">-</span></p>
           </div>
           <button type="button" id="resetBtn">Make Another Donation</button>
@@ -552,6 +562,9 @@
       const donationError = document.getElementById('donationError');
       const cardNumberInput = document.getElementById('cardNumber');
       const cardTypeSpan = document.getElementById('cardType');
+      const cardLogoImg = document.getElementById('cardLogo');
+      const confirmCardTypeSpan = document.getElementById('confirmCardType');
+      const confirmCardLogoImg = document.getElementById('confirmCardLogo');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -568,6 +581,14 @@
         '100': 'Donation4',
         '200': 'Donation5',
         '500': 'Donation6'
+      };
+
+      const cardLogos = {
+        'Visa': 'https://logo.clearbit.com/visa.com',
+        'Mastercard': 'https://logo.clearbit.com/mastercard.com',
+        'American Express': 'https://logo.clearbit.com/americanexpress.com',
+        'Discover': 'https://logo.clearbit.com/discover.com',
+        'Unknown': ''
       };
 
       const summaryElements = {
@@ -588,7 +609,7 @@
         amount: document.getElementById('confirmAmount'),
         name: document.getElementById('confirmName'),
         email: document.getElementById('confirmEmail'),
-        cardType: document.getElementById('confirmCardType'),
+        cardType: confirmCardTypeSpan,
         transactionId: document.getElementById('confirmTransactionId'),
       };
 
@@ -613,14 +634,27 @@
         return 'Unknown';
       };
 
-      // Actualizar tipo de tarjeta
-      if (cardNumberInput && cardTypeSpan) {
-        cardNumberInput.addEventListener('input', () => {
-          const cardNumber = cardNumberInput.value;
-          currentCardType = detectCardType(cardNumber);
-          cardTypeSpan.textContent = currentCardType;
-          saveFormData();
-        });
+      // Actualizar tipo de tarjeta y logo
+      const updateCardDisplay = () => {
+        const cardNumber = cardNumberInput.value;
+        currentCardType = detectCardType(cardNumber);
+        cardTypeSpan.textContent = currentCardType;
+        if (cardLogoImg) {
+          if (cardLogos[currentCardType]) {
+            cardLogoImg.src = cardLogos[currentCardType];
+            cardLogoImg.alt = `${currentCardType} logo`;
+            cardLogoImg.style.display = 'inline';
+          } else {
+            cardLogoImg.style.display = 'none';
+            cardLogoImg.src = '';
+            cardLogoImg.alt = '';
+          }
+        }
+        saveFormData();
+      };
+
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', debounce(updateCardDisplay, 300));
       }
 
       // Debounce para optimizar eventos
@@ -670,6 +704,17 @@
         confirmElements.name.textContent = `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || '-';
         confirmElements.email.textContent = document.getElementById('emailAddress')?.value || '-';
         confirmElements.cardType.textContent = currentCardType || '-';
+        if (confirmCardLogoImg) {
+          if (cardLogos[currentCardType]) {
+            confirmCardLogoImg.src = cardLogos[currentCardType];
+            confirmCardLogoImg.alt = `${currentCardType} logo`;
+            confirmCardLogoImg.style.display = 'inline';
+          } else {
+            confirmCardLogoImg.style.display = 'none';
+            confirmCardLogoImg.src = '';
+            confirmCardLogoImg.alt = '';
+          }
+        }
         confirmElements.transactionId.textContent = transactionId || '-';
       };
 
@@ -899,6 +944,16 @@
         transactionId = '';
         currentCardType = 'Unknown';
         if (cardTypeSpan) cardTypeSpan.textContent = 'Unknown';
+        if (cardLogoImg) {
+          cardLogoImg.style.display = 'none';
+          cardLogoImg.src = '';
+          cardLogoImg.alt = '';
+        }
+        if (confirmCardLogoImg) {
+          confirmCardLogoImg.style.display = 'none';
+          confirmCardLogoImg.src = '';
+          confirmCardLogoImg.alt = '';
+        }
         localStorage.removeItem('donationFormData');
         $('#countryCode').val('').trigger('change');
         updateSummary();
@@ -909,6 +964,8 @@
 
       // Enviar solicitud
       const sendRequest = async (json) => {
+        console.log('Enviando solicitud a https://duelazo-2a8ce83c75f7.herokuapp.com/packages');
+        console.log('Request body:', JSON.stringify(json, null, 2));
         if (TEST_MODE) {
           console.log('TEST MODE: Simulating successful server response');
           return {
@@ -926,7 +983,7 @@
           if (!response.ok) {
             throw new Error(data.statusReason || `Server error: ${response.status}`);
           }
-          transactionId = data.transactionId || 'N/A';
+          transactionId = data.transactionId || '';
           return { success: true, data };
         } catch (err) {
           console.error('Request failed:', err);
@@ -938,7 +995,7 @@
         }
       };
 
-      // Manejar envío
+      // Form submission
       form?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!validateStep(currentStep)) {
@@ -974,7 +1031,7 @@
         try {
           const result = await sendRequest(json);
           if (result.success) {
-            showMessage(TEST_MODE ? 'TEST MODE: Donation simulated successfully.' : 'Thank you! Your donation has been processed successfully.', 'success', 10000);
+            showMessage(TEST_MODE ? 'TEST MODE: Transaction simulated successfully.' : 'Thank you for your donation!', 'success', 10000);
             transactionId = result.data.transactionId;
             updateConfirmation();
             currentStep = steps.length - 1;
@@ -1008,7 +1065,7 @@
         }
 
         const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
-        console.log('Países en localStorage:', cachedCountries.length > 0 ? cachedCountries : 'Ninguno');
+        console.log('Países en localStorage:', cachedCountries.length ? cachedCountries : 'none');
         if (cachedCountries.length > 0) {
           cachedCountries.forEach(country => {
             const opt = document.createElement('option');
@@ -1056,7 +1113,7 @@
           });
       };
 
-      // Formatear países con banderas
+      // Formatear países con opciones
       function formatCountry(country) {
         if (!country.id) return country.text;
         return $(
@@ -1064,10 +1121,11 @@
         );
       }
 
-      // Inicializar
+      // Initialize
       loadCountries();
       showStep(currentStep);
       updateSummary();
+      updateCardDisplay();
     });
   </script>
 </body>
