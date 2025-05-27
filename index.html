@@ -845,7 +845,7 @@
             if (donationError) donationError.style.display = 'none';
           }
         } else {
-          const inputs = step.querySelectorAll('input[required], select[required]');
+          const inputs = step.querySelectorAll('input, select');
           inputs.forEach(input => {
             const errorElement = document.getElementById(`${input.id}Error`);
             if (!input.checkValidity()) {
@@ -969,7 +969,21 @@
         const loadingCountries = document.getElementById('loadingCountries');
         if (!countrySelect || !loadingCountries) return;
 
-        const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
+        let cachedCountries = [];
+        try {
+          const cachedData = localStorage.getItem('countries');
+          if (cachedData) {
+            cachedCountries = JSON.parse(cachedData);
+            if (!Array.isArray(cachedCountries) || cachedCountries.some(c => !c.cca2 || !c.name?.common)) {
+              throw new Error('Datos de países en caché no válidos');
+            }
+          }
+        } catch (error) {
+          console.error('Error al leer países del caché:', error);
+          localStorage.removeItem('countries');
+          cachedCountries = [];
+        }
+
         if (cachedCountries.length > 0) {
           cachedCountries.forEach(country => {
             const opt = document.createElement('option');
@@ -984,23 +998,26 @@
         loadingCountries.style.display = 'block';
         fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
           .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch countries');
+            if (!response.ok) throw new Error(`Fallo al cargar países: ${response.status}`);
             return response.json();
           })
           .then(data => {
+            if (!Array.isArray(data)) throw new Error('Respuesta de la API no es un array');
             data.sort((a, b) => a.name.common.localeCompare(b.name.common));
             data.forEach(country => {
-              const opt = document.createElement('option');
-              opt.value = country.cca2;
-              opt.textContent = country.name.common;
-              countrySelect.appendChild(opt);
+              if (country.cca2 && country.name?.common) {
+                const opt = document.createElement('option');
+                opt.value = country.cca2;
+                opt.textContent = country.name.common;
+                countrySelect.appendChild(opt);
+              }
             });
             localStorage.setItem('countries', JSON.stringify(data));
             countriesLoaded = true;
             loadingCountries.style.display = 'none';
           })
           .catch(error => {
-            console.error('Error loading countries:', error);
+            console.error('Error al cargar países:', error);
             showMessage('No se pudieron cargar los países. Selecciona una opción disponible o intenta de nuevo.', 'error');
             loadingCountries.style.display = 'none';
           });
