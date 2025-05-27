@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulario de Donación</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
   <style>
     :root {
       --primary-color: #FFC107;
@@ -118,7 +119,7 @@
 
     input, select {
       width: 100%;
-      padding: 6px 10px;
+      padding: 6px 40px 6px 10px;
       border: 1px solid var(--input-border-color);
       border-radius: 4px;
       font-size: 13px;
@@ -128,6 +129,12 @@
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary-color);
+    }
+
+    input::placeholder {
+      color: #6C757D;
+      font-size: 13px;
+      opacity: 0.8;
     }
 
     .error-message {
@@ -171,29 +178,44 @@
       color: var(--label-color);
       text-align: center;
       margin-top: 6px;
+      line-height: 1.4;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .terms-notice a {
       color: var(--secondary-color);
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .terms-notice a:hover { color: var(--secondary-hover); }
 
-    .card-logos {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-      justify-content: center;
+    .card-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      opacity: 0.7;
+      display: block;
     }
 
-    .card-logos img {
-      height: 24px;
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
+    .card-icon.active {
+      opacity: 1;
     }
 
-    .card-logos img.active { opacity: 1; }
+    .card-icon.fa-cc-visa {
+      color: #1A1F71;
+    }
+
+    .card-icon.fa-cc-mastercard {
+      color: #EB001B;
+    }
+
+    .card-icon.fa-cc-amex {
+      color: #006FCF;
+    }
 
     .buttons {
       display: flex;
@@ -325,6 +347,17 @@
       margin-bottom: 8px;
     }
 
+    select option {
+      display: flex;
+      align-items: center;
+    }
+
+    select option img {
+      width: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
     @media (min-width: 768px) {
       .container {
         flex-direction: row;
@@ -350,7 +383,16 @@
       .progress-step::before { width: 5px; height: 5px; margin-bottom: 3px; }
       .step-title { font-size: 0.95em; margin-bottom: 8px; }
       label { font-size: 12px; margin-bottom: 3px; }
-      input, select { padding: 5px 8px; font-size: 12px; }
+      input, select {
+        padding: 5px 30px 5px 8px;
+        font-size: 12px;
+      }
+      input::placeholder {
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .error-message { font-size: 10px; margin-top: 3px; }
       .preset-amounts {
         grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
@@ -367,8 +409,15 @@
       .summary-section p { font-size: 0.8em; }
       .loading { font-size: 10px; margin-top: 5px; }
       .notice { font-size: 9px; margin-top: 5px; }
-      .terms-notice { font-size: 9px; }
-      .card-logos img { height: 20px; }
+      .terms-notice {
+        font-size: 10px;
+        line-height: 1.4;
+        padding: 0 5px;
+      }
+      .card-icon {
+        font-size: 18px;
+        right: 8px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -379,7 +428,25 @@
       .preset-button { padding: 5px 4px; font-size: 11px; }
       button { padding: 4px 8px; max-width: 80px; font-size: 11px; }
       #message { font-size: 10px; padding: 4px; min-height: 24px; }
-      .card-logos img { height: 18px; }
+      .card-icon {
+        font-size: 16px;
+        right: 6px;
+      }
+      input, select {
+        padding: 4px 25px 4px 6px;
+        font-size: 11px;
+      }
+      input::placeholder {
+        font-size: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .terms-notice {
+        font-size: 9px;
+        line-height: 1.3;
+        padding: 0 3px;
+      }
     }
   </style>
 </head>
@@ -419,56 +486,54 @@
           <h3 class="step-title">Tus Detalles Personales</h3>
           <div class="form-group">
             <label for="firstName">Nombre:</label>
-            <input id="firstName" name="firstName" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu nombre" aria-describedby="firstNameError" required />
+            <input id="firstName" name="given-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu nombre" aria-describedby="firstNameError" autocomplete="given-name" required />
             <span class="error-message" id="firstNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="lastName">Apellido:</label>
-            <input id="lastName" name="lastName" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu apellido" aria-describedby="lastNameError" required />
+            <input id="lastName" name="family-name" pattern="[A-Za-z\s\-']+" placeholder="Ingresa tu apellido" aria-describedby="lastNameError" autocomplete="family-name" required />
             <span class="error-message" id="lastNameError">Por favor, ingresa un apellido válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="emailAddress">Correo Electrónico:</label>
-            <input type="email" id="emailAddress" name="emailAddress" placeholder="ejemplo@dominio.com" aria-describedby="emailError" required />
+            <input type="email" id="emailAddress" name="email" placeholder="ejemplo@dominio.com" aria-describedby="emailError" autocomplete="email" required />
             <span class="error-message" id="emailError">Por favor, ingresa un correo electrónico válido (ejemplo@dominio.com).</span>
           </div>
           <div class="form-group">
             <label for="phoneNumber">Número de Teléfono:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="\d{10,15}" placeholder="10–15 dígitos" aria-describedby="phoneError" required />
+            <input type="tel" id="phoneNumber" name="tel" pattern="\d{10,15}" placeholder="10–15 dígitos" aria-describedby="phoneError" autocomplete="tel" required />
             <span class="error-message" id="phoneError">Por favor, ingresa un número de teléfono válido (10–15 dígitos).</span>
           </div>
         </div>
 
         <div class="step" id="step-2">
           <h3 class="step-title">Información de Pago</h3>
-          <div class="card-logos">
-            <img src="/assets/visa.svg" alt="Visa" data-type="visa">
-            <img src="/assets/mastercard.svg" alt="MasterCard" data-type="mastercard">
-            <img src="/assets/amex.svg" alt="American Express" data-type="amex">
-          </div>
           <div class="form-group">
             <label for="cardName">Nombre en la Tarjeta:</label>
-            <input id="cardName" name="cardName" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" aria-describedby="cardNameError" required />
+            <input id="cardName" name="cc-name" pattern="[A-Za-z\s\-']+" placeholder="Como aparece en la tarjeta" aria-describedby="cardNameError" autocomplete="cc-name" required />
             <span class="error-message" id="cardNameError">Por favor, ingresa un nombre válido (solo letras, espacios, guiones, apóstrofes).</span>
           </div>
           <div class="form-group">
             <label for="cardNumber">Número de Tarjeta:</label>
-            <input type="tel" id="cardNumber" name="cardNumber" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" required />
+            <div style="position: relative;">
+              <input type="tel" id="cardNumber" name="cc-number" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="1234 5678 9012 3456" aria-describedby="cardNumberError" autocomplete="off" required />
+              <i class="card-icon fas fa-credit-card" id="cardIcon" data-type="generic"></i>
+            </div>
             <span class="error-message" id="cardNumberError">Por favor, ingresa un número de tarjeta válido de 16 dígitos.</span>
           </div>
           <div class="form-group">
             <label for="cvv">CVV:</label>
-            <input type="tel" id="cvv" name="cvv" pattern="\d{3,4}" maxlength="4" placeholder="3–4 dígitos" aria-describedby="cvvError" required />
+            <input type="tel" id="cvv" name="cc-csc" pattern="\d{3,4}" maxlength="4" placeholder="3–4 dígitos" aria-describedby="cvvError" autocomplete="off" required />
             <span class="error-message" id="cvvError">Por favor, ingresa un CVV válido (3 o 4 dígitos).</span>
           </div>
           <div class="form-group">
             <label for="expMonth">Mes de Expiración:</label>
-            <input type="number" id="expMonth" name="expMonth" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" required />
+            <input type="number" id="expMonth" name="cc-exp-month" min="1" max="12" placeholder="MM" aria-describedby="expMonthError" autocomplete="cc-exp-month" required />
             <span class="error-message" id="expMonthError">Por favor, ingresa un mes válido (1–12).</span>
           </div>
           <div class="form-group">
             <label for="expYear">Año de Expiración:</label>
-            <input type="number" id="expYear" name="expYear" min="2025" max="2035" placeholder="AAAA" aria-describedby="expYearError" required />
+            <input type="number" id="expYear" name="cc-exp-year" min="2025" max="2035" placeholder="AAAA" aria-describedby="expYearError" autocomplete="cc-exp-year" required />
             <span class="error-message" id="expYearError">Por favor, ingresa un año válido (2025–2035).</span>
           </div>
         </div>
@@ -477,29 +542,29 @@
           <h3 class="step-title">Tu Dirección</h3>
           <div class="form-group">
             <label for="address">Dirección:</label>
-            <input id="address" name="address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Nombre y número de la calle" aria-describedby="addressError" required />
+            <input id="address" name="street-address" pattern="[A-Za-z0-9\s\-,.#\/]+" placeholder="Nombre y número de la calle" aria-describedby="addressError" autocomplete="street-address" required />
             <span class="error-message" id="addressError">Por favor, ingresa una dirección válida.</span>
           </div>
           <div class="form-group">
             <label for="countryCode">País:</label>
-            <select id="countryCode" name="countryCode" aria-describedby="countryError" required>
+            <select id="countryCode" name="country" aria-describedby="countryError" autocomplete="country" required>
               <option value="">Selecciona un país</option>
             </select>
             <span class="error-message" id="countryError">Por favor, selecciona un país de la lista.</span>
           </div>
           <div class="form-group">
             <label for="stateProvince">Estado / Provincia:</label>
-            <input id="stateProvince" name="stateProvince" pattern="[A-Za-z0-9\s\-]+" placeholder="Ejemplo: California" aria-describedby="stateError" required />
+            <input id="stateProvince" name="address-level1" pattern="[A-Za-z0-9\s\-]+" placeholder="Ejemplo: California" aria-describedby="stateError" autocomplete="address-level1" required />
             <span class="error-message" id="stateError">Por favor, ingresa un estado/provincia válido (letras, números, espacios, guiones).</span>
           </div>
           <div class="form-group">
             <label for="city">Ciudad:</label>
-            <input id="city" name="city" pattern="[A-Za-z\s\-]+" placeholder="Ingresa tu ciudad" aria-describedby="cityError" required />
+            <input id="city" name="address-level2" pattern="[A-Za-z\s\-]+" placeholder="Ingresa tu ciudad" aria-describedby="cityError" autocomplete="address-level2" required />
             <span class="error-message" id="cityError">Por favor, ingresa una ciudad válida (letras, espacios, guiones).</span>
           </div>
           <div class="form-group">
             <label for="postalCode">Código Postal:</label>
-            <input type="text" id="postalCode" name="postalCode" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="Ejemplo: 90210" aria-describedby="postalCodeError" required />
+            <input type="text" id="postalCode" name="postal-code" pattern="[A-Za-z0-9\s\-]{1,10}" maxlength="10" placeholder="Ejemplo: 90210" aria-describedby="postalCodeError" autocomplete="postal-code" required />
             <span class="error-message" id="postalCodeError">Por favor, ingresa un código postal válido (1–10 caracteres).</span>
           </div>
           <input type="hidden" id="ipAddress" name="ipAddress" />
@@ -557,7 +622,7 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/assets/js/jspdf.umd.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const { jsPDF } = window.jspdf;
@@ -577,6 +642,7 @@
       const donationError = document.getElementById('donationError');
       const cardNumberInput = document.getElementById('cardNumber');
       const cvvInput = document.getElementById('cvv');
+      const cardIcon = document.getElementById('cardIcon');
 
       let currentStep = 0;
       let hasManualSelection = false;
@@ -590,6 +656,13 @@
         '100': 'Donacion4',
         '200': 'Donacion5',
         '500': 'Donacion6'
+      };
+
+      const cardIcons = {
+        generic: 'fas fa-credit-card',
+        visa: 'fab fa-cc-visa',
+        mastercard: 'fab fa-cc-mastercard',
+        amex: 'fab fa-cc-amex'
       };
 
       const summaryElements = {
@@ -712,27 +785,35 @@
 
       const updateCardType = () => {
         const cardNumber = cardNumberInput?.value.replace(/\s/g, '') || '';
-        const logos = document.querySelectorAll('.card-logos img');
-        logos.forEach(logo => logo.classList.remove('active'));
-
+        cardIcon.classList.remove('active', 'fas', 'fab', 'fa-credit-card', 'fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex');
         if (!cardNumber) {
           cardType = '';
+          cardIcon.classList.add(...cardIcons.generic.split(' '));
+          cardIcon.setAttribute('data-type', 'generic');
           return;
         }
-
-        if (/^4/.test(cardNumber)) {
+        const len = cardNumber.length;
+        if (/^4/.test(cardNumber) && len === 16) {
           cardType = 'Visa';
-          document.querySelector('.card-logos img[data-type="visa"]')?.classList.add('active');
-        } else if (/^5[1-5]/.test(cardNumber)) {
+          cardIcon.classList.add(...cardIcons.visa.split(' '));
+          cardIcon.setAttribute('data-type', 'visa');
+          cardIcon.classList.add('active');
+        } else if (/^5[1-5]/.test(cardNumber) && len === 16) {
           cardType = 'MasterCard';
-          document.querySelector('.card-logos img[data-type="mastercard"]')?.classList.add('active');
-        } else if (/^3[47]/.test(cardNumber)) {
+          cardIcon.classList.add(...cardIcons.mastercard.split(' '));
+          cardIcon.setAttribute('data-type', 'mastercard');
+          cardIcon.classList.add('active');
+        } else if (/^3[47]/.test(cardNumber) && len === 15) {
           cardType = 'American Express';
-          document.querySelector('.card-logos img[data-type="amex"]')?.classList.add('active');
+          cardIcon.classList.add(...cardIcons.amex.split(' '));
+          cardIcon.setAttribute('data-type', 'amex');
+          cardIcon.classList.add('active');
           cvvInput.setAttribute('pattern', '\\d{4}');
           cvvInput.setAttribute('placeholder', '4 dígitos');
         } else {
           cardType = '';
+          cardIcon.classList.add(...cardIcons.generic.split(' '));
+          cardIcon.setAttribute('data-type', 'generic');
           cvvInput.setAttribute('pattern', '\\d{3,4}');
           cvvInput.setAttribute('placeholder', '3–4 dígitos');
         }
@@ -768,6 +849,7 @@
               if (errorElement) errorElement.style.display = 'none';
               input.classList.remove('error');
             }
+            input.removeEventListener('input', input.oninput);
             input.oninput = () => {
               const errorEl = document.getElementById(`${input.id}Error`);
               if (input.checkValidity()) {
@@ -826,6 +908,12 @@
           showMessage('Por favor, ingresa un año de expiración válido (2025–2035).', 'error');
           return false;
         }
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1;
+        if (expYear === currentYear && expMonth < currentMonth) {
+          showMessage(`La tarjeta está vencida. Usa una tarjeta válida (fecha actual: ${currentMonth}/${currentYear}).`, 'error');
+          return false;
+        }
         const address = document.getElementById('address')?.value;
         if (!address || !/[A-Za-z0-9\s\-,.#\/]+/.test(address)) {
           showMessage('Por favor, ingresa una dirección válida.', 'error');
@@ -849,6 +937,11 @@
         const postalCode = document.getElementById('postalCode')?.value;
         if (!postalCode || !/[A-Za-z0-9\s\-]{1,10}/.test(postalCode)) {
           showMessage('Por favor, ingresa un código postal válido (1–10 caracteres).', 'error');
+          return false;
+        }
+        const ipAddress = document.getElementById('ipAddress')?.value;
+        if (!ipAddress) {
+          showMessage('No se pudo obtener tu dirección IP. Por favor, intenta de nuevo o contacta al soporte.', 'error');
           return false;
         }
         return true;
@@ -919,7 +1012,9 @@
         hasManualSelection = false;
         transactionId = '';
         cardType = '';
-        document.querySelectorAll('.card-logos img').forEach(logo => logo.classList.remove('active'));
+        cardIcon.classList.remove('active', 'fas', 'fab', 'fa-credit-card', 'fa-cc-visa', 'fa-cc-mastercard', 'fa-cc-amex');
+        cardIcon.classList.add(...cardIcons.generic.split(' '));
+        cardIcon.setAttribute('data-type', 'generic');
         localStorage.removeItem('donationFormData');
         updateSummary();
         updateConfirmation();
@@ -1017,26 +1112,26 @@
         if (!select) return;
 
         const fallbackCountries = [
-          { code: 'US', name: 'Estados Unidos' },
-          { code: 'CA', name: 'Canadá' },
-          { code: 'GB', name: 'Reino Unido' },
-          { code: 'AU', name: 'Australia' },
-          { code: 'FR', name: 'Francia' }
+          { cca2: 'US', name: { common: 'Estados Unidos' }, flags: { svg: 'https://flagcdn.com/us.svg' } },
+          { cca2: 'CA', name: { common: 'Canadá' }, flags: { svg: 'https://flagcdn.com/ca.svg' } },
+          { cca2: 'GB', name: { common: 'Reino Unido' }, flags: { svg: 'https://flagcdn.com/gb.svg' } },
+          { cca2: 'AU', name: { common: 'Australia' }, flags: { svg: 'https://flagcdn.com/au.svg' } },
+          { cca2: 'FR', name: { common: 'Francia' }, flags: { svg: 'https://flagcdn.com/fr.svg' } }
         ];
 
         const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
         if (cachedCountries.length > 0) {
           cachedCountries.forEach(country => {
             const opt = document.createElement('option');
-            opt.value = country.code;
-            opt.textContent = country.name;
+            opt.value = country.cca2;
+            opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
             select.appendChild(opt);
           });
           loadFormData();
           return;
         }
 
-        fetch('https://api.world-countries.io/v1/countries')
+        fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags')
           .then(response => {
             if (!response.ok) {
               throw new Error('No se pudieron cargar los países');
@@ -1044,11 +1139,11 @@
             return response.json();
           })
           .then(data => {
-            data.sort((a, b) => a.name.localeCompare(b.name));
+            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
             data.forEach(country => {
               const opt = document.createElement('option');
-              opt.value = country.code;
-              opt.textContent = country.name;
+              opt.value = country.cca2;
+              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
               select.appendChild(opt);
             });
             localStorage.setItem('countries', JSON.stringify(data));
@@ -1058,8 +1153,8 @@
             console.error('Error al cargar países:', error);
             fallbackCountries.forEach(country => {
               const opt = document.createElement('option');
-              opt.value = country.code;
-              opt.textContent = country.name;
+              opt.value = country.cca2;
+              opt.innerHTML = `<img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" style="width: 20px; margin-right: 8px; vertical-align: middle;">${country.name.common}`;
               select.appendChild(opt);
             });
             showMessage('No se pudieron cargar los países. Selecciona de las opciones disponibles o intenta de nuevo.', 'error');
@@ -1071,10 +1166,11 @@
         try {
           const response = await fetch('https://api.ipify.org?format=json');
           const data = await response.json();
-          document.getElementById('ipAddress').value = data.ip || '127.0.0.1';
+          document.getElementById('ipAddress').value = data.ip || '';
         } catch (error) {
           console.error('Error al obtener IP:', error);
-          document.getElementById('ipAddress').value = '127.0.0.1';
+          document.getElementById('ipAddress').value = '';
+          showMessage('No se pudo obtener tu dirección IP. Por favor, intenta de nuevo o contacta al soporte.', 'error');
         }
       };
 
