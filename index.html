@@ -333,7 +333,7 @@
         flex: 1;
       }
       .form-wrapper {
-        position: sticky;
+        position: static;
         top: 12px;
       }
     }
@@ -547,6 +547,15 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Debounce function moved to top
+      const debounce = (func, wait) => {
+        let timeout;
+        return (...args) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      };
+
       const form = document.getElementById('donationForm');
       const steps = document.querySelectorAll('.step');
       const progressSteps = document.querySelectorAll('.progress-step');
@@ -636,35 +645,31 @@
 
       // Actualizar tipo de tarjeta y logo
       const updateCardDisplay = () => {
+        if (!cardNumberInput || !cardTypeSpan || !cardLogoImg) {
+          console.error('Card display elements missing');
+          return;
+        }
         const cardNumber = cardNumberInput.value;
         currentCardType = detectCardType(cardNumber);
         cardTypeSpan.textContent = currentCardType;
-        if (cardLogoImg) {
-          if (cardLogos[currentCardType]) {
-            cardLogoImg.src = cardLogos[currentCardType];
-            cardLogoImg.alt = `${currentCardType} logo`;
-            cardLogoImg.style.display = 'inline';
-          } else {
-            cardLogoImg.style.display = 'none';
-            cardLogoImg.src = '';
-            cardLogoImg.alt = '';
-          }
+        if (cardLogos[currentCardType]) {
+          cardLogoImg.src = cardLogos[currentCardType];
+          cardLogoImg.alt = `${currentCardType} logo`;
+          cardLogoImg.style.display = 'inline';
+        } else {
+          cardLogoImg.style.display = 'none';
+          cardLogoImg.src = '';
+          cardLogoImg.alt = '';
         }
         saveFormData();
       };
 
+      // Bind card number input listener
       if (cardNumberInput) {
         cardNumberInput.addEventListener('input', debounce(updateCardDisplay, 300));
+      } else {
+        console.error('cardNumberInput not found');
       }
-
-      // Debounce para optimizar eventos
-      const debounce = (func, wait) => {
-        let timeout;
-        return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-      };
 
       // Actualizar resumen
       const updateSummary = () => {
@@ -832,7 +837,7 @@
         }
 
         if (!valid && errors.length > 0) {
-          showMessage(`Please fix the following errors:\n- ${errors.join('\n- ')}`, 'error', 5000);
+          showMessage(`Please fix the following errors:\n- ${errors.join('\n- ')}`, 'error');
         }
 
         return valid;
@@ -844,8 +849,8 @@
           showMessage('No donation amount selected. Please go back to Step 1.', 'error');
           return false;
         }
-        const email = document.getElementById('emailAddress')?.value;
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        const emailAddress = document.getElementById('emailAddress')?.value;
+        if (!emailAddress || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress)) {
           showMessage('Please enter a valid email address (e.g., example@domain.com).', 'error');
           return false;
         }
@@ -904,15 +909,23 @@
       // Manejar botones de monto
       presetButtons.forEach(button => {
         button.addEventListener('click', () => {
-          presetButtons.forEach(btn => btn.classList.remove('selected'));
-          button.classList.add('selected');
-          const amount = button.getAttribute('data-amount');
-          if (selectedAmountInput) selectedAmountInput.value = amount;
-          if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
-          hasManualSelection = true;
-          if (donationError) donationError.style.display = 'none';
-          saveFormData();
-          updateSummary();
+          try {
+            console.log(`Preset button clicked: ${button.getAttribute('data-amount')}`);
+            presetButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('selected');
+            const amount = button.getAttribute('data-amount');
+            if (selectedAmountInput) selectedAmountInput.value = amount;
+            else console.error('selectedAmountInput not found');
+            if (selectedPackageInput) selectedPackageInput.value = packageMapping[amount] || '';
+            else console.error('selectedPackageInput not found');
+            hasManualSelection = true;
+            if (donationError) donationError.style.display = 'none';
+            saveFormData();
+            updateSummary();
+          } catch (err) {
+            console.error('Error in preset button click:', err);
+            showMessage('Failed to select donation amount. Please try again.', 'error');
+          }
         });
       });
 
@@ -923,7 +936,7 @@
           showStep(currentStep);
           updateSummary();
         }
-      });
+      }));
 
       // Botón anterior
       prevBtn?.addEventListener('click', () => {
@@ -959,15 +972,15 @@
         updateSummary();
         updateConfirmation();
         console.log('localStorage cleared');
-        showMessage('Form reset and local storage cleared', 'success', 1000);
+        showMessage('Form reset and local storage cleared', 'success');
       });
 
       // Enviar solicitud
       const sendRequest = async (json) => {
-        console.log('Enviando solicitud a https://duelazo-2a8ce83c75f7.herokuapp.com/packages');
+        console.log('Sending request to https://duelazo-2a8ce83c75f7.herokuapp.com/packages');
         console.log('Request body:', JSON.stringify(json, null, 2));
         if (TEST_MODE) {
-          console.log('TEST MODE: Simulating successful server response');
+          console.log('TEST_MODE: Simulating successful server response');
           return {
             success: true,
             data: { transactionId: `TEST-${Date.now()}` }
@@ -989,11 +1002,12 @@
           console.error('Request failed:', err);
           let errorMessage = 'Unable to process donation. Please try again or contact support.';
           if (err.message.includes('Failed to fetch')) {
-            errorMessage = 'CORS error: The server is not configured to accept requests from this origin. Please contact support.';
+            errorMessage = 'CORS error: The server is not configured to accept requests from this origin. Please try again or contact support.';
           }
-          return { success: false, error: new Error(errorMessage) };
+          showMessage(errorMessage, 'error');
+          return { success: false, error: err };
         }
-      };
+      }));
 
       // Form submission
       form?.addEventListener('submit', async (e) => {
@@ -1031,7 +1045,7 @@
         try {
           const result = await sendRequest(json);
           if (result.success) {
-            showMessage(TEST_MODE ? 'TEST MODE: Transaction simulated successfully.' : 'Thank you for your donation!', 'success', 10000);
+            showMessage('TEST MODE: Transaction simulated successfully.', 'success', 10000);
             transactionId = result.data.transactionId;
             updateConfirmation();
             currentStep = steps.length - 1;
@@ -1043,12 +1057,12 @@
             hasManualSelection = false;
             $('#countryCode').val('').trigger('change');
             updateSummary();
-            console.log('localStorage cleared after successful submission');
+            console.log('Form data cleared after successful submission');
           } else {
             throw result.error;
           }
         } catch (err) {
-          showMessage(err.message, 'error', 5000);
+          showMessage(err.message, 'error');
         } finally {
           if (submitBtn) submitBtn.disabled = false;
           if (prevBtn) prevBtn.disabled = false;
@@ -1065,7 +1079,6 @@
         }
 
         const cachedCountries = JSON.parse(localStorage.getItem('countries') || '[]');
-        console.log('Países en localStorage:', cachedCountries.length ? cachedCountries : 'none');
         if (cachedCountries.length > 0) {
           cachedCountries.forEach(country => {
             const opt = document.createElement('option');
@@ -1073,7 +1086,8 @@
             opt.textContent = country.name.common;
             opt.setAttribute('aria-label', `${country.name.common} flag`);
             select.appendChild(opt);
-          });
+          }));
+          console.log('Países cargados desde localStorage:', cachedCountries.length);
           $('#countryCode').select2({
             templateResult: formatCountry,
             templateSelection: formatCountry
@@ -1090,7 +1104,7 @@
             return response.json();
           })
           .then(data => {
-            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+            data.sort((a, b) => a.name.common.localeCompare(b?.name.common || '')));
             data.forEach(country => {
               const opt = document.createElement('option');
               opt.value = country.cca2;
@@ -1111,11 +1125,13 @@
             showMessage('Could not load countries. Please select from the available options or try again later.', 'error');
             loadFormData();
           });
-      };
+        });
 
-      // Formatear países con opciones
+      // Formatear países
       function formatCountry(country) {
-        if (!country.id) return country.text;
+        if (!country.id) {
+          return country.textContent;
+        }
         return $(
           `<span><img src="https://flagcdn.com/16x12/${country.id.toLowerCase()}.png" class="flag-icon" alt="${country.text} flag"/> ${country.text}</span>`
         );
