@@ -494,8 +494,8 @@
           </div>
           <div class="form-group">
             <label for="dateOfBirth">Fecha de Nacimiento:</label>
-            <input type="text" id="dateOfBirth" name="dateOfBirth" pattern="\d{2}/\d{2}/\d{4}" placeholder="DD/MM/YYYY" aria-describedby="dateOfBirthError" required aria-required="true" />
-            <span class="error-message" id="dateOfBirthError" role="alert" aria-atomic="true">Por favor, ingresa una fecha válida (DD/MM/YYYY).</span>
+            <input type="text" id="dateOfBirth" name="dateOfBirth" pattern="\d{2}/\d{2}/\d{4}" placeholder="MM/DD/YYYY" aria-describedby="dateOfBirthError" required aria-required="true" />
+            <span class="error-message" id="dateOfBirthError" role="alert" aria-atomic="true">Por favor, ingresa una fecha válida (MM/DD/YYYY).</span>
           </div>
         </div>
 
@@ -911,7 +911,20 @@
         }
         const dateOfBirth = document.getElementById('dateOfBirth')?.value;
         if (!dateOfBirth || !/^\d{2}\/\d{2}\/\d{4}$/.test(dateOfBirth)) {
-          showMessage('Por favor, ingresa una fecha de nacimiento válida (DD/MM/YYYY).', 'error');
+          showMessage('Por favor, ingresa una fecha de nacimiento válida (MM/DD/YYYY).', 'error');
+          return false;
+        }
+        const [month, day, year] = dateOfBirth.split('/').map(Number);
+        if (month < 1 || month > 12) {
+          showMessage('El mes debe estar entre 01 y 12 (MM/DD/YYYY).', 'error');
+          return false;
+        }
+        if (day < 1 || day > 31) {
+          showMessage('El día debe estar entre 01 y 31 (MM/DD/YYYY).', 'error');
+          return false;
+        }
+        if (year < 1900 || year > new Date().getFullYear()) {
+          showMessage('El año debe ser razonable (1900–hoy).', 'error');
           return false;
         }
         const cardNumber = cardNumberInput?.value?.replace(/\s/g, '');
@@ -1222,6 +1235,26 @@
       cardNumberInput?.addEventListener('input', () => {
         updateCardType();
         saveFormData();
+      });
+
+      document.getElementById('dateOfBirth')?.addEventListener('input', () => {
+        const input = document.getElementById('dateOfBirth');
+        const errorElement = document.getElementById('dateOfBirthError');
+        if (input.checkValidity()) {
+          const [month, day, year] = input.value.split('/').map(Number);
+          if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= new Date().getFullYear()) {
+            errorElement.style.display = 'none';
+            input.classList.remove('error');
+          } else {
+            errorElement.style.display = 'block';
+            input.classList.add('error');
+          }
+        } else {
+          errorElement.style.display = 'block';
+          input.classList.add('error');
+        }
+        saveFormData();
+        updateSummary();
       });
 
       loadFormData();
